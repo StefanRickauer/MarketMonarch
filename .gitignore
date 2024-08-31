@@ -11,6 +11,9 @@
 logs/
 *.log
 
+# Config file
+src/main/resources/config.json
+
 # virtual machine crash logs
 hs_err_pid*
 replay_pid*
