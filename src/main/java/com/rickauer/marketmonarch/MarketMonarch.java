@@ -9,7 +9,7 @@ public class MarketMonarch {
 	private static final String PROGRAM	= "MarketMonarch";
 	private static final String VERSION	= "0.01";
 	
-	private static Logger marketMonarchLogger = LogManager.getLogger(MarketMonarch.class);
+	private static Logger marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 	
 	public static void main(String[] args) {
 		try {
