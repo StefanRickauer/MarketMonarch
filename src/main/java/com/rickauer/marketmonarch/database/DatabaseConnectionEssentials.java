@@ -5,50 +5,63 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Iterator;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-; // TODO: Als Singleton implementieren
+public enum DatabaseConnectionEssentials {
+	INSTANCE;
 
-public class DatabaseConnectionEssentials {
+	private Logger dBEssentialsLogger = LogManager.getLogger(DatabaseConnectionEssentials.class.getName());
 	
 	private String url;
 	private String username;
 	private String password;
-	
+
 	public String getUrl() {
 		return url;
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
-	
-	protected static DatabaseConnectionEssentials readEssentials() {
-		try {
-			String srcFile = System.getProperty("user.dir") + "/src/main/resources/DBessentials.json";
+
+	DatabaseConnectionEssentials() {
+		dBEssentialsLogger.info("Reading database essentials.");
+		readDatabaseConnectionEssentials();
+	}
+
+	private void readDatabaseConnectionEssentials() {
+
+		String srcFile = System.getProperty("user.dir") + "/src/main/resources/DBessentials.json";
+		try (Reader reader = new FileReader(srcFile);) {
+
 			JSONParser parser = new JSONParser();
-			Reader reader = new FileReader(srcFile);
-			
+
 			Object jsonInput = parser.parse(reader);
 			JSONObject jsonInputObject = (JSONObject) jsonInput;
-			
-			DatabaseConnectionEssentials essentials = new DatabaseConnectionEssentials();
-			
-			essentials.url = (String) jsonInputObject.get("URL");
-			essentials.username = (String) jsonInputObject.get("Username");
-			essentials.password = (String) jsonInputObject.get("Password");
-			
-			return essentials;
-			
+
+			url = (String) jsonInputObject.get("URL");
+			username = (String) jsonInputObject.get("Username");
+			password = (String) jsonInputObject.get("Password");
+
 		} catch (Exception e) {
 			throw new RuntimeException("Error reading database credentials.", e);
 		}
+	}
+
+	public void flushDatabaseConnectionEssentials() {
+		url = "";
+		username = "";
+		password = "";
+
+		dBEssentialsLogger.info("Flushed database essentials.");
 	}
 }

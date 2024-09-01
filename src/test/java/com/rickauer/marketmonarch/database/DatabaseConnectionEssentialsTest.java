@@ -1,18 +1,27 @@
 package com.rickauer.marketmonarch.database;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
+@TestMethodOrder(MethodOrderer.MethodName.class)
 class DatabaseConnectionEssentialsTest {
 
 	@Test
-	void test() {
-		DatabaseConnectionEssentials conn = DatabaseConnectionEssentials.readEssentials();
-		assertEquals("http://test.url", conn.getUrl());
-		assertEquals("test-user", conn.getUsername());
-		assertEquals("1234", conn.getPassword());
+	void A_initializationTest() {
+		assertEquals("http://test.url", DatabaseConnectionEssentials.INSTANCE.getUrl());
+		assertEquals("test-user", DatabaseConnectionEssentials.INSTANCE.getUsername());
+		assertEquals("1234", DatabaseConnectionEssentials.INSTANCE.getPassword());
+	}
+	
+	@Test
+	void B_flushTest() {
+		DatabaseConnectionEssentials.INSTANCE.flushDatabaseConnectionEssentials();
+		assertEquals("", DatabaseConnectionEssentials.INSTANCE.getUrl());
+		assertEquals("", DatabaseConnectionEssentials.INSTANCE.getUsername());
+		assertEquals("", DatabaseConnectionEssentials.INSTANCE.getPassword());
 	}
 
 }
