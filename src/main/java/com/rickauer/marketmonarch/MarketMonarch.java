@@ -17,8 +17,12 @@ public class MarketMonarch {
 	public static void main(String[] args) {
 		try {
 			marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
+			// Get DB credentials 
 			DatabaseConnectionEssentials.INSTANCE.getUsername();
 			DatabaseConnectionEssentials.INSTANCE.getPassword();
+			DatabaseConnectionEssentials.INSTANCE.flushDatabaseConnectionEssentials();
+			// Query other credentials
+			// Make money
 		} catch (Throwable t) {
 			// Workaround because usage of e will throw exception.
 			String stackTrace = ExceptionUtils.getStackTrace(t);
