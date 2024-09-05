@@ -14,7 +14,8 @@ import org.json.simple.parser.ParseException;
 
 public enum DatabaseConnectionEssentials {
 	INSTANCE;
-
+	
+	private static final String SOURCE_FILE = "./src/main/resources/DBessentials.json";
 	private Logger dBEssentialsLogger = LogManager.getLogger(DatabaseConnectionEssentials.class.getName());
 	
 	private String url;
@@ -40,7 +41,7 @@ public enum DatabaseConnectionEssentials {
 
 	private void readDatabaseConnectionEssentials() {
 
-		String srcFile = System.getProperty("user.dir") + "/src/main/resources/DBessentials.json";
+		String srcFile = SOURCE_FILE;
 		try (Reader reader = new FileReader(srcFile);) {
 
 			JSONParser parser = new JSONParser();

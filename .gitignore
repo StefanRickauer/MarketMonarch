@@ -13,6 +13,7 @@ logs/
 
 # Config file
 src/main/resources/DBessentials.json
+src/test/resources/DBessentialsTest.json
 
 # virtual machine crash logs
 hs_err_pid*
