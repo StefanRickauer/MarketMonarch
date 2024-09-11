@@ -18,12 +18,22 @@ public enum DatabaseConnectionEssentials {
 	private static final String SOURCE_FILE = "./src/main/resources/DBessentials.json";
 	private Logger dBEssentialsLogger = LogManager.getLogger(DatabaseConnectionEssentials.class.getName());
 	
-	private String url;
+	private String urlTestDB;
+	private String urlAPIKey;
+	private String urlFinancialData;
 	private String username;
 	private String password;
 
-	public String getUrl() {
-		return url;
+	public String getUrlTestDB() {
+		return urlTestDB;
+	}
+
+	public String getUrlAPIKey() {
+		return urlAPIKey;
+	}
+	
+	public String getFinancialData() {
+		return urlFinancialData;
 	}
 
 	public String getUsername() {
@@ -49,7 +59,9 @@ public enum DatabaseConnectionEssentials {
 			Object jsonInput = parser.parse(reader);
 			JSONObject jsonInputObject = (JSONObject) jsonInput;
 
-			url = (String) jsonInputObject.get("URL");
+			urlTestDB = (String) jsonInputObject.get("URL-test_db");
+			urlAPIKey = (String) jsonInputObject.get("URL-api_key");
+			urlFinancialData = (String) jsonInputObject.get("URL-financial_data");
 			username = (String) jsonInputObject.get("Username");
 			password = (String) jsonInputObject.get("Password");
 
@@ -59,7 +71,9 @@ public enum DatabaseConnectionEssentials {
 	}
 
 	public void flushDatabaseConnectionEssentials() {
-		url = "";
+		urlTestDB = "";
+		urlAPIKey = "";
+		urlFinancialData = "";
 		username = "";
 		password = "";
 

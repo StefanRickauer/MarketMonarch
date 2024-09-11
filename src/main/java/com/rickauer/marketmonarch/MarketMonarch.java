@@ -18,8 +18,12 @@ public class MarketMonarch {
 		try {
 			marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			// Get DB credentials 
-			DatabaseConnectionEssentials.INSTANCE.getUsername();
-			DatabaseConnectionEssentials.INSTANCE.getPassword();
+			System.out.println("[DEBUG] Displaying contents of credentials file.");
+			System.out.println(DatabaseConnectionEssentials.INSTANCE.getUsername());
+			System.out.println(DatabaseConnectionEssentials.INSTANCE.getPassword());
+			System.out.println(DatabaseConnectionEssentials.INSTANCE.getUrlTestDB());
+			System.out.println(DatabaseConnectionEssentials.INSTANCE.getUrlAPIKey());
+			System.out.println(DatabaseConnectionEssentials.INSTANCE.getFinancialData());
 			DatabaseConnectionEssentials.INSTANCE.flushDatabaseConnectionEssentials();
 			// Query other credentials
 			// Make money

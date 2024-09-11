@@ -20,17 +20,17 @@ class DatabaseConnectionEssentialsTest {
 
 	@Test
 	void A_initializationTest() {
-		assertEquals("jdbc:mysql://localhost:3306/test_db", DatabaseConnectionEssentials.INSTANCE.getUrl());
+		assertEquals("jdbc:mysql://localhost:3306/test_db", DatabaseConnectionEssentials.INSTANCE.getUrlTestDB());
 		assertEquals("root", DatabaseConnectionEssentials.INSTANCE.getUsername());
 		assertTrue(DatabaseConnectionEssentials.INSTANCE.getPassword().length() > 0);
 	}
 
 	@Test
-	void B_flushTest() {
+	void B_queryTest() {
 		String sqlSelectAll = "SELECT * FROM test_table";
 		; // revise: Add asserts
 		try (Connection conn = DriverManager.getConnection(
-				DatabaseConnectionEssentials.INSTANCE.getUrl(), 
+				DatabaseConnectionEssentials.INSTANCE.getUrlTestDB(), 
 				DatabaseConnectionEssentials.INSTANCE.getUsername(), 
 				DatabaseConnectionEssentials.INSTANCE.getPassword());
 			PreparedStatement ps = conn.prepareStatement(sqlSelectAll);
@@ -50,7 +50,7 @@ class DatabaseConnectionEssentialsTest {
 	@Test
 	void C_flushTest() {
 		DatabaseConnectionEssentials.INSTANCE.flushDatabaseConnectionEssentials();
-		assertEquals("", DatabaseConnectionEssentials.INSTANCE.getUrl());
+		assertEquals("", DatabaseConnectionEssentials.INSTANCE.getUrlTestDB());
 		assertEquals("", DatabaseConnectionEssentials.INSTANCE.getUsername());
 		assertEquals("", DatabaseConnectionEssentials.INSTANCE.getPassword());
 	}
