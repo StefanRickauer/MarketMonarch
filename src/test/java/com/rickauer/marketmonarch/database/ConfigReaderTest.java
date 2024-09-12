@@ -15,14 +15,16 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.rickauer.marketmonarch.configuration.ConfigReader;
+
 @TestMethodOrder(MethodOrderer.MethodName.class)
-class DatabaseConnectionEssentialsTest {
+class ConfigReaderTest {
 
 	@Test
 	void A_initializationTest() {
-		assertEquals("jdbc:mysql://localhost:3306/test_db", DatabaseConnectionEssentials.INSTANCE.getUrlTestDB());
-		assertEquals("root", DatabaseConnectionEssentials.INSTANCE.getUsername());
-		assertTrue(DatabaseConnectionEssentials.INSTANCE.getPassword().length() > 0);
+		assertEquals("jdbc:mysql://localhost:3306/test_db", ConfigReader.INSTANCE.getUrlTestDB());
+		assertEquals("root", ConfigReader.INSTANCE.getUsername());
+		assertTrue(ConfigReader.INSTANCE.getPassword().length() > 0);
 	}
 
 	@Test
@@ -30,9 +32,9 @@ class DatabaseConnectionEssentialsTest {
 		String sqlSelectAll = "SELECT * FROM test_table";
 		; // revise: Add asserts
 		try (Connection conn = DriverManager.getConnection(
-				DatabaseConnectionEssentials.INSTANCE.getUrlTestDB(), 
-				DatabaseConnectionEssentials.INSTANCE.getUsername(), 
-				DatabaseConnectionEssentials.INSTANCE.getPassword());
+				ConfigReader.INSTANCE.getUrlTestDB(), 
+				ConfigReader.INSTANCE.getUsername(), 
+				ConfigReader.INSTANCE.getPassword());
 			PreparedStatement ps = conn.prepareStatement(sqlSelectAll);
 			ResultSet rs = ps.executeQuery();)
 				{
@@ -49,9 +51,9 @@ class DatabaseConnectionEssentialsTest {
 
 	@Test
 	void C_flushTest() {
-		DatabaseConnectionEssentials.INSTANCE.flushDatabaseConnectionEssentials();
-		assertEquals("", DatabaseConnectionEssentials.INSTANCE.getUrlTestDB());
-		assertEquals("", DatabaseConnectionEssentials.INSTANCE.getUsername());
-		assertEquals("", DatabaseConnectionEssentials.INSTANCE.getPassword());
+		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+		assertEquals("", ConfigReader.INSTANCE.getUrlTestDB());
+		assertEquals("", ConfigReader.INSTANCE.getUsername());
+		assertEquals("", ConfigReader.INSTANCE.getPassword());
 	}
 }

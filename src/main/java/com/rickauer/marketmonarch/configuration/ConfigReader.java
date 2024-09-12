@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.database;
+package com.rickauer.marketmonarch.configuration;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,11 +12,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public enum DatabaseConnectionEssentials {
+public enum ConfigReader {
 	INSTANCE;
 	
-	private static final String SOURCE_FILE = "./src/main/resources/DBessentials.json";
-	private Logger dBEssentialsLogger = LogManager.getLogger(DatabaseConnectionEssentials.class.getName());
+	private static final String SOURCE_FILE = "./src/main/resources/Configuration.json";
+	private Logger configReaderLogger = LogManager.getLogger(ConfigReader.class.getName());
 	
 	private String urlTestDB;
 	private String urlAPIKey;
@@ -44,8 +44,8 @@ public enum DatabaseConnectionEssentials {
 		return password;
 	}
 
-	DatabaseConnectionEssentials() {
-		dBEssentialsLogger.info("Reading database essentials.");
+	ConfigReader() {
+		configReaderLogger.info("Reading database essentials.");
 		readDatabaseConnectionEssentials();
 	}
 
@@ -77,6 +77,6 @@ public enum DatabaseConnectionEssentials {
 		username = "";
 		password = "";
 
-		dBEssentialsLogger.info("Flushed database essentials.");
+		configReaderLogger.info("Flushed database essentials.");
 	}
 }

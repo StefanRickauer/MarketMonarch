@@ -3,7 +3,9 @@ package com.rickauer.marketmonarch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rickauer.marketmonarch.database.DatabaseConnectionEssentials;
+import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.configuration.FileSupplier;
+import com.rickauer.marketmonarch.reporting.LineGraphCreator;
 
 import org.apache.commons.lang3.exception.*;
 
@@ -19,12 +21,17 @@ public class MarketMonarch {
 			marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			// Get DB credentials 
 			System.out.println("[DEBUG] Displaying contents of credentials file.");
-			System.out.println(DatabaseConnectionEssentials.INSTANCE.getUsername());
-			System.out.println(DatabaseConnectionEssentials.INSTANCE.getPassword());
-			System.out.println(DatabaseConnectionEssentials.INSTANCE.getUrlTestDB());
-			System.out.println(DatabaseConnectionEssentials.INSTANCE.getUrlAPIKey());
-			System.out.println(DatabaseConnectionEssentials.INSTANCE.getFinancialData());
-			DatabaseConnectionEssentials.INSTANCE.flushDatabaseConnectionEssentials();
+			System.out.println(ConfigReader.INSTANCE.getUsername());
+			System.out.println(ConfigReader.INSTANCE.getPassword());
+			System.out.println(ConfigReader.INSTANCE.getUrlTestDB());
+			System.out.println(ConfigReader.INSTANCE.getUrlAPIKey());
+			System.out.println(ConfigReader.INSTANCE.getFinancialData());
+			ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+			
+			FileSupplier.createTemporaryFolder();
+//			LineGraphCreator creator = new LineGraphCreator();
+//			creator.createLineGraph();
+			FileSupplier.deleteTemporaryFolder();
 			// Query other credentials
 			// Make money
 		} catch (Throwable t) {

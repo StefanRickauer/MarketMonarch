@@ -1,0 +1,7 @@
+{
+	"Password":"diMqQx_7:4#wQoYZ",
+	"URL-test_db":"jdbc:mysql://localhost:3306/test_db",
+	"URL-api_key":"jdbc:mysql://localhost:3306/api_key",
+	"URL-financial_data":"jdbc:mysql://localhost:3306/financial_data",
+	"Username":"root"
+}
