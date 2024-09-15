@@ -13,15 +13,15 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import com.rickauer.marketmonarch.configuration.FileSupplier;
 
-public class LineGraphCreator {
+public class LineChartCreator {
 	
-	private static final String CWD = System.getProperty("user.dir");
+	public static final String LINECHART = FileSupplier.printTemporaryFolder() + "/Linechart.jpeg";
 	
-	private static Logger lineGraphCreatorLogger = LogManager.getLogger(LineGraphCreator.class.getName());
+	private static Logger lineGraphCreatorLogger = LogManager.getLogger(LineChartCreator.class.getName());
 	
 	DefaultCategoryDataset tradingData;
 	
-	public LineGraphCreator() {
+	public LineChartCreator() {
 		tradingData = new DefaultCategoryDataset();
 	}
 	
@@ -40,11 +40,10 @@ public class LineGraphCreator {
 		
 		int width = 1280; 
 		int height = 960;
-		String memoryLocation = FileSupplier.printTemporaryFolder() + "/Linechart.jpeg";
-		File lineGraph = new File(memoryLocation);
+		File lineGraph = new File(LINECHART);
 		try {
 			ChartUtils.saveChartAsJPEG(lineGraph, lineChartObject, width, height);
-			lineGraphCreatorLogger.info("Line graph saved to: " + memoryLocation);
+			lineGraphCreatorLogger.info("Line graph saved to: " + LINECHART);
 		} catch (IOException e) {
 			throw new RuntimeException("Could not save line graph.", e);
 		}

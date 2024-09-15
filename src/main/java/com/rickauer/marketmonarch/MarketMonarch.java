@@ -5,7 +5,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.configuration.FileSupplier;
-import com.rickauer.marketmonarch.reporting.LineGraphCreator;
+import com.rickauer.marketmonarch.reporting.LineChartCreator;
+
+import java.awt.Desktop;
+import java.io.File;
 
 import org.apache.commons.lang3.exception.*;
 
@@ -29,9 +32,11 @@ public class MarketMonarch {
 			ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 			
 			FileSupplier.createTemporaryFolder();
-//			LineGraphCreator creator = new LineGraphCreator();
-//			creator.createLineGraph();
+			LineChartCreator creator = new LineChartCreator();
+			creator.createLineGraph();
+			Desktop.getDesktop().open(new File(LineChartCreator.LINECHART));
 			FileSupplier.deleteTemporaryFolder();
+			
 			// Query other credentials
 			// Make money
 		} catch (Throwable t) {

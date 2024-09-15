@@ -7,6 +7,9 @@
 *.tar.gz
 *.rar
 
+# Temporary Folder
+temp/
+
 # Log file
 logs/
 *.log

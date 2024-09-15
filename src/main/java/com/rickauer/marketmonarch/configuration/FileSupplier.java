@@ -12,7 +12,7 @@ public class FileSupplier {
 	public static String printWorkingDirectory() {
 		return System.getProperty("user.dir");
 	}
-	
+
 	public static String printTemporaryFolder() {
 		return printWorkingDirectory() + "/temp";
 	}
@@ -22,7 +22,7 @@ public class FileSupplier {
 		fileSupplierLogger.info("Creating temporary folder.");
 
 		File temp = new File(printTemporaryFolder());
-
+		
 		if (!temp.exists()) {
 			temp.mkdir();
 			fileSupplierLogger.info("Created '" + temp.getAbsolutePath() + "'.");
@@ -32,16 +32,20 @@ public class FileSupplier {
 	}
 
 	public static void deleteTemporaryFolder() {
-		; // auch Inhalt des Ordners löschen, falls vorhanden.
-		fileSupplierLogger.info("Deleting temporary folder.");
+		deleteTemporaryFolderRecursively(new File(printTemporaryFolder()));
+	}
 
-		File temp = new File(printTemporaryFolder());
+	private static void deleteTemporaryFolderRecursively(File file) {
 
-		if (!temp.exists()) {
-			fileSupplierLogger.info("Temporary folder: '" + temp.getAbsolutePath() + "' does not exist.");
-		} else {
-			temp.delete();
-			fileSupplierLogger.info("Deleted '" + temp.getAbsolutePath() + "'.");
-		}
+		fileSupplierLogger.info("Processing: '" + file + "'.");
+		
+		if (file.isDirectory()) {
+			File[] directoryContent = file.listFiles();
+			for (File actualFile : directoryContent) {
+				deleteTemporaryFolderRecursively(actualFile);
+			}
+		} 
+		file.delete();
+		fileSupplierLogger.info("Deleted: '" + file + "'.");
 	}
 }
