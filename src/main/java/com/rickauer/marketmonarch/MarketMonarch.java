@@ -31,12 +31,6 @@ public class MarketMonarch {
 			System.out.println(ConfigReader.INSTANCE.getFinancialData());
 			ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 			
-			FileSupplier.createTemporaryFolder();
-			LineChartCreator creator = new LineChartCreator();
-			creator.createLineGraph();
-			Desktop.getDesktop().open(new File(LineChartCreator.LINECHART));
-			FileSupplier.deleteTemporaryFolder();
-			
 			// Query other credentials
 			// Make money
 		} catch (Throwable t) {

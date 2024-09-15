@@ -29,13 +29,6 @@ public class LineChartCreator {
 		
 		lineGraphCreatorLogger.info("Creating line graph.");
 		
-		; // Abfrage funktioniert nicht
-		if (tradingData == null) {
-			lineGraphCreatorLogger.error("Missing data: Unable to create line graph.");
-			throw new UnsupportedOperationException("No trading data present. Unable to create chart.");
-		}
-		
-		// Hier müssen Daten bereits in tradingData gespeichert sein.
 		JFreeChart lineChartObject = ChartFactory.createLineChart("Invested and Total Capital, Return", "Trading Day", "Euro", tradingData, PlotOrientation.VERTICAL, true, true, false);
 		
 		int width = 1280; 
