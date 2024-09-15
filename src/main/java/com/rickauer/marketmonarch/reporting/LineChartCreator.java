@@ -16,12 +16,12 @@ import com.rickauer.marketmonarch.configuration.FileSupplier;
 public class LineChartCreator {
 	
 	public static final String LINECHART = FileSupplier.printTemporaryFolder() + "/Linechart.jpeg";
-	
 	private static Logger lineGraphCreatorLogger = LogManager.getLogger(LineChartCreator.class.getName());
 	
-	DefaultCategoryDataset tradingData;
+	private DefaultCategoryDataset tradingData;
 	
 	public LineChartCreator() {
+		; // Constructor must query database for trading stats
 		tradingData = new DefaultCategoryDataset();
 	}
 	
