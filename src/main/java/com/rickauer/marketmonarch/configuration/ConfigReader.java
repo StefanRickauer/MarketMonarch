@@ -1,5 +1,6 @@
 package com.rickauer.marketmonarch.configuration;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -24,6 +25,14 @@ public enum ConfigReader {
 	private String username;
 	private String password;
 
+	public boolean isSourceFilePresent() {
+		return new File(SOURCE_FILE).exists();
+	}
+	
+	public String getSourceFile() {
+		return SOURCE_FILE;
+	}
+	
 	public String getUrlTestDB() {
 		return urlTestDB;
 	}
@@ -45,6 +54,14 @@ public enum ConfigReader {
 	}
 
 	ConfigReader() {
+		urlTestDB = "";
+		urlAPIKey = "";
+		urlFinancialData = "";
+		username = "";
+		password = "";
+	}
+	
+	public void initializeConfigReader() {
 		configReaderLogger.info("Reading database essentials.");
 		readDatabaseConnectionEssentials();
 	}

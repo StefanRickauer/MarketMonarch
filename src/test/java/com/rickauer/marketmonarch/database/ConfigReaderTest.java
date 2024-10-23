@@ -22,6 +22,7 @@ class ConfigReaderTest {
 
 	@Test
 	void A_initializationTest() {
+		ConfigReader.INSTANCE.initializeConfigReader();
 		assertEquals("jdbc:mysql://localhost:3306/test_db", ConfigReader.INSTANCE.getUrlTestDB());
 		assertEquals("root", ConfigReader.INSTANCE.getUsername());
 		assertTrue(ConfigReader.INSTANCE.getPassword().length() > 0);
@@ -55,5 +56,10 @@ class ConfigReaderTest {
 		assertEquals("", ConfigReader.INSTANCE.getUrlTestDB());
 		assertEquals("", ConfigReader.INSTANCE.getUsername());
 		assertEquals("", ConfigReader.INSTANCE.getPassword());
+	}
+	
+	@Test
+	void D_existenceTest() {
+		assertTrue(ConfigReader.INSTANCE.isSourceFilePresent());
 	}
 }

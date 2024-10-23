@@ -22,8 +22,10 @@ public class MarketMonarch {
 	public static void main(String[] args) {
 		try {
 			marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
+			ensureOperationalReadiness();
 			// Get DB credentials 
 			System.out.println("[DEBUG] Displaying contents of credentials file.");
+			ConfigReader.INSTANCE.initializeConfigReader();
 			System.out.println(ConfigReader.INSTANCE.getUsername());
 			System.out.println(ConfigReader.INSTANCE.getPassword());
 			System.out.println(ConfigReader.INSTANCE.getUrlTestDB());
@@ -38,5 +40,15 @@ public class MarketMonarch {
 			String stackTrace = ExceptionUtils.getStackTrace(t);
 			marketMonarchLogger.error(stackTrace);
 		}
+	}
+	
+	private static void ensureOperationalReadiness() {
+		marketMonarchLogger.info("Checking operational readiness...");
+		if (!ConfigReader.INSTANCE.isSourceFilePresent()) {
+			marketMonarchLogger.error("Check for operational readiness failed. Could not load operating environment. Missing configuration file.");
+			throw new RuntimeException("Could not find '" + ConfigReader.INSTANCE.getSourceFile() + "'.");
+		}
+		// do remaining checks
+		marketMonarchLogger.info("Checked operational readiness.");
 	}
 }
