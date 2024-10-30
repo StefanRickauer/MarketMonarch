@@ -15,7 +15,7 @@ import org.apache.commons.lang3.exception.*;
 public class MarketMonarch {
 
 	private static final String PROGRAM	= "MarketMonarch";
-	private static final String VERSION	= "0.01";
+	private static final String VERSION	= "0.02";
 	
 	private static Logger marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 	
@@ -44,11 +44,7 @@ public class MarketMonarch {
 	
 	private static void ensureOperationalReadiness() {
 		marketMonarchLogger.info("Checking operational readiness...");
-		if (!ConfigReader.INSTANCE.isSourceFilePresent()) {
-			marketMonarchLogger.error("Check for operational readiness failed. Could not load operating environment. Missing configuration file.");
-			throw new RuntimeException("Could not find '" + ConfigReader.INSTANCE.getSourceFile() + "'.");
-		}
-		// do remaining checks
+		HealthChecker.runHealthCheck();
 		marketMonarchLogger.info("Checked operational readiness.");
 	}
 }
