@@ -31,5 +31,7 @@ public class HealthChecker {
 		FinancialDataAccess financeData = new FinancialDataAccess(false, ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
 		if (!financeData.isReadyForOperation(5))
 			System.err.println("Could not access financial data.");
+		
+		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 }
