@@ -1,5 +1,9 @@
 package com.rickauer.marketmonarch;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,16 +15,40 @@ import com.rickauer.marketmonarch.db.FinancialDataAccess;
 public class HealthChecker {
 	
 	private static Logger healthCheckerLogger = LogManager.getLogger(HealthChecker.class.getName()); 
+	private List<Verifyable> typesToCheck;
 	
-	private HealthChecker() {
-		throw new UnsupportedOperationException("The class '" + HealthChecker.class.getCanonicalName() + "' is not meant to be instanciated.");
+	public HealthChecker() {
+		typesToCheck = new ArrayList<>();
 	}
 	
-	public static void runHealthCheck() {
+	public void runHealthCheck() {
 		
-		if (!ConfigReader.INSTANCE.isSourceFilePresent()) {
-			healthCheckerLogger.error("Check for operational readiness failed. Could not load operating environment. Missing configuration file.");
-			throw new RuntimeException("Could not find '" + ConfigReader.INSTANCE.getSourceFile() + "'.");
+		int operationalTypes = typesToCheck.size();
+		int systemCriticalFailures = 0;
+		boolean result = false;
+		
+		for (Verifyable system : typesToCheck) {
+			
+			result = system.runHealthCheck(); 
+			
+			if (!result) {
+				operationalTypes--;
+				healthCheckerLogger.info("Health check for '" + system.getClass().getCanonicalName() + "' failed.");
+			}
+			
+			if (system.isCoreType() && (!result))
+				systemCriticalFailures++;
+		}
+		
+		;// hier weiter
+		
+	
+		healthCheckerLogger.info("Check complete: " + operationalTypes + " out of "+ typesToCheck.size() + " operational.\n"
+				+ systemCriticalFailures + "system critical failures detected.");
+		
+		
+		if (systemCriticalFailures > 0) {
+			throw new RuntimeException("Critical failures detected. Unable to proceed.");
 		}
 		ConfigReader.INSTANCE.initializeConfigReader();
 		

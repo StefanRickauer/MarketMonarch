@@ -44,7 +44,7 @@ public class MarketMonarch {
 	
 	private static void ensureOperationalReadiness() {
 		marketMonarchLogger.info("Checking operational readiness...");
-		HealthChecker.runHealthCheck();
+		new HealthChecker().runHealthCheck();
 		marketMonarchLogger.info("Checked operational readiness.");
 	}
 }
