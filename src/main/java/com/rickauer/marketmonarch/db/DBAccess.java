@@ -7,9 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.rickauer.marketmonarch.utils.Visitor;
+
 ; // Unvollständing preparedStatement noch einbauen. close()-Methode überarbeiten -> wenn jetzt bei erstem Versuch eine Exception ausgelöst wird, bleiben die anderen offen
 
-public abstract class DBAccess {
+public abstract class DBAccess implements Visitor {
 	private boolean isEssentialForTrading;
 
 	private Connection connect;

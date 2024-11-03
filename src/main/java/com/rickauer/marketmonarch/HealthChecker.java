@@ -11,6 +11,10 @@ import org.apache.logging.log4j.Logger;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 import com.rickauer.marketmonarch.db.FinancialDataAccess;
+import com.rickauer.marketmonarch.utils.IsCoreTypeCheckVisitor;
+import com.rickauer.marketmonarch.utils.OperationalCheckVisitor;
+import com.rickauer.marketmonarch.utils.Verifyable;
+import com.rickauer.marketmonarch.utils.Visitor;
 
 public class HealthChecker {
 	
@@ -21,45 +25,21 @@ public class HealthChecker {
 		typesToCheck = new ArrayList<>();
 	}
 	
+	public void add(Verifyable verifyable) {
+		typesToCheck.add(verifyable);
+	}
+	
 	public void runHealthCheck() {
 		
-		int operationalTypes = typesToCheck.size();
-		int systemCriticalFailures = 0;
-		boolean result = false;
+		OperationalCheckVisitor opCheckVisitor = new OperationalCheckVisitor();
+		IsCoreTypeCheckVisitor coreCheckVisitor = new IsCoreTypeCheckVisitor();
 		
-		for (Verifyable system : typesToCheck) {
+		for (Verifyable element : typesToCheck) {
+			element.accept(opCheckVisitor);
+			element.accept(coreCheckVisitor);
 			
-			result = system.runHealthCheck(); 
-			
-			if (!result) {
-				operationalTypes--;
-				healthCheckerLogger.info("Health check for '" + system.getClass().getCanonicalName() + "' failed.");
-			}
-			
-			if (system.isCoreType() && (!result))
-				systemCriticalFailures++;
+			System.out.println("[DEBUG] is operational: " + opCheckVisitor.getOperational());
+			System.out.println("[DEBUG] is core type:   " + coreCheckVisitor.getCoreType());
 		}
-		
-		;// hier weiter
-		
-	
-		healthCheckerLogger.info("Check complete: " + operationalTypes + " out of "+ typesToCheck.size() + " operational.\n"
-				+ systemCriticalFailures + "system critical failures detected.");
-		
-		
-		if (systemCriticalFailures > 0) {
-			throw new RuntimeException("Critical failures detected. Unable to proceed.");
-		}
-		ConfigReader.INSTANCE.initializeConfigReader();
-		
-		ApiKeyAccess apiData = new ApiKeyAccess(true, ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
-		if (!apiData.isReadyForOperation(5))
-			throw new RuntimeException("Could not access API keys.");
-		
-		FinancialDataAccess financeData = new FinancialDataAccess(false, ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
-		if (!financeData.isReadyForOperation(5))
-			System.err.println("Could not access financial data.");
-		
-		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 }

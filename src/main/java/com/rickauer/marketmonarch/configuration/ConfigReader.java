@@ -13,7 +13,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.rickauer.marketmonarch.Verifyable;
+import com.rickauer.marketmonarch.utils.Verifyable;
+import com.rickauer.marketmonarch.utils.Visitor;
 
 public enum ConfigReader implements Verifyable {
 	INSTANCE;
@@ -99,18 +100,7 @@ public enum ConfigReader implements Verifyable {
 		configReaderLogger.info("Flushed database essentials.");
 	}
 
-	@Override
-	public boolean runHealthCheck() {
-		
-		if (!ConfigReader.INSTANCE.isSourceFilePresent()) {
-			configReaderLogger.error("Check for operational readiness failed. Could not load operating environment. Missing configuration file.");
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean isCoreType() {
-		return true;
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
 }

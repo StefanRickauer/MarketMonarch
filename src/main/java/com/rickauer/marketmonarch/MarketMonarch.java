@@ -17,7 +17,10 @@ public class MarketMonarch {
 	private static final String PROGRAM	= "MarketMonarch";
 	private static final String VERSION	= "0.02";
 	
+	private static HealthChecker healthChecker = new HealthChecker();
+	
 	private static Logger marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
+	
 	
 	public static void main(String[] args) {
 		try {
@@ -43,8 +46,10 @@ public class MarketMonarch {
 	}
 	
 	private static void ensureOperationalReadiness() {
+		marketMonarchLogger.info("Preparing for operational readiness check...");
+		healthChecker.add(ConfigReader.INSTANCE);
 		marketMonarchLogger.info("Checking operational readiness...");
-		new HealthChecker().runHealthCheck();
+		healthChecker.runHealthCheck();
 		marketMonarchLogger.info("Checked operational readiness.");
 	}
 }
