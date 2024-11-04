@@ -44,7 +44,7 @@ public enum ConfigReader implements Verifyable {
 		return urlAPIKey;
 	}
 	
-	public String getFinancialData() {
+	public String getUrlFinancialData() {
 		return urlFinancialData;
 	}
 

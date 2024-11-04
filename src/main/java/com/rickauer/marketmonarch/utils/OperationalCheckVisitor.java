@@ -6,44 +6,37 @@ import com.rickauer.marketmonarch.db.FinancialDataAccess;
 
 public class OperationalCheckVisitor implements Visitor {
 
-	private boolean isOperational;
+	private boolean _isOperational;
 	
 	public OperationalCheckVisitor() {
-		isOperational = false;
+		_isOperational = false;
 	}
 	
 	public boolean getOperational() {
-		return isOperational;
+		return _isOperational;
 	}
 	
 	@Override
 	public void visit(ConfigReader config) {
-		resetOperationalFlag();
 		
 		ConfigReader.INSTANCE.initializeConfigReader();
 		
-		if (ConfigReader.INSTANCE.getFinancialData().isEmpty())
-			isOperational = false;
+		if (ConfigReader.INSTANCE.getUrlFinancialData().isEmpty())
+			_isOperational = false;
 		
-		isOperational = true;
+		_isOperational = true;
 		
 		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 
 	@Override
 	public void visit(ApiKeyAccess apiAccess) {
-		// TODO Auto-generated method stub
-		
+		_isOperational = apiAccess.isReadyForOperation(5);
 	}
 
 	@Override
 	public void visit(FinancialDataAccess finAccess) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	private void resetOperationalFlag() {
-		isOperational = false;
+		_isOperational = finAccess.isReadyForOperation(5);
 	}
 	
 }

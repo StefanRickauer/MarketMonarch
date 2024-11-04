@@ -6,31 +6,28 @@ import com.rickauer.marketmonarch.db.FinancialDataAccess;
 
 public class IsCoreTypeCheckVisitor implements Visitor {
 
-	private boolean isCoreType;
+	private boolean _isCoreType;
 	
 	public boolean getCoreType() {
-		return isCoreType;
+		return _isCoreType;
 	}
 	
 	public IsCoreTypeCheckVisitor() {
-		isCoreType = false;
+		_isCoreType = false;
 	}
 	
 	@Override
 	public void visit(ConfigReader config) {
-		// TODO Auto-generated method stub
-		
+		_isCoreType = true;
 	}
 
 	@Override
 	public void visit(ApiKeyAccess apiAccess) {
-		// TODO Auto-generated method stub
-		
+		_isCoreType = true;
 	}
 
 	@Override
 	public void visit(FinancialDataAccess finAccess) {
-		// TODO Auto-generated method stub
-		
+		_isCoreType = false;
 	}
 }

@@ -7,21 +7,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
 ; // Unvollständing preparedStatement noch einbauen. close()-Methode überarbeiten -> wenn jetzt bei erstem Versuch eine Exception ausgelöst wird, bleiben die anderen offen
 
-public abstract class DBAccess implements Visitor {
-	private boolean isEssentialForTrading;
+public abstract class DBAccess implements Verifyable {
 
 	private Connection connect;
 	private Statement statement;
 	private PreparedStatement preparedStatement;
 	private ResultSet resultSet;
 
-	public DBAccess(final boolean essential, final String dbUrl, final String user, final String password) {
-		
-		isEssentialForTrading = essential;
+	public DBAccess(final String dbUrl, final String user, final String password) {
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -30,10 +28,6 @@ public abstract class DBAccess implements Visitor {
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new RuntimeException("Error creating object class: " + DBAccess.class.getCanonicalName());
 		}
-	}
-	
-	public boolean isEssentialForTrading() {
-		return isEssentialForTrading;
 	}
 	
 	public boolean isReadyForOperation(int timeout) {

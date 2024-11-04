@@ -1,29 +1,18 @@
 package com.rickauer.marketmonarch.db;
 
 import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.utils.Visitor;
 
 public class ApiKeyAccess extends DBAccess {
 
-	public ApiKeyAccess(boolean essential, String dbUrl, String user, String password) {
-		super(essential, dbUrl, user, password);
+	public ApiKeyAccess(String dbUrl, String user, String password) {
+		super(dbUrl, user, password);
 	}
 
 	@Override
-	public void visit(ConfigReader config) {
-		// TODO Auto-generated method stub
-		
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
 	}
-
-	@Override
-	public void visit(ApiKeyAccess apiAccess) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(FinancialDataAccess finAccess) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
+	
 }

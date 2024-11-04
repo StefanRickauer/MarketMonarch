@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.configuration.FileSupplier;
+import com.rickauer.marketmonarch.db.ApiKeyAccess;
+import com.rickauer.marketmonarch.db.FinancialDataAccess;
 import com.rickauer.marketmonarch.reporting.LineChartCreator;
 
 import java.awt.Desktop;
@@ -15,41 +17,50 @@ import org.apache.commons.lang3.exception.*;
 public class MarketMonarch {
 
 	private static final String PROGRAM	= "MarketMonarch";
-	private static final String VERSION	= "0.02";
+	private static final String VERSION	= "0.03";
 	
-	private static HealthChecker healthChecker = new HealthChecker();
+	private static HealthChecker _healthChecker = new HealthChecker();
+	private static ApiKeyAccess _apiAccess;
+	private static FinancialDataAccess _finAccess;
+
+	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 	
-	private static Logger marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
-	
+	static {
+		ConfigReader.INSTANCE.initializeConfigReader();
+		
+		_apiAccess = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
+		_finAccess = new FinancialDataAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
+		
+		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+	}
 	
 	public static void main(String[] args) {
 		try {
-			marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
+			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			ensureOperationalReadiness();
-			// Get DB credentials 
-			System.out.println("[DEBUG] Displaying contents of credentials file.");
-			ConfigReader.INSTANCE.initializeConfigReader();
-			System.out.println(ConfigReader.INSTANCE.getUsername());
-			System.out.println(ConfigReader.INSTANCE.getPassword());
-			System.out.println(ConfigReader.INSTANCE.getUrlTestDB());
-			System.out.println(ConfigReader.INSTANCE.getUrlAPIKey());
-			System.out.println(ConfigReader.INSTANCE.getFinancialData());
-			ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 			
 			// Query other credentials
 			// Make money
 		} catch (Throwable t) {
 			// Workaround because usage of e will throw exception.
 			String stackTrace = ExceptionUtils.getStackTrace(t);
-			marketMonarchLogger.error(stackTrace);
+			_marketMonarchLogger.error(stackTrace);
 		}
 	}
 	
 	private static void ensureOperationalReadiness() {
-		marketMonarchLogger.info("Preparing for operational readiness check...");
-		healthChecker.add(ConfigReader.INSTANCE);
-		marketMonarchLogger.info("Checking operational readiness...");
-		healthChecker.runHealthCheck();
-		marketMonarchLogger.info("Checked operational readiness.");
+		_marketMonarchLogger.info("Preparing for operational readiness check...");
+
+		_healthChecker.add(ConfigReader.INSTANCE);
+		_healthChecker.add(_apiAccess);
+		_healthChecker.add(_finAccess);
+		
+		_marketMonarchLogger.info("Checking operational readiness...");
+		_healthChecker.runHealthCheck();
+		_marketMonarchLogger.info("Checked operational readiness.");
+		
+		_marketMonarchLogger.info("Evaluating check results...");
+		_healthChecker.analyseCheckResults();
+		_marketMonarchLogger.info("Evaluated check results.");
 	}
 }
