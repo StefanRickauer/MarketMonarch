@@ -7,7 +7,7 @@ import java.io.File;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-class FileSupplierTest {
+public class FileSupplierTest {
 
 	private static final String CWD = System.getProperty("user.dir");
 	private static final String TMP = CWD + "/temp";

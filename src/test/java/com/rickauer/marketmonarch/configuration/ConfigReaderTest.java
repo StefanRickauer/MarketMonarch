@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.database;
+package com.rickauer.marketmonarch.configuration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
-class ConfigReaderTest {
+public class ConfigReaderTest {
 
 	@Test
 	void A_initializationTest() {

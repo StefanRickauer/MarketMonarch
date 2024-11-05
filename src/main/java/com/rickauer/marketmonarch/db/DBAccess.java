@@ -19,6 +19,13 @@ public abstract class DBAccess implements Verifyable {
 	private PreparedStatement preparedStatement;
 	private ResultSet resultSet;
 
+	public DBAccess() {
+		connect = null;
+		statement = null;
+		preparedStatement = null;
+		resultSet = null;
+	}
+	
 	public DBAccess(final String dbUrl, final String user, final String password) {
 		
 		try {
@@ -26,7 +33,7 @@ public abstract class DBAccess implements Verifyable {
 			connect = DriverManager.getConnection(dbUrl, user, password);
 			statement = connect.createStatement();
 		} catch (ClassNotFoundException | SQLException e) {
-			throw new RuntimeException("Error creating object class: " + DBAccess.class.getCanonicalName());
+			throw new RuntimeException("Error creating object.", e);
 		}
 	}
 	

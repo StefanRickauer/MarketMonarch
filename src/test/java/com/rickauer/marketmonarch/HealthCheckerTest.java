@@ -45,6 +45,4 @@ class HealthCheckerTest {
 		_healthChecker.runHealthCheck();
 		assertTrue(_healthChecker.isTypeOperational(_finValid));
 	}
-	
-	;// Fehlschläge hinzufügen sowie Exceptions beim Erstellen nicht valider Datenbankverbindungen
 }

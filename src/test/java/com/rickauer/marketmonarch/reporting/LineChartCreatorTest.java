@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.rickauer.marketmonarch.configuration.FileSupplier;
 
-class LineChartCreatorTest {
+public class LineChartCreatorTest {
 
 	private File lineChart = new File(LineChartCreator.LINECHART);
 	
