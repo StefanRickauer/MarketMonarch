@@ -4,17 +4,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class FileSupplierTest {
 
 	private static final String CWD = System.getProperty("user.dir");
 	private static final String TMP = CWD + "/temp";
 	
 	@Test
-	@Order(1)
-	void creationTest() {
+	void A_creationTest() {
 		FileSupplier.createTemporaryFolder();
 		
 		File temp = new File(TMP);
@@ -22,8 +24,7 @@ public class FileSupplierTest {
 	}
 	
 	@Test
-	@Order(2)
-	void deletionTest() {
+	void B_deletionTest() {
 		
 		@SuppressWarnings("unused")
 		File subfolder = new File(TMP + "/subfolder");
@@ -34,6 +35,7 @@ public class FileSupplierTest {
 		
 		if (!subfolder2.exists()) {
 			System.err.println("Error creating test data. Subfolder2 does not exist.");
+			assertTrue(false);	// Test invalid if checking for deleted folders that never existed
 		}
 		
 		FileSupplier.deleteTemporaryFolder();
