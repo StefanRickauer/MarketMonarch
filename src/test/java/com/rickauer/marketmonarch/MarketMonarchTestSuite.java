@@ -9,7 +9,7 @@ import com.rickauer.marketmonarch.reporting.*;
 
 @Suite
 @SelectClasses({ HealthCheckerTest.class, FileSupplierTest.class, 
-	ConfigReaderTest.class, DBAccessTest.class, LineChartCreatorTest.class})
+	ConfigReaderTest.class, DBAccessTest.class, LineChartCreatorTest.class, ApiKeyAccessTest.class})
 public class MarketMonarchTestSuite {
 	// Nothing to do
 }
