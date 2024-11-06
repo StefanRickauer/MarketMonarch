@@ -20,7 +20,7 @@ public class MarketMonarch {
 	private static final String VERSION	= "0.03";
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
-	private static ApiKeyAccess _apiAccess;
+	public static ApiKeyAccess _apiAccess;
 	private static FinancialDataAccess _finAccess;
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
