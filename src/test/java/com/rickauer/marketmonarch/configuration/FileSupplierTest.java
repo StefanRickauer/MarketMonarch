@@ -29,6 +29,9 @@ public class FileSupplierTest {
 		File subfolder = new File(TMP + "/subfolder");
 		File subfolder2 = new File(TMP + "/subfolder/subfolder2");
 		
+		subfolder.mkdir();
+		subfolder2.mkdir();
+		
 		if (!subfolder2.exists()) {
 			System.err.println("Error creating test data. Subfolder2 does not exist.");
 		}
