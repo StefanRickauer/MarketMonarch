@@ -9,6 +9,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -31,7 +33,11 @@ public class ConfigReaderTest {
 	@Test
 	void B_queryTest() {
 		String sqlSelectAll = "SELECT * FROM test_table";
-		; // revise: Add asserts
+		
+		Map<String, String> expectedValues = new HashMap<>();
+		expectedValues.put("id", "my new value");
+		expectedValues.put("id2", "my new value2");
+		
 		try (Connection conn = DriverManager.getConnection(
 				ConfigReader.INSTANCE.getUrlTestDB(), 
 				ConfigReader.INSTANCE.getUsername(), 
@@ -43,7 +49,8 @@ public class ConfigReaderTest {
 						String id = rs.getString("id");
 						String name = rs.getString("name");
 						
-						System.out.println("id: " + id + "\nname: " + name);
+						assertTrue(expectedValues.containsKey(id));
+						assertTrue(name.equals(expectedValues.get(id)));
 					}
 		} catch (SQLException e) {
 			throw new RuntimeException("Error reading database.", e);

@@ -2,6 +2,7 @@ package com.rickauer.marketmonarch;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,5 +45,11 @@ class HealthCheckerTest {
 		_healthChecker.add(_finValid);
 		_healthChecker.runHealthCheck();
 		assertTrue(_healthChecker.isTypeOperational(_finValid));
+	}
+	
+	@AfterAll
+	public static void tearDown() {
+		_apiValid.close();
+		_finValid.close();
 	}
 }

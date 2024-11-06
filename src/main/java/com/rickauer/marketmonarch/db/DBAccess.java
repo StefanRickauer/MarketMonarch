@@ -7,13 +7,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
-; // Unvollständing preparedStatement noch einbauen. close()-Methode überarbeiten -> wenn jetzt bei erstem Versuch eine Exception ausgelöst wird, bleiben die anderen offen
+; // Unvollständing preparedStatement noch verwenden.
 
 public abstract class DBAccess implements Verifyable {
 
+	private static Logger _dbLogger = LogManager.getLogger(DBAccess.class.getName()); 
+	
 	private Connection connect;
 	private Statement statement;
 	private PreparedStatement preparedStatement;
@@ -63,19 +69,21 @@ public abstract class DBAccess implements Verifyable {
 		try {
 
 			if (resultSet != null) {
-				resultSet.close();
+				_dbLogger.info("Closing: " + resultSet.getClass().getName());
 			}
 			
 			if (statement != null) {
-				statement.close();
+				_dbLogger.info("Closing: " + statement.getClass().getName());
 			}
 			
 			if (connect != null) {
-				connect.close();
+				_dbLogger.info("Closing: " + connect.getClass().getName());
 			}
 			
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		} finally {
+			try { if (resultSet != null) resultSet.close(); } catch (Exception e) { /*Ignore*/ } 
+			try { if (statement != null) statement.close(); } catch (Exception e) { /*Ignore*/ } 
+			try { if (connect != null) connect.close(); } catch (Exception e) { /*Ignore*/ } 
 		}
 	}
 }
