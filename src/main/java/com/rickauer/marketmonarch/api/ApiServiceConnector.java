@@ -6,15 +6,15 @@ import com.rickauer.marketmonarch.db.DBAccess;
 import com.rickauer.marketmonarch.utils.Verifyable;
 
 public abstract class ApiServiceConnector implements Verifyable {
-	private String _provider;
-	private String _token;
-	private String _query;
+	protected String _provider;
+	protected String _token;
 	
-	public ApiServiceConnector(String provider, String token, String query) {
+	public ApiServiceConnector(final String provider, final String token) {
 		_provider = provider;
 		_token = token;
-		_query = query;
 	}
 	
-	
+	public boolean isOperational() {
+		return (!_token.equals("")) && (_token != null); 
+	}
 }

@@ -1,5 +1,6 @@
 package com.rickauer.marketmonarch.utils;
 
+import com.rickauer.marketmonarch.api.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 import com.rickauer.marketmonarch.db.FinancialDataAccess;
@@ -37,6 +38,11 @@ public class OperationalCheckVisitor implements Visitor {
 	@Override
 	public void visit(FinancialDataAccess finAccess) {
 		_isOperational = finAccess.isReadyForOperation(5);
+	}
+	
+	@Override
+	public void visit(MailtrapServiceConnector mailtrap) {
+		_isOperational = mailtrap.isOperational();
 	}
 	
 }

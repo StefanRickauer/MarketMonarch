@@ -65,6 +65,18 @@ public abstract class DBAccess implements Verifyable {
 		}
 	}
 	
+	public String executeSqlQueryAndGetFirstResultAsString(String query, String column) {
+		try {
+			resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				return resultSet.getString(column);
+			} 
+			return "";
+		} catch (Exception e) {
+			throw new RuntimeException("Error executing '" + query + "'.");
+		}
+	}
+	
 	public void close() {
 		try {
 

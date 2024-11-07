@@ -3,6 +3,7 @@ package com.rickauer.marketmonarch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.rickauer.marketmonarch.api.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.configuration.FileSupplier;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
@@ -11,6 +12,7 @@ import com.rickauer.marketmonarch.reporting.LineChartCreator;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.sql.SQLException;
 
 import org.apache.commons.lang3.exception.*;
 
@@ -22,6 +24,7 @@ public class MarketMonarch {
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyAccess _apiAccess;
 	private static FinancialDataAccess _finAccess;
+	private static MailtrapServiceConnector _mailtrapService;
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 	
@@ -30,6 +33,7 @@ public class MarketMonarch {
 		
 		_apiAccess = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
 		_finAccess = new FinancialDataAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
+		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
 		
 		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 	}
@@ -45,6 +49,9 @@ public class MarketMonarch {
 			// Workaround because usage of e will throw exception.
 			String stackTrace = ExceptionUtils.getStackTrace(t);
 			_marketMonarchLogger.error(stackTrace);
+		} finally {
+			_apiAccess.close();
+			_finAccess.close();
 		}
 	}
 	
@@ -54,6 +61,7 @@ public class MarketMonarch {
 		_healthChecker.add(ConfigReader.INSTANCE);
 		_healthChecker.add(_apiAccess);
 		_healthChecker.add(_finAccess);
+		_healthChecker.add(_mailtrapService);
 		
 		_marketMonarchLogger.info("Checking operational readiness...");
 		_healthChecker.runHealthCheck();
