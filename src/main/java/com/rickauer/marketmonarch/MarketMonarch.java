@@ -36,6 +36,8 @@ public class MarketMonarch {
 		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
 		
 		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+		
+		; // add class that creates request-IDs
 	}
 	
 	public static void main(String[] args) {
