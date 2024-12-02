@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rickauer.marketmonarch.api.MailtrapServiceConnector;
+import com.rickauer.marketmonarch.api.StockNewsConnector;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.configuration.FileSupplier;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
@@ -24,6 +25,7 @@ public class MarketMonarch {
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyAccess _apiAccess;
 	private static FinancialDataAccess _finAccess;
+	private static StockNewsConnector _stockNews;
 	private static MailtrapServiceConnector _mailtrapService;
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
@@ -34,7 +36,8 @@ public class MarketMonarch {
 		_apiAccess = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
 		_finAccess = new FinancialDataAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
 		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
-		
+		_stockNews = new StockNewsConnector("stocknewsapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'stocknewsapi'", "token"));
+
 		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 		
 		; // add class that creates request-IDs
