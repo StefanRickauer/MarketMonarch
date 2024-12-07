@@ -3,8 +3,8 @@ package com.rickauer.marketmonarch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rickauer.marketmonarch.api.MailtrapServiceConnector;
-import com.rickauer.marketmonarch.api.StockNewsConnector;
+import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
+import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.configuration.FileSupplier;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
@@ -67,6 +67,7 @@ public class MarketMonarch {
 		_healthChecker.add(_apiAccess);
 		_healthChecker.add(_finAccess);
 		_healthChecker.add(_mailtrapService);
+		_healthChecker.add(_stockNews);
 		
 		_marketMonarchLogger.info("Checking operational readiness...");
 		_healthChecker.runHealthCheck();

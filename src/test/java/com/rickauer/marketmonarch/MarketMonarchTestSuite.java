@@ -4,7 +4,7 @@ import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
 import com.rickauer.marketmonarch.api.MailtrapServiceConnectorTest;
-import com.rickauer.marketmonarch.api.StockNewsConnector;
+import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.configuration.*;
 import com.rickauer.marketmonarch.db.*;
 import com.rickauer.marketmonarch.reporting.*;

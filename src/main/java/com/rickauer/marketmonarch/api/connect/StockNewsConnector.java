@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.api;
+package com.rickauer.marketmonarch.api.connect;
 
 import com.rickauer.marketmonarch.utils.Visitor;
 
