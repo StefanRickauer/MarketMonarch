@@ -5,6 +5,22 @@ import com.ib.client.EReader;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
 
 public class InteractiveBrokersApiController {
+	
+	enum TransactionType {
+		BUY("BUY"), 
+		SELL("SELL");
+		
+		private String action;
+		
+		private TransactionType(String action) {
+			this.action = action;
+		}
+		
+		public String getAction() {
+			return action;
+		}
+	}
+	
 	private InteractiveBrokersApiRequestHandler _requestHandler;
 	private String _host;
 	private int _port;
