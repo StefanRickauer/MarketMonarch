@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
+import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.configuration.FileSupplier;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
@@ -27,10 +28,14 @@ public class MarketMonarch {
 	private static FinancialDataAccess _finAccess;
 	private static StockNewsConnector _stockNews;
 	private static MailtrapServiceConnector _mailtrapService;
+	private static InteractiveBrokersApiController _ibController;
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 	
 	static {
+		
+		_ibController = new InteractiveBrokersApiController();
+
 		ConfigReader.INSTANCE.initializeConfigReader();
 		
 		_apiAccess = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
@@ -40,7 +45,6 @@ public class MarketMonarch {
 
 		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 		
-		; // add class that creates request-IDs
 	}
 	
 	public static void main(String[] args) {
@@ -68,6 +72,7 @@ public class MarketMonarch {
 		_healthChecker.add(_finAccess);
 		_healthChecker.add(_mailtrapService);
 		_healthChecker.add(_stockNews);
+		_healthChecker.add(_ibController);
 		
 		_marketMonarchLogger.info("Checking operational readiness...");
 		_healthChecker.runHealthCheck();

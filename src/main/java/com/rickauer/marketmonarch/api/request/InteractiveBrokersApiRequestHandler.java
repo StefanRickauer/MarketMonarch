@@ -3,6 +3,10 @@ package com.rickauer.marketmonarch.api.request;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Set;
 
 import com.ib.client.Bar;
@@ -17,6 +21,7 @@ import com.ib.client.EClientSocket;
 import com.ib.client.EJavaSignal;
 import com.ib.client.EReaderSignal;
 import com.ib.client.EWrapper;
+import com.ib.client.EWrapperMsgGenerator;
 import com.ib.client.Execution;
 import com.ib.client.FamilyCode;
 import com.ib.client.HistogramEntry;
@@ -32,9 +37,12 @@ import com.ib.client.SoftDollarTier;
 import com.ib.client.TickAttrib;
 import com.ib.client.TickAttribBidAsk;
 import com.ib.client.TickAttribLast;
+import com.rickauer.marketmonarch.HealthChecker;
 
 public class InteractiveBrokersApiRequestHandler implements EWrapper{
 
+	private static Logger _ibRequestHandlerLogger = LogManager.getLogger(InteractiveBrokersApiRequestHandler.class.getName());
+	
 	private EReaderSignal _readerSignal;
 	private EClientSocket _clientSocket;
 	private int _currentOrderId = -1;
@@ -142,8 +150,8 @@ public class InteractiveBrokersApiRequestHandler implements EWrapper{
 
 	@Override
 	public void nextValidId(int orderId) {
-		// TODO Auto-generated method stub
-		
+		_ibRequestHandlerLogger.info(EWrapperMsgGenerator.nextValidId(orderId));
+		_currentOrderId = orderId;		
 	}
 
 	@Override
