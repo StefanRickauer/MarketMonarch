@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.utils.Visitor;
 
-public class MailtrapServiceConnector extends ApiServiceConnector {
+public final class MailtrapServiceConnector extends ApiServiceConnector {
 
 	
 	public MailtrapServiceConnector(String provider, String token) {

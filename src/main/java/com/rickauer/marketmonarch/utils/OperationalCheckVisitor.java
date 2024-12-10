@@ -7,7 +7,7 @@ import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 import com.rickauer.marketmonarch.db.FinancialDataAccess;
 
-public class OperationalCheckVisitor implements Visitor {
+public final class OperationalCheckVisitor implements Visitor {
 
 	private boolean _isOperational;
 	

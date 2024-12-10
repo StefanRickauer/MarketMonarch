@@ -12,7 +12,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class StockNewsRequestHandler {
+public final class StockNewsRequestHandler {
+	
+	private StockNewsRequestHandler() {
+		throw new UnsupportedOperationException();
+	}
 
 	public static String sendRequest(String request) {
 

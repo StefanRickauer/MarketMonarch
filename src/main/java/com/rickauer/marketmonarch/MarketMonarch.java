@@ -18,7 +18,7 @@ import java.sql.SQLException;
 
 import org.apache.commons.lang3.exception.*;
 
-public class MarketMonarch {
+public final class MarketMonarch {
 
 	private static final String PROGRAM	= "MarketMonarch";
 	private static final String VERSION	= "0.03";

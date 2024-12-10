@@ -7,7 +7,7 @@ import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 import com.rickauer.marketmonarch.db.FinancialDataAccess;
 
-public class IsCoreTypeCheckVisitor implements Visitor {
+public final class IsCoreTypeCheckVisitor implements Visitor {
 
 	private boolean _isCoreType;
 	

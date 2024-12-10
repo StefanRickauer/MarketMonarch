@@ -9,7 +9,7 @@ import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandle
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
-public class InteractiveBrokersApiController implements Verifyable {
+public final class InteractiveBrokersApiController implements Verifyable {
 	
 	enum TransactionType {
 		BUY("BUY"), 

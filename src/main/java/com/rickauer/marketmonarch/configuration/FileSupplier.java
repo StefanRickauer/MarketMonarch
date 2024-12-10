@@ -5,10 +5,14 @@ import java.io.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class FileSupplier {
+public final class FileSupplier {
 
 	private static Logger fileSupplierLogger = LogManager.getLogger(FileSupplier.class.getName());
 
+	private FileSupplier() {
+		throw new UnsupportedOperationException();
+	}
+	
 	public static String printWorkingDirectory() {
 		return System.getProperty("user.dir");
 	}

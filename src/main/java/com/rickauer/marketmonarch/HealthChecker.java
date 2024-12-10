@@ -16,7 +16,7 @@ import com.rickauer.marketmonarch.utils.OperationalCheckVisitor;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
-public class HealthChecker {
+public final class HealthChecker {
 	
 	private static Logger _healthCheckerLogger = LogManager.getLogger(HealthChecker.class.getName()); 
 	private List<Verifyable> _typesToCheck;

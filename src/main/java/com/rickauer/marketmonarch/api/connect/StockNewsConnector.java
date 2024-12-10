@@ -2,7 +2,7 @@ package com.rickauer.marketmonarch.api.connect;
 
 import com.rickauer.marketmonarch.utils.Visitor;
 
-public class StockNewsConnector extends ApiServiceConnector {
+public final class StockNewsConnector extends ApiServiceConnector {
 
 	public StockNewsConnector(String provider, String token) {
 		super(provider, token);
