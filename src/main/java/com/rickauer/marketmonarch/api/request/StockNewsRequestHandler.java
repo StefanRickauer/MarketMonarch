@@ -20,26 +20,26 @@ public final class StockNewsRequestHandler {
 
 	public static String sendRequest(String request) {
 
-		URL singleTicker;
-		HttpURLConnection conn;
-		StringBuilder responseText = new StringBuilder();
+		URL apiURL;
+		HttpURLConnection connection;
+		StringBuilder response = new StringBuilder();
 		
 		try {
-			singleTicker = new URI(request).toURL();
-			conn = (HttpURLConnection) singleTicker.openConnection();
-			conn.setRequestProperty("accept", "application/json");
-			InputStream responseStream = conn.getInputStream();
+			apiURL = new URI(request).toURL();
+			connection = (HttpURLConnection) apiURL.openConnection();
+			connection.setRequestProperty("accept", "application/json");
+			InputStream responseStream = connection.getInputStream();
 			
 			try (Reader reader = new BufferedReader(new InputStreamReader(responseStream, StandardCharsets.UTF_8))) {
 				int c = 0;
 				while ((c = reader.read()) != -1) {
-					responseText.append((char) c);
+					response.append((char) c);
 				}
 			}
 		} catch (IOException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 
-		return responseText.toString();
+		return response.toString();
 	}
 }

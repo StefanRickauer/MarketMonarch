@@ -27,13 +27,13 @@ public class StockNewsRequestControllerTest {
 	
 	@Test
 	void requestSentimentScoreWithDataTest() {
-		assertFalse(_controller.requestSentimentScore("AAPL", SentimentFilterPeriod.TODAY).isEmpty());
+		assertTrue(_controller.requestSentimentScore("AAPL", SentimentFilterPeriod.TODAY) != 0.0);
 	}
 
 	// In case this test fails, that just means that data was received. I used 'XXXXX' but after a few successful tries received a ConnectionException. So I thought it was better to use something else.
 	@Test
 	void requestSentimentScoreEmptyResponseTest() {
-		assertTrue(_controller.requestSentimentScore("HMBL", SentimentFilterPeriod.TODAY).isEmpty());
+		assertTrue(_controller.requestSentimentScore("HMBL", SentimentFilterPeriod.TODAY) == 0.0);
 	}
 
 }

@@ -19,15 +19,15 @@ public final class StockNewsRequestController {
 		_token = token;
 	}
 	
-	public String requestSentimentScore(String symbol, SentimentFilterPeriod period) {
+	// The Sentiment Score ranges from -1.5 (Negative) to +1.5 (Positive) and is based on the # of positive and negative news on a specific time frame
+	public double requestSentimentScore(String symbol, SentimentFilterPeriod period) {
 		
-		String request = "https://stocknewsapi.com/api/v1/stat?&tickers=%s&date=%s&page=1&token=%s";
-		request = String.format(request, symbol, period.getFilterPeriod(), _token);
+		String request = String.format(StockNewsServiceRequest.SENTIMENT.getServiceRequest(), symbol, period.getFilterPeriod(), _token);
 		
 		return requestSentiment(request, symbol);
 	}
 	
-	private String requestSentiment(String request, String symbol) {
+	private double requestSentiment(String request, String symbol) {
 		_stockNewsRequestControllerLogger.info("Requesting data for symbol: '" + symbol + "'.");
 		String response = StockNewsRequestHandler.sendRequest(request);
 		
@@ -41,13 +41,13 @@ public final class StockNewsRequestController {
 			
 			if (isEmpty) {
 				_stockNewsRequestControllerLogger.warn("No data found for '" + symbol + "' for requested period.");
-				return "";
+				return 0.0;
 			} else {
 				JSONObject data = (JSONObject) jsonObj.get("total");
 				JSONObject stockData = (JSONObject) data.get(symbol);
 				double sentiment = (double) stockData.get("Sentiment Score");
 				
-				return Double.toString(sentiment);
+				return sentiment;
 			}
 		} catch (ParseException e) {
 			throw new RuntimeException("Error processing answer.", e);

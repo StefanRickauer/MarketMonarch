@@ -23,7 +23,6 @@ public abstract class ApiServiceConnector implements Verifyable {
 	}
 	
 	public boolean isOperational() {
-		; // revise logic?
 		return (!_token.equals("")) && (_token != null); 
 	}
 
