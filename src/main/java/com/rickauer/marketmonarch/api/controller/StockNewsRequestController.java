@@ -13,7 +13,7 @@ import com.rickauer.marketmonarch.api.request.StockNewsRequestHandler;
 public final class StockNewsRequestController {
 	
 	private static Logger _stockNewsRequestControllerLogger = LogManager.getLogger(StockNewsRequestController.class.getName());
-	String _token;
+	private String _token;
 
 	public StockNewsRequestController(String token) {
 		_token = token;
