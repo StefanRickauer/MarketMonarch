@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.api.controller;
+package com.rickauer.marketmonarch.api.enums;
 
 public enum SentimentFilterPeriod {
 	// sentiment filter periods: today, yesterday, last7days, last30days, last60days, last90days, yeartodate

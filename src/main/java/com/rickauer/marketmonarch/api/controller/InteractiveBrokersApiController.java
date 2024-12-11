@@ -11,21 +11,6 @@ import com.rickauer.marketmonarch.utils.Visitor;
 
 public final class InteractiveBrokersApiController implements Verifyable {
 	
-	enum TransactionType {
-		BUY("BUY"), 
-		SELL("SELL");
-		
-		private String action;
-		
-		private TransactionType(String action) {
-			this.action = action;
-		}
-		
-		public String getAction() {
-			return action;
-		}
-	}
-	
 	private static Logger _ibApiControllerLogger = LogManager.getLogger(InteractiveBrokersApiController.class.getName());
 	
 	private InteractiveBrokersApiRequestHandler _requestHandler;

@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.api.controller;
+package com.rickauer.marketmonarch.api.enums;
 
 public enum StockNewsServiceRequest {
 
