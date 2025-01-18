@@ -3,6 +3,7 @@ package com.rickauer.marketmonarch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.rickauer.marketmonarch.api.connect.AlphaVantageConnector;
 import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
@@ -21,12 +22,13 @@ import org.apache.commons.lang3.exception.*;
 public final class MarketMonarch {
 
 	private static final String PROGRAM	= "MarketMonarch";
-	private static final String VERSION	= "0.03";
+	private static final String VERSION	= "0.04";
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyAccess _apiAccess;
 	private static FinancialDataAccess _finAccess;
 	private static StockNewsConnector _stockNews;
+	private static AlphaVantageConnector _alphaVantage;
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _ibController;
 
@@ -42,7 +44,7 @@ public final class MarketMonarch {
 		_finAccess = new FinancialDataAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
 		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
 		_stockNews = new StockNewsConnector("stocknewsapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'stocknewsapi'", "token"));
-
+		_alphaVantage = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
 		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 		
 	}
@@ -52,10 +54,15 @@ public final class MarketMonarch {
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			ensureOperationalReadiness();
 			
+			// Get market scanner and save response
+			
+			// 
+			
 			// Query other credentials
 			// Make money
+			// Docs: Orders are submitted via the EClient.placeOrder method. From the snippet below, note how a variable holding the nextValidId is incremented automatically.
 		} catch (Throwable t) {
-			// Workaround because usage of e will throw exception.
+			// Workaround because usage of t will throw exception.
 			String stackTrace = ExceptionUtils.getStackTrace(t);
 			_marketMonarchLogger.error(stackTrace);
 		} finally {
@@ -72,6 +79,7 @@ public final class MarketMonarch {
 		_healthChecker.add(_finAccess);
 		_healthChecker.add(_mailtrapService);
 		_healthChecker.add(_stockNews);
+		_healthChecker.add(_alphaVantage);
 		_healthChecker.add(_ibController);
 		
 		_marketMonarchLogger.info("Checking operational readiness...");

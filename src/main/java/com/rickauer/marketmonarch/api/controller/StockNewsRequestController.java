@@ -8,7 +8,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.rickauer.marketmonarch.api.enums.SentimentFilterPeriod;
-import com.rickauer.marketmonarch.api.enums.StockNewsServiceRequest;
+import com.rickauer.marketmonarch.api.enums.StockNewsServiceSentimentRequest;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
 import com.rickauer.marketmonarch.api.request.StockNewsRequestHandler;
 
@@ -24,13 +24,13 @@ public final class StockNewsRequestController {
 	// The Sentiment Score ranges from -1.5 (Negative) to +1.5 (Positive) and is based on the # of positive and negative news on a specific time frame
 	public double requestSentimentScore(String symbol, SentimentFilterPeriod period) {
 		
-		String request = String.format(StockNewsServiceRequest.SENTIMENT.getServiceRequest(), symbol, period.getFilterPeriod(), _token);
+		String request = String.format(StockNewsServiceSentimentRequest.SENTIMENT.getServiceRequest(), symbol, period.getFilterPeriod(), _token);
 		
 		return requestSentiment(request, symbol);
 	}
 	
 	private double requestSentiment(String request, String symbol) {
-		_stockNewsRequestControllerLogger.info("Requesting data for symbol: '" + symbol + "'.");
+		_stockNewsRequestControllerLogger.info("Requesting sentiment for symbol: '" + symbol + "'.");
 		String response = StockNewsRequestHandler.sendRequest(request);
 		
 		try {

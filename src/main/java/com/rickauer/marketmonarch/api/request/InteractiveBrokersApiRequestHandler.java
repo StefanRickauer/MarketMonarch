@@ -39,7 +39,7 @@ import com.ib.client.TickAttribBidAsk;
 import com.ib.client.TickAttribLast;
 import com.rickauer.marketmonarch.HealthChecker;
 
-public final class InteractiveBrokersApiRequestHandler implements EWrapper{
+public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	private static Logger _ibRequestHandlerLogger = LogManager.getLogger(InteractiveBrokersApiRequestHandler.class.getName());
 	
