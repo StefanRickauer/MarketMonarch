@@ -31,7 +31,8 @@ public final class MarketMonarch {
 	private static AlphaVantageConnector _alphaVantage;
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _ibController;
-
+	; // FMP request to query company share float
+	
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 	
 	static {
