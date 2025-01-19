@@ -13,6 +13,8 @@ import com.rickauer.marketmonarch.db.ApiKeyAccess;
 
 public class StockNewsRequestControllerTest {
 
+	// StockNews-API key and account were deleted. Refresh to use the StockNews-API. Until then, all tests will fail.
+	
 	private static ApiKeyAccess _apiAccess;
 	private static StockNewsConnector _stockNewsConnector;
 	private static StockNewsRequestController _controller;

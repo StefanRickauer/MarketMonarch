@@ -8,8 +8,10 @@ import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 
-class StockNewsConnectorTest {
+public class StockNewsConnectorTest {
 
+	// StockNews-API key and account were deleted. Refresh to use the StockNews-API. Until then, all tests will fail.
+	
 	@Test
 	void isOperationalTrueTest() {
 		ConfigReader.INSTANCE.initializeConfigReader();

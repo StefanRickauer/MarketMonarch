@@ -39,6 +39,14 @@ public final class AlphaVantageRequestController {
 		_alphaVantageRequestControllerLogger.info("Requesting sentiment for symbol: '" + symbol + "'.");
 		String response = AlphaVantageRequestHandler.sendRequest(request);
 		
+		double averageSentimentScore = -1.0;
+
+		if (response.contains("Invalid inputs")) {
+			_alphaVantageRequestControllerLogger.error("Invalid input. Received:\n'" + response + "'.");
+			return averageSentimentScore;
+			
+		}
+		
 		int numberOfItems;
 
 		try {
@@ -47,7 +55,6 @@ public final class AlphaVantageRequestController {
 			String items = (String) jo.get("items");
 
 			numberOfItems = Integer.parseInt(items);
-			double averageSentimentScore = -1.0;
 
 			if (numberOfItems > 0) {
 
