@@ -41,7 +41,7 @@ public final class AlphaVantageRequestController {
 		
 		double averageSentimentScore = -1.0;
 
-		if (response.contains("Invalid inputs")) {
+		if (response.contains("Invalid inputs") || response.equals("")) {
 			_alphaVantageRequestControllerLogger.error("Invalid input. Received:\n'" + response + "'.");
 			return averageSentimentScore;
 			

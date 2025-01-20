@@ -34,7 +34,7 @@ public class FmpRequestController {
 		
 		Long companyShareFloat = -1L;
 		
-		if (response.contains("Exclusive Endpoint")) {
+		if (response.contains("Exclusive Endpoint") || response.equals("")) {
 			_fmpRequestLogger.error("Invalid request. Received:\n'" + response + "'.");
 			return companyShareFloat;
 		}
