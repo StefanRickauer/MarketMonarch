@@ -10,7 +10,7 @@ import org.json.simple.parser.ParseException;
 import com.rickauer.marketmonarch.api.enums.SentimentFilterPeriod;
 import com.rickauer.marketmonarch.api.enums.StockNewsServiceSentimentRequest;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
-import com.rickauer.marketmonarch.api.request.StockNewsRequestHandler;
+import com.rickauer.marketmonarch.api.request.RequestHandler;
 
 public final class StockNewsRequestController {
 	
@@ -31,7 +31,14 @@ public final class StockNewsRequestController {
 	
 	private double requestSentiment(String request, String symbol) {
 		_stockNewsRequestControllerLogger.info("Requesting sentiment for symbol: '" + symbol + "'.");
-		String response = StockNewsRequestHandler.sendRequest(request);
+		String response = RequestHandler.sendRequest(request);
+
+		double sentiment = 0.0;
+		
+		if (response.equals("")) {
+			_stockNewsRequestControllerLogger.error("Invalid request. Received:\n'" + response + "'.");
+			return sentiment;
+		}
 		
 		try {
 			Object object = new JSONParser().parse(response);
@@ -43,11 +50,11 @@ public final class StockNewsRequestController {
 			
 			if (isEmpty) {
 				_stockNewsRequestControllerLogger.warn("No data found for '" + symbol + "' for requested period.");
-				return 0.0;
+				return sentiment;
 			} else {
 				JSONObject data = (JSONObject) jsonObj.get("total");
 				JSONObject stockData = (JSONObject) data.get(symbol);
-				double sentiment = (double) stockData.get("Sentiment Score");
+				sentiment = (double) stockData.get("Sentiment Score");
 				
 				return sentiment;
 			}

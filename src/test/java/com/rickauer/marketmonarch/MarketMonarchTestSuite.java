@@ -15,6 +15,8 @@ import com.rickauer.marketmonarch.configuration.*;
 import com.rickauer.marketmonarch.db.*;
 import com.rickauer.marketmonarch.reporting.*;
 
+// Test cases for stock news api were removed because subscription was canceled so api calls won't succeed anymore
+
 @Suite
 @SelectClasses({ HealthCheckerTest.class, FileSupplierTest.class, 
 	ConfigReaderTest.class, DBAccessTest.class, LineChartCreatorTest.class, ApiKeyAccessTest.class, MailtrapServiceConnectorTest.class,

@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
-import com.rickauer.marketmonarch.api.request.FmpRequestHandler;
+import com.rickauer.marketmonarch.api.request.RequestHandler;
 
 public class FmpRequestController {
 
@@ -30,7 +30,7 @@ public class FmpRequestController {
 	
 	private Long requestFloat(String request, String symbol) {
 		_fmpRequestLogger.info("Requesting company share float for symbol: '" + symbol + "'.");
-		String response = FmpRequestHandler.sendRequest(request);
+		String response = RequestHandler.sendRequest(request);
 		
 		Long companyShareFloat = -1L;
 		

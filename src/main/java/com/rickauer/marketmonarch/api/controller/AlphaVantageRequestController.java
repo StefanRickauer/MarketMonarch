@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.rickauer.marketmonarch.api.enums.AlphaVantageServiceSentimentRequest;
-import com.rickauer.marketmonarch.api.request.AlphaVantageRequestHandler;
+import com.rickauer.marketmonarch.api.request.RequestHandler;
 
 public final class AlphaVantageRequestController {
 	
@@ -37,7 +37,7 @@ public final class AlphaVantageRequestController {
 	
 	private double requestSentiment(String request, String symbol) {
 		_alphaVantageRequestControllerLogger.info("Requesting sentiment for symbol: '" + symbol + "'.");
-		String response = AlphaVantageRequestHandler.sendRequest(request);
+		String response = RequestHandler.sendRequest(request);
 		
 		double averageSentimentScore = -1.0;
 

@@ -62,13 +62,8 @@
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.request.FmpRequestHandler" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.request.AlphaVantageRequestHandler" level="trace"
+		</Logger>		
+		<Logger name="com.rickauer.marketmonarch.api.request.RequestHandler" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
