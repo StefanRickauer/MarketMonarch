@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rickauer.marketmonarch.api.connect.AlphaVantageConnector;
+import com.rickauer.marketmonarch.api.connect.FmpConnector;
 import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
@@ -27,7 +28,7 @@ public final class MarketMonarch {
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyAccess _apiAccess;
 	private static FinancialDataAccess _finAccess;
-	private static StockNewsConnector _stockNews;
+	private static FmpConnector _fmp;
 	private static AlphaVantageConnector _alphaVantage;
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _ibController;
@@ -44,7 +45,7 @@ public final class MarketMonarch {
 		_apiAccess = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
 		_finAccess = new FinancialDataAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
 		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
-		_stockNews = new StockNewsConnector("stocknewsapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'stocknewsapi'", "token"));
+		_fmp = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
 		_alphaVantage = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
 		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 		
@@ -79,7 +80,7 @@ public final class MarketMonarch {
 		_healthChecker.add(_apiAccess);
 		_healthChecker.add(_finAccess);
 		_healthChecker.add(_mailtrapService);
-		_healthChecker.add(_stockNews);
+		_healthChecker.add(_fmp);
 		_healthChecker.add(_alphaVantage);
 		_healthChecker.add(_ibController);
 		

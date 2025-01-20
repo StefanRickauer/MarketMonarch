@@ -1,6 +1,7 @@
 package com.rickauer.marketmonarch.utils;
 
 import com.rickauer.marketmonarch.api.connect.AlphaVantageConnector;
+import com.rickauer.marketmonarch.api.connect.FmpConnector;
 import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
@@ -47,6 +48,11 @@ public final class IsCoreTypeCheckVisitor implements Visitor {
 	
 	@Override
 	public void visit(AlphaVantageConnector alphavantage) {
+		_isCoreType = true;
+	}
+	
+	@Override
+	public void visit(FmpConnector fmp) {
 		_isCoreType = true;
 	}
 	
