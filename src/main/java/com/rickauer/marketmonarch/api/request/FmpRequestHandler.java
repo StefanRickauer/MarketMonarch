@@ -6,8 +6,15 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.rickauer.marketmonarch.api.controller.FmpRequestController;
+
 public final class FmpRequestHandler {
 
+	private static Logger _fmpHandlerLogger = LogManager.getLogger(FmpRequestHandler.class.getName());
+	
 	private FmpRequestHandler() {
 		throw new UnsupportedOperationException();
 	}
@@ -23,7 +30,7 @@ public final class FmpRequestHandler {
 				response.append((char)c);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			_fmpHandlerLogger.error(e.getMessage());
 		}
 		return response.toString();
 	}

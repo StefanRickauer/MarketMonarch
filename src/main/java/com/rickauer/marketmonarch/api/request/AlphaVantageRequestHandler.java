@@ -6,7 +6,12 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class AlphaVantageRequestHandler {
+	
+	private static Logger _alphaVantageRequestHandlerLogger = LogManager.getLogger(AlphaVantageRequestHandler.class.getName());
 	
 	private AlphaVantageRequestHandler() {
 		throw new UnsupportedOperationException();
@@ -23,7 +28,7 @@ public final class AlphaVantageRequestHandler {
 				response.append((char)c);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			_alphaVantageRequestHandlerLogger.error(e.getMessage());
 		}
 		return response.toString();
 	}
