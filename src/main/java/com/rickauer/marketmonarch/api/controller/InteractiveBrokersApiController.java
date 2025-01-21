@@ -40,7 +40,7 @@ public final class InteractiveBrokersApiController implements Verifyable {
 				try {
 					reader.processMsgs();
 				} catch (Exception e) {
-					System.out.println("Exception: " + e.getMessage());
+					_ibApiControllerLogger.error(e.getMessage());
 				}
 			}
 		}).start();

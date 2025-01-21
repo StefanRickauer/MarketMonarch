@@ -39,7 +39,7 @@ public final class AlphaVantageRequestController {
 		_alphaVantageRequestControllerLogger.info("Requesting sentiment for symbol: '" + symbol + "'.");
 		String response = RequestHandler.sendRequest(request);
 		
-		double averageSentimentScore = -1.0;
+		double averageSentimentScore = -2.0;
 
 		if (response.contains("Invalid inputs") || response.equals("")) {
 			_alphaVantageRequestControllerLogger.error("Invalid input. Received:\n'" + response + "'.");
@@ -85,12 +85,10 @@ public final class AlphaVantageRequestController {
 				_alphaVantageRequestControllerLogger.warn("Could not find sentiment.");
 			}
 			
-			return averageSentimentScore;
-
 		} catch (Exception e) {
-			_alphaVantageRequestControllerLogger.warn("Error processing Alpha Vantage response.");
-			throw new RuntimeException("Error processing Alpha Vantage response.");
+			_alphaVantageRequestControllerLogger.error(e.getMessage());
 		}
+		return averageSentimentScore;
 	}
 	
 	private String evaluateSentiment(double sentiment) {

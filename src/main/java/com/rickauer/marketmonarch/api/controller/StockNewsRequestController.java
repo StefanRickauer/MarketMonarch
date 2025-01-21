@@ -33,9 +33,9 @@ public final class StockNewsRequestController {
 		_stockNewsRequestControllerLogger.info("Requesting sentiment for symbol: '" + symbol + "'.");
 		String response = RequestHandler.sendRequest(request);
 
-		double sentiment = 0.0;
+		double sentiment = -2.0;
 		
-		if (response.equals("")) {
+		if (!response.equals("")) {
 			_stockNewsRequestControllerLogger.error("Invalid request. Received:\n'" + response + "'.");
 			return sentiment;
 		}
@@ -50,16 +50,14 @@ public final class StockNewsRequestController {
 			
 			if (isEmpty) {
 				_stockNewsRequestControllerLogger.warn("No data found for '" + symbol + "' for requested period.");
-				return sentiment;
 			} else {
 				JSONObject data = (JSONObject) jsonObj.get("total");
 				JSONObject stockData = (JSONObject) data.get(symbol);
 				sentiment = (double) stockData.get("Sentiment Score");
-				
-				return sentiment;
 			}
-		} catch (ParseException e) {
-			throw new RuntimeException("Error processing answer.", e);
+		} catch (Exception e) {
+			_stockNewsRequestControllerLogger.error(e.getMessage());
 		}
+		return sentiment;
 	}
 }

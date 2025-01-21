@@ -47,7 +47,7 @@ public class FmpRequestController {
 			companyShareFloat = (Long) dataObject.get("floatShares");
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			_fmpRequestLogger.error(e.getMessage());
 		}
 		return companyShareFloat;
 	}

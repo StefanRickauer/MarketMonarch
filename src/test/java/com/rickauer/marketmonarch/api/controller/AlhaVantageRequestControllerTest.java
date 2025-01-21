@@ -26,11 +26,11 @@ public class AlhaVantageRequestControllerTest {
 	
 	@Test
 	void requestSentimentScoreWithDataTest() {
-		assertTrue(_controller.requestSentimentScore("AAPL") != -1.0);
+		assertTrue(_controller.requestSentimentScore("AAPL") != -2.0);
 	}
 	
 	@Test
 	void requestSentimentScoreEmptyResponseTest() {
-		assertTrue(_controller.requestSentimentScore("MOND") == -1.0);
+		assertTrue(_controller.requestSentimentScore("MOND") == -2.0);
 	}
 }
