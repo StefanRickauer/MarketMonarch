@@ -1,5 +1,6 @@
 package com.rickauer.marketmonarch.api.request;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -217,8 +218,8 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void historicalData(int reqId, Bar bar) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("HistoricalData:  " + EWrapperMsgGenerator.historicalData(reqId, bar.time(), bar.open(), bar.high(), bar.low(), bar.close(), bar.volume(), bar.count(), bar.wap()));
+		; // Hier die Daten verarbeiten, bzw. einer Datenstruktur hinzufügen, die oben als Klassenattribut eingefügt werden muss.
 	}
 
 	@Override
@@ -432,8 +433,8 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("HistoricalDataEnd. " + EWrapperMsgGenerator.historicalDataEnd(reqId, startDateStr, endDateStr));
+		; // Das ist der Abschluss von histroicalData(); wenn das hier aufgerufen wird, wird histroicalData für diesen einen API-Aufruf nicht mehr aufgerufen.
 	}
 
 	@Override
