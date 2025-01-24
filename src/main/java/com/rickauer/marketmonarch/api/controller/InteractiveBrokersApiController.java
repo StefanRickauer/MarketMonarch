@@ -22,8 +22,20 @@ public final class InteractiveBrokersApiController implements Verifyable {
 		// Paper money trading (simulation)	-> port 4002
 		this("127.0.0.1", 4002);
 	}
+
+	public InteractiveBrokersApiController(int port) {
+		// Real money trading 				-> port 4001
+		// Paper money trading (simulation)	-> port 4002
+		this("127.0.0.1", port);
+	}
+
+	public InteractiveBrokersApiController(boolean isSimulatedTrading) {
+		// Real money trading 				-> port 4001
+		// Paper money trading (simulation)	-> port 4002
+		this("127.0.0.1", isSimulatedTrading ? 4002 : 4001);
+	}
 	
-	public InteractiveBrokersApiController(String host, int port) {
+	private InteractiveBrokersApiController(String host, int port) {
 		_requestHandler = new InteractiveBrokersApiRequestHandler();
 		_host = host;
 		_port = port;
@@ -53,7 +65,7 @@ public final class InteractiveBrokersApiController implements Verifyable {
 	public EClientSocket getSocket() {
 		return _requestHandler.getClientSocket();
 	}
-
+	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
