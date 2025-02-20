@@ -8,6 +8,7 @@ import com.rickauer.marketmonarch.api.connect.FmpConnector;
 import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
+import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.configuration.FileSupplier;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
@@ -24,6 +25,8 @@ public final class MarketMonarch {
 
 	private static final String PROGRAM	= "MarketMonarch";
 	private static final String VERSION	= "0.04";
+
+	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyAccess _apiAccess;
@@ -32,12 +35,15 @@ public final class MarketMonarch {
 	private static AlphaVantageConnector _alphaVantage;
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _ibController;
-	
-	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
+	private static Object _lock;
+	private static ScannerResponse _responses;
+
 	
 	static {
+		_lock = new Object();
+		_responses = new ScannerResponse(_lock);
 		
-		_ibController = new InteractiveBrokersApiController();
+		_ibController = new InteractiveBrokersApiController(_responses);
 
 		ConfigReader.INSTANCE.initializeConfigReader();
 		

@@ -52,15 +52,21 @@ public final class HealthChecker {
 	
 	public void analyseCheckResults() {
 		
+		boolean isOperational = true;
+		
 		for (Result result : _results) {
 			if ( (!result._isOperational) && result._isCoreType ) {
 				_healthCheckerLogger.error("Discovered fatal error in core type: " + result._testSubject.getClass().getCanonicalName());
-				throw new RuntimeException("Discovered fatal error in core type: " + result._testSubject.getClass().getCanonicalName());
+				isOperational = false;
 			}
 			
 			if (!result._isOperational) {
 				_healthCheckerLogger.error("Discovered error in: " + result._testSubject.getClass().getCanonicalName());
 			}
+		}
+		
+		if (!isOperational) {
+			throw new RuntimeException("Discovered fatal error in core type(s). Check log for more information.");
 		}
 		_healthCheckerLogger.info("All checked types are operational.");
 	}

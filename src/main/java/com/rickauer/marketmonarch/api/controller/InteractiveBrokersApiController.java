@@ -5,7 +5,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.ib.client.EClientSocket;
 import com.ib.client.EReader;
+import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
+import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
@@ -17,26 +19,26 @@ public final class InteractiveBrokersApiController implements Verifyable {
 	private String _host;
 	private int _port;
 	
-	public InteractiveBrokersApiController() {
+	public InteractiveBrokersApiController(ScannerResponse result) {
 		// Real money trading 				-> port 4001
 		// Paper money trading (simulation)	-> port 4002
-		this("127.0.0.1", 4002);
+		this("127.0.0.1", 4002, result);
 	}
 
-	public InteractiveBrokersApiController(int port) {
+	public InteractiveBrokersApiController(int port, ScannerResponse result) {
 		// Real money trading 				-> port 4001
 		// Paper money trading (simulation)	-> port 4002
-		this("127.0.0.1", port);
+		this("127.0.0.1", port, result);
 	}
 
-	public InteractiveBrokersApiController(boolean isSimulatedTrading) {
+	public InteractiveBrokersApiController(boolean isSimulatedTrading, ScannerResponse result) {
 		// Real money trading 				-> port 4001
 		// Paper money trading (simulation)	-> port 4002
-		this("127.0.0.1", isSimulatedTrading ? 4002 : 4001);
+		this("127.0.0.1", isSimulatedTrading ? 4002 : 4001, result);
 	}
 	
-	private InteractiveBrokersApiController(String host, int port) {
-		_requestHandler = new InteractiveBrokersApiRequestHandler();
+	private InteractiveBrokersApiController(String host, int port, ScannerResponse result) {
+		_requestHandler = new InteractiveBrokersApiRequestHandler(result);
 		_host = host;
 		_port = port;
 
@@ -72,6 +74,7 @@ public final class InteractiveBrokersApiController implements Verifyable {
 	}
 	
 	public boolean isOperational() {
+		getSocket().reqIds(-1);
 		return (getOrderId() != -1);
 	}
 }
