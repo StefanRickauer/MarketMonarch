@@ -60,6 +60,10 @@ public final class InteractiveBrokersApiController implements Verifyable {
 		}).start();
 	}
 
+	public int getRequestId() {
+		return _requestHandler.getNextRequestId();
+	}
+	
 	public int getOrderId() {
 		return _requestHandler.getCurrentOrderId();
 	}

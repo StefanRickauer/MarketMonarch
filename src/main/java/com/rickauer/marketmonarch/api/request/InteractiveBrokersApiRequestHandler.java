@@ -49,14 +49,20 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	private EReaderSignal _readerSignal;
 	private EClientSocket _clientSocket;
-	private int _currentOrderId = -1;
+	private int _requestId;
+	private int _currentOrderId;
 	private ScannerResponse _scanResult;
 
 	public InteractiveBrokersApiRequestHandler(ScannerResponse scanResult) {
 		_readerSignal = new EJavaSignal();
 		_clientSocket = new EClientSocket(this, _readerSignal);
+		_requestId = 1;
 		_currentOrderId = -1;
 		_scanResult = scanResult;
+	}
+	
+	public int getNextRequestId() {
+		return _requestId++;
 	}
 
 	public EReaderSignal getReaderSignal() {
@@ -238,7 +244,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	@Override
 	public void scannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark,
 			String projection, String legsStr) {
-		// TODO Auto-generated method stub
+		_scanResult.addItem(rank, contractDetails.contract());
 
 	}
 

@@ -15,5 +15,17 @@ public class ScannerResponse {
 		_lock = lock;
 	}
 	
-	; // add einbauen
+	public void addItem(Integer rank, Contract contract) {
+		_ranking.put(rank, contract);
+		synchronized(_lock) {
+			; // TODO: Find better solution 
+			if (_ranking.size() >= 50) {
+				_lock.notify();
+			}
+		}
+	}
+	
+	public Map<Integer, Contract> getRankings() {
+		return _ranking;
+	}
 }

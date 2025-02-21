@@ -1,0 +1,36 @@
+package com.rickauer.marketmonarch.api.controller;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.rickauer.marketmonarch.api.response.ScannerResponse;
+
+public class InteractiveBrokersApiControllerTest {
+
+	ScannerResponse _responses;
+	InteractiveBrokersApiController _ibController;
+	
+	// getRequestId() will increment the requestId. Therefore, in order to ensure the requestId starts from 1 at each new test, a new object of 
+	// the class InteractiveBrokersApiController must be instantiated. 
+	
+	@BeforeEach
+	void initializeData() {
+		_responses = new ScannerResponse(new Object());
+		_ibController = new InteractiveBrokersApiController(null);		
+	}
+	
+	@Test
+	void getRequestIdValidTest() {
+		for (int i = 1; i <= 10; i++) {
+			assertEquals(i, _ibController.getRequestId());
+		}
+	}
+
+	@Test
+	void getRequestIdInvalidTest() {
+		assertFalse(0 == _ibController.getRequestId());
+	}
+
+}

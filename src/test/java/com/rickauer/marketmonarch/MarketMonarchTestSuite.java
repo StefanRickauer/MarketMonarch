@@ -10,6 +10,7 @@ import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnectorTest;
 import com.rickauer.marketmonarch.api.controller.AlhaVantageRequestControllerTest;
 import com.rickauer.marketmonarch.api.controller.FmpRequestControllerTest;
+import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiControllerTest;
 import com.rickauer.marketmonarch.api.controller.StockNewsRequestControllerTest;
 import com.rickauer.marketmonarch.configuration.*;
 import com.rickauer.marketmonarch.db.*;
@@ -20,7 +21,8 @@ import com.rickauer.marketmonarch.reporting.*;
 @Suite
 @SelectClasses({ HealthCheckerTest.class, FileSupplierTest.class, 
 	ConfigReaderTest.class, DBAccessTest.class, LineChartCreatorTest.class, ApiKeyAccessTest.class, MailtrapServiceConnectorTest.class,
-	AlphaVantageConnectorTest.class, AlhaVantageRequestControllerTest.class, FmpConnectorTest.class, FmpRequestControllerTest.class})
+	AlphaVantageConnectorTest.class, AlhaVantageRequestControllerTest.class, FmpConnectorTest.class, FmpRequestControllerTest.class,
+	InteractiveBrokersApiControllerTest.class})
 public class MarketMonarchTestSuite {
 	// Nothing to do
 }
