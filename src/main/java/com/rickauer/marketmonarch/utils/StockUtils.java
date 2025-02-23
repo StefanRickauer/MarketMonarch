@@ -1,13 +1,19 @@
 package com.rickauer.marketmonarch.utils;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 public class StockUtils {
+	
+	public static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern("yyyyMMdd HH:mm:ss");
 	
 	private StockUtils() {
 		throw new UnsupportedOperationException(StockUtils.class.getCanonicalName() + " is not meant to be instantiated.");
 	}
 	
 	public static int timeToIndex(int time) {
-		if (isInRange(time, 570, 630))			// 09:30 to 09:59
+		if (isInRange(time, 570, 600))			// 09:30 to 09:59
 			return 0;
 		else if (isInRange(time, 600, 630))		// 10:00 to 10:29
 			return 1;
@@ -39,5 +45,24 @@ public class StockUtils {
 	
 	private static boolean isInRange(int number, int lowerInclusive, int upperExclusive) {
 		return number >= lowerInclusive && number < upperExclusive;
+	}
+	
+	public static DateTime convertStringToDateTime(String date) {
+		return DateTime.parse(extractDate(date), FORMATTER);	
+	}
+	
+	private static String extractDate(String dateWithZone) {
+		String lower = dateWithZone.toLowerCase();
+		String upper = dateWithZone.toUpperCase();
+		
+		int index = 0;
+		
+		for (char c : lower.toCharArray()) {
+			if (!(c == upper.toCharArray()[index])) 
+				return dateWithZone.substring(0, index).trim();
+			index++;
+			
+		}
+		return dateWithZone;
 	}
 }
