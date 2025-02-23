@@ -67,10 +67,10 @@ public final class MarketMonarch {
 			ensureOperationalReadiness();
 			scanMarketAndSaveResult();
 			
-			// request historical data for all results (5 minute candles)
+			// request company share float; filter out all stocks > 20.000.000 
+			// request historical data for all results (5 minute candles) -> iterate over _responses
 			// calculate percentage gain; filter out all stocks < 10% gain
 			// calculate RVOL for 30 minute intervals
-			// request company share float; filter out all stocks > 20.000.000 
 			
 			// Make money
 			// Docs: Orders are submitted via the EClient.placeOrder method. From the
