@@ -7,6 +7,10 @@ import org.joda.time.format.DateTimeFormatter;
 public class StockUtils {
 	
 	public static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern("yyyyMMdd HH:mm:ss");
+	public static final int TRADING_DAY_INTERVALS = 13;
+	
+	; // Restliche Werte ergänzen!
+	private static final int FOUR_PM = 960;
 	
 	private StockUtils() {
 		throw new UnsupportedOperationException(StockUtils.class.getCanonicalName() + " is not meant to be instantiated.");
@@ -37,7 +41,7 @@ public class StockUtils {
 			return 10;
 		else if (isInRange(time, 900, 930))		// 15:00 to 15:29
 			return 11;
-		else if (isInRange(time, 930, 960))		// 15:30 to 15:59
+		else if (isInRange(time, 930, FOUR_PM))		// 15:30 to 15:59
 			return 12;
 		
 		throw new IllegalArgumentException("Invalid argument: " + time);
@@ -64,5 +68,9 @@ public class StockUtils {
 			
 		}
 		return dateWithZone;
+	}
+	
+	public static int getMinuteOfLastEntry(int intervalLength) {
+		return FOUR_PM - intervalLength;
 	}
 }
