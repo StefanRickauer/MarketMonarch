@@ -35,7 +35,7 @@ public class CandleStick {
 		return _open;
 	}
 	
-	public double close() {
+	public double getClose() {
 		return _close;
 	}
 	
