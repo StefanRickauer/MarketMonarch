@@ -203,4 +203,11 @@ public class StockUtilsTest {
 			StockUtils.timeToIndex(StockUtils.convertStringToDateTime(date).getMinuteOfDay());
 		});
 	}
+	
+	@Test
+	void getMinuteOfLastEntryTest() {
+		int interval = 5;
+		int result = StockUtils.getMinuteOfLastEntry(interval);
+		assertEquals(955, result);
+	}
 }
