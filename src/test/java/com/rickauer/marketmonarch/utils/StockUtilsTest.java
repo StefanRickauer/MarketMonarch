@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import com.rickauer.marketmonarch.api.enums.TradingTime;
+
 public class StockUtilsTest {
 
 	@Test
@@ -209,5 +211,29 @@ public class StockUtilsTest {
 		int interval = 5;
 		int result = StockUtils.getMinuteOfLastEntry(interval);
 		assertEquals(955, result);
+	}
+	
+	@Test
+	void isValidTradingTimeTooLow() {
+		boolean result = StockUtils.isValidTradingTime(TradingTime.NINE_THIRTY.toMinutes() - 1);
+		assertFalse(result);
+	}
+	
+	@Test
+	void isValidTradingTimeCorrect1() {
+		boolean result = StockUtils.isValidTradingTime(TradingTime.NINE_THIRTY.toMinutes());
+		assertTrue(result);
+	}
+
+	@Test
+	void isValidTradingTimeCorrect2() {
+		boolean result = StockUtils.isValidTradingTime(TradingTime.SIXTEEN.toMinutes() - 1);
+		assertTrue(result);
+	}
+
+	@Test
+	void isValidTradingTimeTooHigh() {
+		boolean result = StockUtils.isValidTradingTime(TradingTime.SIXTEEN.toMinutes());
+		assertFalse(result);
 	}
 }
