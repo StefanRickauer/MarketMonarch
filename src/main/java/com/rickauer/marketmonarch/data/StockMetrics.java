@@ -10,8 +10,6 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class StockMetrics {
 
-	private Object _lock;
-
 	private Contract _contract;
 	private List<CandleStick> _candleChart;
 	private double[] _historicalVolumesByInterval;
@@ -20,10 +18,8 @@ public class StockMetrics {
 	private double _profitLossChange;
 	
 	
-	public StockMetrics(Contract contract, Object lock) {
+	public StockMetrics(Contract contract) {
 		
-		_lock = lock;
-
 		_contract = contract;
 		_candleChart = new ArrayList<>();
 		_historicalVolumesByInterval = new double[StockUtils.TRADING_DAY_INTERVALS];
@@ -46,6 +42,9 @@ public class StockMetrics {
 	
 	// call from within InteractiveBrokersApiRequestHandler::historicalData
 	public void addCandleStick(CandleStick candleStick) {
+		if (!StockUtils.isValidTradingTime(candleStick.getDate().getMinuteOfDay())) {
+			throw new IllegalArgumentException("Invalid argument: " + candleStick.getDateAsString());
+		}
 		_candleChart.add(candleStick);
 	}
 	
@@ -57,24 +56,25 @@ public class StockMetrics {
 				continue;
 			}
 			
-			_historicalVolumesByInterval[StockUtils.timeToIndex(candleStick.getDate().getMinuteOfDay())] += Double.parseDouble(candleStick.toString());
+			_historicalVolumesByInterval[StockUtils.timeToIndex(candleStick.getDate().getMinuteOfDay())] += Double.parseDouble(candleStick.getVolume().toString());
 			_volumeCountsPerInterval[StockUtils.timeToIndex(candleStick.getDate().getMinuteOfDay())]++;
 		}
 		
-		updateRelativeVolume();
+		_rvol = Double.parseDouble(_candleChart.getLast().getVolume().toString()) / getAverageTradingVolumeForInterval(_candleChart.getLast().getDate());
 	}
 	
-	public void updateRelativeVolume() {
-		_rvol = Double.parseDouble(_candleChart.getLast().toString()) / getAverageTradingVolumeForInterval(_candleChart.getLast().getDate());
-	}
 
 	private double getAverageTradingVolumeForInterval(DateTime date) {
-		return _historicalVolumesByInterval[StockUtils.timeToIndex(date.getMinuteOfDay())] / _volumeCountsPerInterval[StockUtils.timeToIndex(date.getMinuteOfDay())];
+		double historicalVolumesByInterval = _historicalVolumesByInterval[StockUtils.timeToIndex(date.getMinuteOfDay())];
+		double volumeCountsByInterval = _volumeCountsPerInterval[StockUtils.timeToIndex(date.getMinuteOfDay())];
+		
+		if (historicalVolumesByInterval != 0 && volumeCountsByInterval != 0) {
+			return historicalVolumesByInterval / volumeCountsByInterval;			
+		}
+		
+		return -1.0;
 	}
 	
-	; // Add method that adds a candle stick and update the rvol. This is for live data. However,
-	// live data sticks are only 5 second intervals and not 5 minute intervals!
-	// The method to receive live data is InteractiveBrokersApiRequestHandler::realtimeBar
 	
 	public void calculateProfitLossChange() {
 		
