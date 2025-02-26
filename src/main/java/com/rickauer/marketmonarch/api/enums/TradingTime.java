@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.utils;
+package com.rickauer.marketmonarch.api.enums;
 
 public enum TradingTime {
 
