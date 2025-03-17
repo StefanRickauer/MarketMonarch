@@ -166,7 +166,8 @@ public final class MarketMonarch {
 			break; // Debug: Only one loop
 		}
 		
-		// TODO: revise StockMetrics such that there is no need to call the calculate...-Functions in order to get valid results.
+		// TODO: Revise StockMetrics such that there is no need to call the calculate...-Functions in order to get valid results.
+		// TODO: Change logic such that code iterates over all scan results.
 		
 		StockMetrics metrics = _stocks.get(requestId);
 		metrics.calculateRelativeTradingVolume();
