@@ -19,26 +19,26 @@ public final class InteractiveBrokersApiController implements Verifyable {
 	private String _host;
 	private int _port;
 	
-	public InteractiveBrokersApiController(ScannerResponse result) {
+	public InteractiveBrokersApiController(ScannerResponse result, Object sharedLock) {
 		// Real money trading 				-> port 4001
 		// Paper money trading (simulation)	-> port 4002
-		this("127.0.0.1", 4002, result);
+		this("127.0.0.1", 4002, result, sharedLock);
 	}
 
-	public InteractiveBrokersApiController(int port, ScannerResponse result) {
+	public InteractiveBrokersApiController(int port, ScannerResponse result, Object sharedLock) {
 		// Real money trading 				-> port 4001
 		// Paper money trading (simulation)	-> port 4002
-		this("127.0.0.1", port, result);
+		this("127.0.0.1", port, result, sharedLock);
 	}
 
-	public InteractiveBrokersApiController(boolean isSimulatedTrading, ScannerResponse result) {
+	public InteractiveBrokersApiController(boolean isSimulatedTrading, ScannerResponse result, Object sharedLock) {
 		// Real money trading 				-> port 4001
 		// Paper money trading (simulation)	-> port 4002
-		this("127.0.0.1", isSimulatedTrading ? 4002 : 4001, result);
+		this("127.0.0.1", isSimulatedTrading ? 4002 : 4001, result, sharedLock);
 	}
 	
-	private InteractiveBrokersApiController(String host, int port, ScannerResponse result) {
-		_requestHandler = new InteractiveBrokersApiRequestHandler(result);
+	private InteractiveBrokersApiController(String host, int port, ScannerResponse result, Object sharedLock) {
+		_requestHandler = new InteractiveBrokersApiRequestHandler(result, sharedLock);
 		_host = host;
 		_port = port;
 

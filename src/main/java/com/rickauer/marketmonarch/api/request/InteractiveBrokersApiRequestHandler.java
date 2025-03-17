@@ -41,6 +41,7 @@ import com.ib.client.TickAttribLast;
 import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
+import com.rickauer.marketmonarch.data.CandleStick;
 
 public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
@@ -52,13 +53,15 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	private int _requestId;
 	private int _currentOrderId;
 	private ScannerResponse _scanResult;
+	private Object _sharedLock;
 
-	public InteractiveBrokersApiRequestHandler(ScannerResponse scanResult) {
+	public InteractiveBrokersApiRequestHandler(ScannerResponse scanResult, Object sharedLock) {
 		_readerSignal = new EJavaSignal();
 		_clientSocket = new EClientSocket(this, _readerSignal);
 		_requestId = 1;
 		_currentOrderId = -1;
 		_scanResult = scanResult;
+		_sharedLock = sharedLock;
 	}
 	
 	public int getNextRequestId() {
@@ -229,10 +232,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void historicalData(int reqId, Bar bar) {
-		System.out.println("HistoricalData:  " + EWrapperMsgGenerator.historicalData(reqId, bar.time(), bar.open(),
-				bar.high(), bar.low(), bar.close(), bar.volume(), bar.count(), bar.wap()));
-		; // Hier die Daten verarbeiten, bzw. einer Datenstruktur hinzufügen, die oben als
-			// Klassenattribut eingefügt werden muss.
+		MarketMonarch._stocks.get(reqId).addCandleStick(new CandleStick(bar.time(), bar.open(), bar.close(), bar.high(), bar.low(), bar.volume()));
 	}
 
 	@Override
@@ -446,10 +446,11 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
-		System.out.println(
-				"HistoricalDataEnd. " + EWrapperMsgGenerator.historicalDataEnd(reqId, startDateStr, endDateStr));
-		; // Das ist der Abschluss von histroicalData(); wenn das hier aufgerufen wird,
-			// wird histroicalData für diesen einen API-Aufruf nicht mehr aufgerufen.
+		_ibRequestHandlerLogger.info("Request-ID: " + reqId + "; Historical data end.");
+		
+		synchronized(_sharedLock) {
+			_sharedLock.notify();			
+		}
 	}
 
 	@Override

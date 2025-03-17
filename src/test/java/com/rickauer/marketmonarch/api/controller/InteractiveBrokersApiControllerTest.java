@@ -18,7 +18,7 @@ public class InteractiveBrokersApiControllerTest {
 	@BeforeEach
 	void initializeData() {
 		_responses = new ScannerResponse(new Object());
-		_ibController = new InteractiveBrokersApiController(null);		
+		_ibController = new InteractiveBrokersApiController(_responses, new Object());		
 	}
 	
 	@Test

@@ -14,6 +14,8 @@ import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.configuration.FileSupplier;
+import com.rickauer.marketmonarch.data.CandleStick;
+import com.rickauer.marketmonarch.data.StockMetrics;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 import com.rickauer.marketmonarch.db.FinancialDataAccess;
 import com.rickauer.marketmonarch.reporting.LineChartCreator;
@@ -21,6 +23,7 @@ import com.rickauer.marketmonarch.reporting.LineChartCreator;
 import java.awt.Desktop;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -43,12 +46,14 @@ public final class MarketMonarch {
 	private static InteractiveBrokersApiController _ibController;
 	private static Object _sharedLock;
 	private static ScannerResponse _responses;
+	public static Map<Integer, StockMetrics> _stocks;
 
 	static {
 		_sharedLock = new Object();
 		_responses = new ScannerResponse(_sharedLock);
+		_stocks = new HashMap<>();
 
-		_ibController = new InteractiveBrokersApiController(_responses);
+		_ibController = new InteractiveBrokersApiController(_responses, _sharedLock);
 
 		ConfigReader.INSTANCE.initializeConfigReader();
 
@@ -65,7 +70,9 @@ public final class MarketMonarch {
 		try {
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			ensureOperationalReadiness();
+			
 			scanMarketAndSaveResult();
+			analyseScanResults();
 			
 			// request company share float; filter out all stocks > 20.000.000 
 			// request historical data for all results (5 minute candles) -> iterate over _responses
@@ -135,5 +142,35 @@ public final class MarketMonarch {
 		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
 			System.out.println("Rank: " + entry.getKey() + ", Symbol: " + entry.getValue().symbol());
 		}
+	}
+	
+	private static void analyseScanResults() {
+		int requestId = 0;
+		
+		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
+			
+			_marketMonarchLogger.info("Analysing scan results for " + entry.getValue().symbol());
+			requestId = _ibController.getRequestId();
+			
+			_stocks.put(requestId, new StockMetrics(entry.getValue()));
+			_ibController.getSocket().reqHistoricalData(requestId, entry.getValue(), "", "12 D", "5 mins", "TRADES", 1, 1, false, null);
+			
+			synchronized (_sharedLock) {
+				try {
+					_sharedLock.wait();
+				} catch (InterruptedException e) {
+					throw new RuntimeException("Error scanning market.", e);
+				}
+			}
+			
+			break; // Debug: Only one loop
+		}
+		
+		// TODO: revise StockMetrics such that there is no need to call the calculate...-Functions in order to get valid results.
+		
+		StockMetrics metrics = _stocks.get(requestId);
+		metrics.calculateRelativeTradingVolume();
+		metrics.calculateProfitLossChange();
+		System.out.println("Symbol: " + metrics.getSymbol() + ", Relative volume: " + metrics.getRelativeVolume() + ", Profit loss: " + metrics.getProfitLossChange());
 	}
 }
