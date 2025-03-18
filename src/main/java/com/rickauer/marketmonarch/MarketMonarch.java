@@ -53,7 +53,7 @@ public final class MarketMonarch {
 		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
 
-		_ibController = new InteractiveBrokersApiController(_responses, _sharedLock);
+		_ibController = new InteractiveBrokersApiController(_responses);
 
 		ConfigReader.INSTANCE.initializeConfigReader();
 
@@ -154,24 +154,23 @@ public final class MarketMonarch {
 			
 			_stocks.put(requestId, new StockMetrics(entry.getValue()));
 			_ibController.getSocket().reqHistoricalData(requestId, entry.getValue(), "", "12 D", "5 mins", "TRADES", 1, 1, false, null);
-			
-			synchronized (_sharedLock) {
+
+			synchronized (_stocks) {
 				try {
-					_sharedLock.wait();
+					_stocks.wait();
 				} catch (InterruptedException e) {
 					throw new RuntimeException("Error scanning market.", e);
 				}
 			}
-			
-			break; // Debug: Only one loop
 		}
 		
 		// TODO: Revise StockMetrics such that there is no need to call the calculate...-Functions in order to get valid results.
-		// TODO: Change logic such that code iterates over all scan results.
+		// TODO: Filer out negative results
 		
-		StockMetrics metrics = _stocks.get(requestId);
-		metrics.calculateRelativeTradingVolume();
-		metrics.calculateProfitLossChange();
-		System.out.println("Symbol: " + metrics.getSymbol() + ", Relative volume: " + metrics.getRelativeVolume() + ", Profit loss: " + metrics.getProfitLossChange());
+		for (StockMetrics metric : _stocks.values()) {
+			metric.calculateRelativeTradingVolume();
+			metric.calculateProfitLossChange();
+			System.out.println("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange());
+		}
 	}
 }

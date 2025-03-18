@@ -53,15 +53,13 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	private int _requestId;
 	private int _currentOrderId;
 	private ScannerResponse _scanResult;
-	private Object _sharedLock;
 
-	public InteractiveBrokersApiRequestHandler(ScannerResponse scanResult, Object sharedLock) {
+	public InteractiveBrokersApiRequestHandler(ScannerResponse scanResult) {
 		_readerSignal = new EJavaSignal();
 		_clientSocket = new EClientSocket(this, _readerSignal);
 		_requestId = 1;
 		_currentOrderId = -1;
 		_scanResult = scanResult;
-		_sharedLock = sharedLock;
 	}
 	
 	public int getNextRequestId() {
@@ -448,8 +446,8 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
 		_ibRequestHandlerLogger.info("Request-ID: " + reqId + "; Historical data end.");
 		
-		synchronized(_sharedLock) {
-			_sharedLock.notify();			
+		synchronized(MarketMonarch._stocks) {
+			MarketMonarch._stocks.notify();			
 		}
 	}
 
