@@ -10,6 +10,7 @@ import com.rickauer.marketmonarch.api.connect.AlphaVantageConnector;
 import com.rickauer.marketmonarch.api.connect.FmpConnector;
 import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
+import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
@@ -37,21 +38,27 @@ public final class MarketMonarch {
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 
+	private static int MAX_NUMBER_OF_SHARES = 20_000_000;
+	private static int MIN_NUMBER_OF_SHARES = 5_000_000;
+	
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyAccess _apiAccess;
 	private static FinancialDataAccess _finAccess;
-	private static FmpConnector _fmp;
+	private static FmpConnector _fmpConnector;
+	private static FmpRequestController _fmpController;
 	private static AlphaVantageConnector _alphaVantage;
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _ibController;
 	private static Object _sharedLock;
-	private static ScannerResponse _responses;
+	public static ScannerResponse _responses;
 	public static Map<Integer, StockMetrics> _stocks;
+	private static Map<String, Long> _sharedFloatBySymbol;
 
 	static {
 		_sharedLock = new Object();
 		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
+		_sharedFloatBySymbol = new HashMap<>();
 
 		_ibController = new InteractiveBrokersApiController(_responses);
 
@@ -60,7 +67,8 @@ public final class MarketMonarch {
 		_apiAccess = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
 		_finAccess = new FinancialDataAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
 		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
-		_fmp = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
+		_fmpConnector = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
+		_fmpController = new FmpRequestController(_fmpConnector.getToken());
 		_alphaVantage = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
 		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 
@@ -72,6 +80,7 @@ public final class MarketMonarch {
 			ensureOperationalReadiness();
 			
 			scanMarketAndSaveResult();
+			filterByFloat();
 			analyseScanResults();
 			
 			// request company share float; filter out all stocks > 20.000.000 
@@ -101,7 +110,7 @@ public final class MarketMonarch {
 		_healthChecker.add(_apiAccess);
 		_healthChecker.add(_finAccess);
 		_healthChecker.add(_mailtrapService);
-		_healthChecker.add(_fmp);
+		_healthChecker.add(_fmpConnector);
 		_healthChecker.add(_alphaVantage);
 		_healthChecker.add(_ibController);
 
@@ -144,19 +153,39 @@ public final class MarketMonarch {
 		}
 	}
 	
+	private static void filterByFloat() {
+		// iterate over scan results and filter out all stocks whose company share float is above 20.000.000 and below 5.000.000
+		
+		_marketMonarchLogger.info("Filtering scan results by company share float...");
+		
+		long floatShares = 0L;
+		
+		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
+			floatShares = _fmpController.requestCompanyShareFloat(entry.getValue().symbol());
+			
+			_sharedFloatBySymbol.put(entry.getValue().symbol(), floatShares); 
+			
+		}
+		
+		_responses.getRankings().entrySet()
+			.removeIf(entry -> _sharedFloatBySymbol.get(entry.getValue().symbol()) > MAX_NUMBER_OF_SHARES || _sharedFloatBySymbol.get(entry.getValue().symbol()) < MIN_NUMBER_OF_SHARES);
+		
+		_marketMonarchLogger.info("Done filtering scan results by company share float.");
+	}
+	
 	private static void analyseScanResults() {
 		int requestId = 0;
 		
 		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
 			
 			_marketMonarchLogger.info("Analysing scan results for " + entry.getValue().symbol());
-			requestId = _ibController.getRequestId();
-			
-			_stocks.put(requestId, new StockMetrics(entry.getValue()));
-			_ibController.getSocket().reqHistoricalData(requestId, entry.getValue(), "", "12 D", "5 mins", "TRADES", 1, 1, false, null);
 
 			synchronized (_stocks) {
 				try {
+					requestId = _ibController.getRequestId();
+					
+					_stocks.put(requestId, new StockMetrics(entry.getValue()));
+					_ibController.getSocket().reqHistoricalData(requestId, entry.getValue(), "", "12 D", "5 mins", "TRADES", 1, 1, false, null);
 					_stocks.wait();
 				} catch (InterruptedException e) {
 					throw new RuntimeException("Error scanning market.", e);
