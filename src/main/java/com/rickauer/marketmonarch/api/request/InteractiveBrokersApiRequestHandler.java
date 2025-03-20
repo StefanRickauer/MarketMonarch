@@ -57,7 +57,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	public InteractiveBrokersApiRequestHandler(ScannerResponse scanResult) {
 		_readerSignal = new EJavaSignal();
 		_clientSocket = new EClientSocket(this, _readerSignal);
-		_requestId = 1;
+		_requestId = 0;
 		_currentOrderId = -1;
 		_scanResult = scanResult;
 	}
@@ -248,8 +248,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void scannerDataEnd(int reqId) {
-		// TODO Auto-generated method stub
-
+		_ibRequestHandlerLogger.info("Market scanner subscription canceled.");
 	}
 
 	@Override
@@ -444,9 +443,11 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
-		_ibRequestHandlerLogger.info("Request-ID: " + reqId + "; Historical data end.");
+		_ibRequestHandlerLogger.info("Symbol: " + MarketMonarch._stocks.get(reqId).getSymbol() + ", Request-ID: " + reqId + " gathered historical data.");
 		
 		synchronized(MarketMonarch._stocks) {
+			MarketMonarch._stocks.get(reqId).calculateProfitLossChange();
+			MarketMonarch._stocks.get(reqId).calculateRelativeTradingVolume();
 			MarketMonarch._stocks.notify();			
 		}
 	}

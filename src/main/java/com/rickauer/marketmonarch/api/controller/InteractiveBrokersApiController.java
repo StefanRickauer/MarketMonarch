@@ -11,6 +11,8 @@ import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
+import static com.rickauer.marketmonarch.MarketMonarch.PROGRAM;
+
 public final class InteractiveBrokersApiController implements Verifyable {
 	
 	private static Logger _ibApiControllerLogger = LogManager.getLogger(InteractiveBrokersApiController.class.getName());
@@ -49,6 +51,7 @@ public final class InteractiveBrokersApiController implements Verifyable {
 		final EReader reader = new EReader(_requestHandler.getClientSocket(), _requestHandler.getReaderSignal());
 		reader.start();
 		new Thread(() -> {
+			Thread.currentThread().setName(PROGRAM + " -> Request Handler Thread");
 			while (_requestHandler.getClientSocket().isConnected()) {
 				_requestHandler.getReaderSignal().waitForSignal();
 				try {

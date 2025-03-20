@@ -33,7 +33,7 @@ import org.apache.commons.lang3.exception.*;
 
 public final class MarketMonarch {
 
-	private static final String PROGRAM = "MarketMonarch";
+	public static final String PROGRAM = "MarketMonarch";
 	private static final String VERSION = "0.2";
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
@@ -76,12 +76,13 @@ public final class MarketMonarch {
 
 	public static void main(String[] args) {
 		try {
+			Thread.currentThread().setName(PROGRAM + " -> Main Thread");
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			ensureOperationalReadiness();
 			
 			scanMarketAndSaveResult();
-			filterByFloat();
-			analyseScanResults();
+//			filterByFloat();
+			filterByProfitLossAndRVOL();
 			
 			// request company share float; filter out all stocks > 20.000.000 
 			// request historical data for all results (5 minute candles) -> iterate over _responses
@@ -126,7 +127,9 @@ public final class MarketMonarch {
 	
 	private static void scanMarketAndSaveResult() {
 	
-		_marketMonarchLogger.info("Setting up market scanner and requesting scan results...");
+		_marketMonarchLogger.info("Setting up market scanner subscription and requesting scan results...");
+		
+		int requestId = _ibController.getRequestId();
 		
 		ScannerSubscription subscription = new ScannerSubscription();
 		subscription.instrument("STK");
@@ -135,7 +138,7 @@ public final class MarketMonarch {
 		List<TagValue> filterTagValues = new LinkedList<>();
 		filterTagValues.add(new TagValue("priceAbove", "2"));
 		filterTagValues.add(new TagValue("priceBelow", "20"));
-		_ibController.getSocket().reqScannerSubscription(_ibController.getRequestId(), subscription, null, filterTagValues);
+		_ibController.getSocket().reqScannerSubscription(requestId, subscription, null, filterTagValues);
 
 		synchronized (_sharedLock) {
 			try {
@@ -144,21 +147,15 @@ public final class MarketMonarch {
 				throw new RuntimeException("Error scanning market.", e);
 			}
 		}
-		
-		_marketMonarchLogger.info("Set up market scanner and received scan results.");
-
-		// DEBUG only!
-		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
-			System.out.println("Rank: " + entry.getKey() + ", Symbol: " + entry.getValue().symbol());
-		}
+		_ibController.getSocket().cancelScannerSubscription(requestId);
+		_marketMonarchLogger.info("Received scan results.");
 	}
 	
 	private static void filterByFloat() {
-		// iterate over scan results and filter out all stocks whose company share float is above 20.000.000 and below 5.000.000
 		
 		_marketMonarchLogger.info("Filtering scan results by company share float...");
-		
 		long floatShares = 0L;
+		int numberOfStocksBeforeFiltering = _responses.getRankings().size();
 		
 		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
 			floatShares = _fmpController.requestCompanyShareFloat(entry.getValue().symbol());
@@ -170,20 +167,20 @@ public final class MarketMonarch {
 		_responses.getRankings().entrySet()
 			.removeIf(entry -> _sharedFloatBySymbol.get(entry.getValue().symbol()) > MAX_NUMBER_OF_SHARES || _sharedFloatBySymbol.get(entry.getValue().symbol()) < MIN_NUMBER_OF_SHARES);
 		
-		_marketMonarchLogger.info("Done filtering scan results by company share float.");
+		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _responses.getRankings().size()) + " entries.");
 	}
 	
-	private static void analyseScanResults() {
+	private static void filterByProfitLossAndRVOL() {
+		
+		_marketMonarchLogger.info("Filtering stocks by profit and loss (P&L) and relative trading volume...");
 		int requestId = 0;
+		int numberOfStocksBeforeFiltering = _responses.getRankings().size();
 		
 		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
 			
-			_marketMonarchLogger.info("Analysing scan results for " + entry.getValue().symbol());
-
 			synchronized (_stocks) {
 				try {
 					requestId = _ibController.getRequestId();
-					
 					_stocks.put(requestId, new StockMetrics(entry.getValue()));
 					_ibController.getSocket().reqHistoricalData(requestId, entry.getValue(), "", "12 D", "5 mins", "TRADES", 1, 1, false, null);
 					_stocks.wait();
@@ -193,12 +190,11 @@ public final class MarketMonarch {
 			}
 		}
 		
-		// TODO: Revise StockMetrics such that there is no need to call the calculate...-Functions in order to get valid results.
-		// TODO: Filer out negative results
+		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10 || Math.floor(entry.getValue().getRelativeVolume()) < 5);
+
+		_marketMonarchLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed " + (numberOfStocksBeforeFiltering - _stocks.size()) + " entries.");
 		
 		for (StockMetrics metric : _stocks.values()) {
-			metric.calculateRelativeTradingVolume();
-			metric.calculateProfitLossChange();
 			System.out.println("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange());
 		}
 	}
