@@ -443,7 +443,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
-		_ibRequestHandlerLogger.info("Symbol: " + MarketMonarch._stocks.get(reqId).getSymbol() + ", Request-ID: " + reqId + " gathered historical data.");
+		_ibRequestHandlerLogger.info("Gathered historical data for Symbol: '" + MarketMonarch._stocks.get(reqId).getSymbol() + "', Request-ID: " + reqId + ".");
 		
 		synchronized(MarketMonarch._stocks) {
 			MarketMonarch._stocks.get(reqId).calculateProfitLossChange();
