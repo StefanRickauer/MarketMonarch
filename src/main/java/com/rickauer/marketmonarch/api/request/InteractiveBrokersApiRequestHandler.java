@@ -356,20 +356,17 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void error(Exception e) {
-		// TODO Auto-generated method stub
-
+		_ibRequestHandlerLogger.error(e);
 	}
 
 	@Override
 	public void error(String str) {
-		// TODO Auto-generated method stub
-
+		_ibRequestHandlerLogger.error(str);
 	}
 
 	@Override
 	public void error(int id, int errorCode, String errorMsg, String advancedOrderRejectJson) {
-		// TODO Auto-generated method stub
-
+		_ibRequestHandlerLogger.error("RequestID: " + id + ", Error Code: " + errorCode + ", Error Message: " + errorMsg + "Advanced Order Reject Json:\n" + advancedOrderRejectJson);
 	}
 
 	@Override
