@@ -19,14 +19,14 @@ public class RequestHandler {
 
 	public static String sendRequest(String request) {
 		StringBuilder response = new StringBuilder();
+	
 		try {
 			URL url = new URI(request).toURL();
-			Reader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 
-			int c = 0;
-			while ((c = reader.read()) != -1) {
-				response.append((char) c);
-			}
+			for (String line; (line = reader.readLine()) != null;) {
+		        response.append(line);
+		    }
 		} catch (Exception e) {
 			_requestHandlerLogger.error(e.getMessage());
 		}
