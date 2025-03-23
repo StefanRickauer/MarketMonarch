@@ -15,12 +15,12 @@ import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
-import com.rickauer.marketmonarch.configuration.FileSupplier;
 import com.rickauer.marketmonarch.data.CandleStick;
 import com.rickauer.marketmonarch.data.StockMetrics;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 import com.rickauer.marketmonarch.db.FinancialDataAccess;
 import com.rickauer.marketmonarch.reporting.LineChartCreator;
+import com.rickauer.marketmonarch.utils.FileSupplier;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
 import java.awt.Desktop;

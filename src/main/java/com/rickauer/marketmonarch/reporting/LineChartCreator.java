@@ -11,7 +11,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import com.rickauer.marketmonarch.configuration.FileSupplier;
+import com.rickauer.marketmonarch.utils.FileSupplier;
 
 public final class LineChartCreator {
 	

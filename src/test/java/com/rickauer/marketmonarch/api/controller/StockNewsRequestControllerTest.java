@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.enums.SentimentFilterPeriod;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
-import com.rickauer.marketmonarch.configuration.FileSupplier;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
+import com.rickauer.marketmonarch.utils.FileSupplier;
 
 public class StockNewsRequestControllerTest {
 

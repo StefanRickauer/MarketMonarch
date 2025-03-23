@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.configuration;
+package com.rickauer.marketmonarch.utils;
 
 import java.io.File;
 
