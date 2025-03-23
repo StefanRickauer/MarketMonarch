@@ -23,14 +23,14 @@ public class InteractiveBrokersApiControllerTest {
 	
 	@Test
 	void getRequestIdValidTest() {
-		for (int i = 1; i <= 10; i++) {
+		for (int i = 0; i <= 10; i++) {
 			assertEquals(i, _ibController.getRequestId());
 		}
 	}
 
 	@Test
 	void getRequestIdInvalidTest() {
-		assertFalse(0 == _ibController.getRequestId());
+		assertFalse(0 != _ibController.getRequestId());
 	}
 
 }
