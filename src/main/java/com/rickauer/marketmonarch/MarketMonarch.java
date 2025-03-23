@@ -12,6 +12,7 @@ import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
+import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.configuration.FileSupplier;
@@ -20,6 +21,7 @@ import com.rickauer.marketmonarch.data.StockMetrics;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 import com.rickauer.marketmonarch.db.FinancialDataAccess;
 import com.rickauer.marketmonarch.reporting.LineChartCreator;
+import com.rickauer.marketmonarch.utils.StockUtils;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -34,7 +36,7 @@ import org.apache.commons.lang3.exception.*;
 public final class MarketMonarch {
 
 	public static final String PROGRAM = "MarketMonarch";
-	private static final String VERSION = "0.2";
+	private static final String VERSION = "0.28";
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 
@@ -53,12 +55,14 @@ public final class MarketMonarch {
 	public static ScannerResponse _responses;
 	public static Map<Integer, StockMetrics> _stocks;
 	private static Map<String, Long> _sharedFloatBySymbol;
+	private static String _allCompanyFloats;
 
 	static {
 		_sharedLock = new Object();
 		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
 		_sharedFloatBySymbol = new HashMap<>();
+		_allCompanyFloats = "";
 
 		_ibController = new InteractiveBrokersApiController(_responses);
 
@@ -68,7 +72,7 @@ public final class MarketMonarch {
 		_finAccess = new FinancialDataAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
 		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
 		_fmpConnector = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
-		_fmpController = new FmpRequestController(_fmpConnector.getToken());
+		_fmpController = new FmpRequestController(_fmpConnector.getToken(), FmpServiceRequest.ALL_SHARES_FLOAT);
 		_alphaVantage = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
 		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
 
@@ -80,14 +84,18 @@ public final class MarketMonarch {
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			ensureOperationalReadiness();
 			
+			getAllCompanyFloats();
 			scanMarketAndSaveResult();
-//			filterByFloat();
+			filterByFloat();
 			filterByProfitLossAndRVOL();
+			addFloatToStock();
 			
-			// request company share float; filter out all stocks > 20.000.000 
-			// request historical data for all results (5 minute candles) -> iterate over _responses
-			// calculate percentage gain; filter out all stocks < 10% gain
-			// calculate RVOL for 30 minute intervals
+			// DEBUG ONLY: Remove before going live =======================================
+			for (StockMetrics metric : _stocks.values()) {
+				System.out.println("[DEBUG] -> Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
+				+ ", Company Share Float: " + _sharedFloatBySymbol.get(metric.getSymbol()));
+			}
+			// DEBUG ONLY END =============================================================
 			
 			// Make money
 			// Docs: Orders are submitted via the EClient.placeOrder method. From the
@@ -124,6 +132,17 @@ public final class MarketMonarch {
 		_marketMonarchLogger.info("Evaluated check results.");
 	}
 
+	private static void getAllCompanyFloats() {
+		_marketMonarchLogger.info("Requesting all company floats...");
+		
+		_allCompanyFloats = _fmpController.requestAllShareFloat();
+		
+		if (_allCompanyFloats.equals("")) {
+			_marketMonarchLogger.warn("Received empty response from FMP. Trying to fall back on latest save point...");
+		}
+		
+		_marketMonarchLogger.info("Received all company floats.");
+	}
 	
 	private static void scanMarketAndSaveResult() {
 	
@@ -158,10 +177,16 @@ public final class MarketMonarch {
 		int numberOfStocksBeforeFiltering = _responses.getRankings().size();
 		
 		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
-			floatShares = _fmpController.requestCompanyShareFloat(entry.getValue().symbol());
 			
-			_sharedFloatBySymbol.put(entry.getValue().symbol(), floatShares); 
+			String currentSymbol = entry.getValue().symbol();
 			
+			if (currentSymbol.contains(" ")) {
+				floatShares = StockUtils.filterAllFloatsForSymbol(_allCompanyFloats, currentSymbol.replace(" ", "-"));	// The symbol "GTN A" wasn't found but list contains "GTN-A".
+			} else {
+				floatShares = StockUtils.filterAllFloatsForSymbol(_allCompanyFloats, currentSymbol);
+			}
+			
+			_sharedFloatBySymbol.put(currentSymbol, floatShares); 
 		}
 		
 		_responses.getRankings().entrySet()
@@ -191,11 +216,12 @@ public final class MarketMonarch {
 		}
 		
 		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10 || Math.floor(entry.getValue().getRelativeVolume()) < 5);
-
 		_marketMonarchLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed " + (numberOfStocksBeforeFiltering - _stocks.size()) + " entries.");
-		
-		for (StockMetrics metric : _stocks.values()) {
-			System.out.println("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange());
+	}
+	
+	private static void addFloatToStock() {
+		for (Map.Entry<Integer, StockMetrics> entry : _stocks.entrySet()) {
+			entry.getValue().setCompanyShareFloat(_sharedFloatBySymbol.get(entry.getValue().getSymbol()));
 		}
 	}
 }

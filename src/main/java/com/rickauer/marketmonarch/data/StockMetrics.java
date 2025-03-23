@@ -16,7 +16,7 @@ public class StockMetrics {
 	private double[] _volumeCountsPerInterval;
 	private double _rvol;
 	private double _profitLossChange;
-	
+	private long _companyShareFloat;
 	
 	public StockMetrics(Contract contract) {
 		
@@ -26,6 +26,7 @@ public class StockMetrics {
 		_volumeCountsPerInterval = new double[StockUtils.TRADING_DAY_INTERVALS];
 		_rvol = 0;
 		_profitLossChange = 0;
+		_companyShareFloat = 0;
 	}
 	
 	public String getSymbol() {
@@ -38,6 +39,14 @@ public class StockMetrics {
 	
 	public double getProfitLossChange() {
 		return _profitLossChange;
+	}
+	
+	public long getCompanyShareFloat() {
+		return _companyShareFloat;
+	}
+	
+	public void setCompanyShareFloat(long companyShareFloat) {
+		_companyShareFloat = companyShareFloat;
 	}
 	
 	// call from within InteractiveBrokersApiRequestHandler::historicalData

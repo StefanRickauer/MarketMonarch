@@ -19,6 +19,7 @@ public class FmpRequestController {
 	private String _token;
 	private FmpServiceRequest _serviceRequest;
 
+	@Deprecated
 	public FmpRequestController(String token) {
 		_token = token;
 		_serviceRequest = FmpServiceRequest.COMPANY_SHARE_FLOAT;
