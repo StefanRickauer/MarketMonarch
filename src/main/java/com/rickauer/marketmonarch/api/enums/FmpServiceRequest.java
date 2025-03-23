@@ -2,7 +2,8 @@ package com.rickauer.marketmonarch.api.enums;
 
 public enum FmpServiceRequest {
 
-	COMPANY_SHARE_FLOAT("https://financialmodelingprep.com/api/v4/shares_float?symbol=%s&apikey=%s");
+	COMPANY_SHARE_FLOAT("https://financialmodelingprep.com/api/v4/shares_float?symbol=%s&apikey=%s"),						// API subscription required
+	ALL_SHARES_FLOAT("https://financialmodelingprep.com/stable/shares-float-all?apikey=dRNcSKsjjphNAlRas30jQkilr4RC0nNb");	// no API subscription required
 	
 	private String _request;
 	
