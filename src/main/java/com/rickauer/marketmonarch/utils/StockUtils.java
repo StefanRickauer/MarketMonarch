@@ -1,12 +1,20 @@
 package com.rickauer.marketmonarch.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
+import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.enums.TradingTime;
 
 public class StockUtils {
+
+	private static Logger _stockUtilsLogger = LogManager.getLogger(StockUtils.class.getName());
 	
 	public static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern("yyyyMMdd HH:mm:ss");
 	public static final int TRADING_DAY_INTERVALS = 13;
@@ -76,5 +84,35 @@ public class StockUtils {
 	
 	public static int getMinuteOfLastEntry(int intervalLength) {
 		return TradingTime.SIXTEEN.toMinutes() - intervalLength;
+	}
+	
+	public static Long filterAllFloatsForSymbol(String allFloats, String symbolToSearchFor) {
+		_stockUtilsLogger.info("Filtering all shares floats for symbol: '" + symbolToSearchFor +"'...");
+		String symbol = "";
+
+		Long companyShareFloat = -1L;
+
+		try {
+			Object responseObject = new JSONParser().parse(allFloats);
+			JSONArray array = (JSONArray) responseObject;
+
+			for (int i = 0; i < array.size(); i++) {
+
+				JSONObject dataObject = (JSONObject) array.get(i);
+				symbol = (String) dataObject.get("symbol");
+				
+				if (symbol.equals(symbolToSearchFor)) {
+					_stockUtilsLogger.info("Found company share float for symbol: '" + symbolToSearchFor + "'.");
+					return (Long) dataObject.get("floatShares");
+				}
+			}
+			
+
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		
+		_stockUtilsLogger.warn("Did not find company share float for symbol: '" + symbolToSearchFor + "'.");
+		return companyShareFloat;
 	}
 }

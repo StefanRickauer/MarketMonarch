@@ -72,33 +72,7 @@ public class FmpRequestController {
 			return "";
 		}
 		
+		_fmpRequestLogger.info("Received all shares float.");
 		return response;
-	}
-
-	public Long filterAllFloatsForSymbol(String allFloats, String symbolToSearchFor) {
-		_fmpRequestLogger.info("Requesting all shares float and filtering for symbol: " + symbolToSearchFor);
-		String symbol = "";
-
-		Long companyShareFloat = -1L;
-
-		try {
-			Object responseObject = new JSONParser().parse(allFloats);
-			JSONArray array = (JSONArray) responseObject;
-
-			for (int i = 0; i < array.size(); i++) {
-
-				JSONObject dataObject = (JSONObject) array.get(i);
-				symbol = (String) dataObject.get("symbol");
-				
-				if (symbol.equals(symbolToSearchFor)) {
-					companyShareFloat = (Long) dataObject.get("floatShares");
-				}
-			}
-
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
-		
-		return companyShareFloat;
 	}
 }
