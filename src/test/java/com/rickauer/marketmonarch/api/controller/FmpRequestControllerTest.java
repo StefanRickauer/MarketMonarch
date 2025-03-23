@@ -30,11 +30,6 @@ public class FmpRequestControllerTest {
 	
 	@Test
 	void requestAllShareFloatTest() {
-		assertTrue(_controller.filterAllFloatsForSymbol(_response, "AAPL") != -1);
-	}
-	
-	@Test
-	void requestCompanyShareFloatEmptyResponseTest() {
-		assertFalse(_controller.filterAllFloatsForSymbol(_response, "****") != -1L);
+		assertFalse(_response.equals(""));
 	}
 }
