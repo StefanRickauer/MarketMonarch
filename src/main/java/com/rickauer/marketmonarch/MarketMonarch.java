@@ -84,6 +84,9 @@ public final class MarketMonarch {
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			ensureOperationalReadiness();
 			
+			// TODO: Request account summary and quit execution if account balance is below certain amount!
+			// TODO: Add functionality that saves all received float values in separate file an in case there is no connection to load saved values instead or in case there was already a request today! 
+			
 			getAllCompanyFloats();
 			scanMarketAndSaveResult();
 			filterByFloat();
