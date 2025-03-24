@@ -18,7 +18,7 @@ public class LineChartCreatorTest {
 	
 	@BeforeAll
 	public static void initializeTestData() {
-		FileSupplier.createTemporaryFolder();
+		FileSupplier.createFolder(FileSupplier.getTemporaryFolder());
 	}
 	
 	@Test
@@ -32,6 +32,6 @@ public class LineChartCreatorTest {
 
 	@AfterAll
 	public static void removeTestData() {
-		FileSupplier.deleteTemporaryFolder();
+		FileSupplier.deleteFolder(FileSupplier.getTemporaryFolder());
 	}
 }

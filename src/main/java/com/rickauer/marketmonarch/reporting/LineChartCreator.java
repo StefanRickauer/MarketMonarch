@@ -15,7 +15,7 @@ import com.rickauer.marketmonarch.utils.FileSupplier;
 
 public final class LineChartCreator {
 	
-	public static final String LINECHART = FileSupplier.printTemporaryFolder() + "/Linechart.jpeg";
+	public static final String LINECHART = FileSupplier.getTemporaryFolder() + "/Linechart.jpeg";
 	private static Logger lineGraphCreatorLogger = LogManager.getLogger(LineChartCreator.class.getName());
 	
 	private DefaultCategoryDataset tradingData;

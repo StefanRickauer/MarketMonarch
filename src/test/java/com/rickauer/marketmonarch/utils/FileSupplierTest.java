@@ -19,7 +19,7 @@ public class FileSupplierTest {
 	
 	@Test
 	void A_creationTest() {
-		FileSupplier.createTemporaryFolder();
+		FileSupplier.createFolder(FileSupplier.getTemporaryFolder());
 		
 		File temp = new File(TMP);
 		assertTrue(temp.exists());
@@ -40,7 +40,9 @@ public class FileSupplierTest {
 			assertTrue(false);	// Test invalid if checking for deleted folders that never existed
 		}
 		
-		FileSupplier.deleteTemporaryFolder();
+		FileSupplier.deleteFolder(FileSupplier.getTemporaryFolder());
 		assertFalse(new File(TMP).exists());
 	}
+	
+	// Creation and deletion of backup folder won't be tested since there might be production data which is not supposed to be deleted.
 }
