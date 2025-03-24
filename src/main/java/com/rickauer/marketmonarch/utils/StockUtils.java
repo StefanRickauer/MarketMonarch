@@ -18,6 +18,7 @@ public class StockUtils {
 	
 	public static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern("yyyyMMdd HH:mm:ss");
 	public static final int TRADING_DAY_INTERVALS = 13;
+	private static final int DATESTRING_LENGTH_WITHOUT_TIMEZONE = 17;
 	
 	
 	private StockUtils() {
@@ -68,18 +69,7 @@ public class StockUtils {
 	}
 	
 	private static String extractDate(String dateWithZone) {
-		String lower = dateWithZone.toLowerCase();
-		String upper = dateWithZone.toUpperCase();
-		
-		int index = 0;
-		
-		for (char c : lower.toCharArray()) {
-			if (!(c == upper.toCharArray()[index])) 
-				return dateWithZone.substring(0, index).trim();
-			index++;
-			
-		}
-		return dateWithZone;
+		return dateWithZone.substring(0, DATESTRING_LENGTH_WITHOUT_TIMEZONE);
 	}
 	
 	public static int getMinuteOfLastEntry(int intervalLength) {
