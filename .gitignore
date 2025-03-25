@@ -17,6 +17,7 @@ logs/
 # Config file
 src/main/resources/Configuration.json
 src/test/resources/DBessentialsTest.json
+src/test/resources/test.txt
 
 # virtual machine crash logs
 hs_err_pid*
@@ -35,3 +36,6 @@ bin/
 build/
 /bin1/
 java/build/**
+
+# Backups
+backup/**
