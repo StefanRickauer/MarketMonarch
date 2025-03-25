@@ -92,8 +92,13 @@ public class StockUtils {
 				symbol = (String) dataObject.get("symbol");
 				
 				if (symbol.equals(symbolToSearchFor)) {
-					_stockUtilsLogger.info("Found company share float for symbol: '" + symbolToSearchFor + "'.");
-					return (Long) dataObject.get("floatShares");
+					
+					Long floatShares = (Long) dataObject.get("floatShares");
+					
+					if (floatShares != null) {
+						_stockUtilsLogger.info("Found company share float for symbol: '" + symbolToSearchFor + "'.");
+						return floatShares;
+					}
 				}
 			}
 			
