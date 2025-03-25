@@ -70,7 +70,7 @@ public class FmpRequestController {
 		
 		if (response.contains("Exclusive Endpoint") || response.equals("")) {
 			_fmpRequestLogger.error("Invalid request. Received:\n'" + response + "'.");
-			return "";
+			throw new RuntimeException("Invalid request.");
 		}
 		
 		_fmpRequestLogger.info("Received all shares float.");
