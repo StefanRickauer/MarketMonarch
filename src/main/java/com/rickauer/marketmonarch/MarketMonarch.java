@@ -2,6 +2,9 @@ package com.rickauer.marketmonarch;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.ib.client.Contract;
 import com.ib.client.ScannerSubscription;
@@ -25,6 +28,9 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -36,12 +42,14 @@ import org.apache.commons.lang3.exception.*;
 public final class MarketMonarch {
 
 	public static final String PROGRAM = "MarketMonarch";
-	private static final String VERSION = "0.28";
+	private static final String VERSION = "0.3";
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 
-	private static int MAX_NUMBER_OF_SHARES = 20_000_000;
-	private static int MIN_NUMBER_OF_SHARES = 5_000_000;
+	private static final String COMPANY_FLOATS_BACKUP_FOLDER= FileSupplier.getBackupFolder() + "\\Company Floats\\";
+	
+	private static final int MAX_NUMBER_OF_SHARES = 20_000_000;
+	private static final int MIN_NUMBER_OF_SHARES = 5_000_000;
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyAccess _apiAccess;
@@ -83,7 +91,7 @@ public final class MarketMonarch {
 			Thread.currentThread().setName(PROGRAM + " -> Main Thread");
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			ensureOperationalReadiness();
-			
+			setUpWorkingEnvironment();
 			// TODO: Request account summary and quit execution if account balance is below certain amount!
 			// TODO: Add functionality that saves all received float values in separate file an in case there is no connection to load saved values instead or in case there was already a request today!
 			// TODO: Convert _allCompanyFloats to HashMap<String, Long>. Tests revealed the usage of HashMap to be up to six times faster than iterative approach. 
@@ -135,14 +143,56 @@ public final class MarketMonarch {
 		_healthChecker.analyseCheckResults();
 		_marketMonarchLogger.info("Evaluated check results.");
 	}
+	
+	private static void setUpWorkingEnvironment() {
+		_marketMonarchLogger.info("Setting up working environment...");
+		
+		File companyFloatBackupFolder = new File(COMPANY_FLOATS_BACKUP_FOLDER);
+		if (!companyFloatBackupFolder.exists()) {
+			companyFloatBackupFolder.mkdir();
+			_marketMonarchLogger.info("Created company floats backup folder.");
+		}
+		
+		_marketMonarchLogger.info("Set up environment.");
+	}
 
 	private static void getAllCompanyFloats() {
 		_marketMonarchLogger.info("Requesting all company floats...");
 		
-		_allCompanyFloats = _fmpController.requestAllShareFloat();
+		DateTime today = DateTime.now();
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
+		
+		String todaysBackupFileName = COMPANY_FLOATS_BACKUP_FOLDER + today.toString(formatter);
+		
+		File todaysBackupFile = new File(todaysBackupFileName);
+
+		if (todaysBackupFile.exists()) {
+			_allCompanyFloats = FileSupplier.readFile(todaysBackupFileName);
+		} else {
+			
+			try {
+				_allCompanyFloats = _fmpController.requestAllShareFloat();
+				FileSupplier.writeFile(todaysBackupFileName, _allCompanyFloats);
+				_marketMonarchLogger.info("Saved company floats to '" + todaysBackupFileName + "'.");		
+			} catch (Exception e) {
+				_marketMonarchLogger.error("Could not fetch data.");
+			}
+		}
 		
 		if (_allCompanyFloats.equals("")) {
-			_marketMonarchLogger.warn("Received empty response from FMP. Trying to fall back on latest save point...");
+			_marketMonarchLogger.warn("No backups today and received empty response from FMP. Trying to fall back on latest save point...");
+			
+			File backupFolder = new File(COMPANY_FLOATS_BACKUP_FOLDER);
+			
+			File[] backupFiles = backupFolder.listFiles(); 
+			
+			if (backupFiles.length > 0 ) {
+				String latestBackup = backupFiles[backupFiles.length - 1].getAbsolutePath();
+				_allCompanyFloats = FileSupplier.readFile(latestBackup);
+				_marketMonarchLogger.info("Loaded latest save file: '" + latestBackup + "'.");
+			} else {
+				_marketMonarchLogger.fatal("Could not obtain company floats.");
+			}
 		}
 		
 		_marketMonarchLogger.info("Received all company floats.");
