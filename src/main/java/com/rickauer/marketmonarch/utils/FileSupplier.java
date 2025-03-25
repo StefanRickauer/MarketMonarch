@@ -1,13 +1,17 @@
 package com.rickauer.marketmonarch.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class FileSupplier {
 	
-	private static Logger fileSupplierLogger = LogManager.getLogger(FileSupplier.class.getName());
+	private static Logger _fileSupplierLogger = LogManager.getLogger(FileSupplier.class.getName());
 
 	private FileSupplier() {
 		throw new UnsupportedOperationException();
@@ -27,15 +31,15 @@ public final class FileSupplier {
 	
 	public static void createFolder(String folder) {
 
-		fileSupplierLogger.info("Creating folder: '" + folder + "'.");
+		_fileSupplierLogger.info("Creating folder: '" + folder + "'.");
 
 		File newFolder = new File(folder);
 		
 		if (!newFolder.exists()) {
 			newFolder.mkdir();
-			fileSupplierLogger.info("Created '" + newFolder.getAbsolutePath() + "'.");
+			_fileSupplierLogger.info("Created '" + newFolder.getAbsolutePath() + "'.");
 		} else {
-			fileSupplierLogger.info("Temporary folder: '" + newFolder.getAbsolutePath() + "' already exists.");
+			_fileSupplierLogger.info("Temporary folder: '" + newFolder.getAbsolutePath() + "' already exists.");
 		}
 	}
 
@@ -45,7 +49,7 @@ public final class FileSupplier {
 
 	private static void deleteFolderRecursively(File file) {
 
-		fileSupplierLogger.info("Processing: '" + file + "'.");
+		_fileSupplierLogger.info("Processing: '" + file + "'.");
 		
 		if (file.isDirectory()) {
 			File[] directoryContent = file.listFiles();
@@ -54,6 +58,35 @@ public final class FileSupplier {
 			}
 		} 
 		file.delete();
-		fileSupplierLogger.info("Deleted: '" + file + "'.");
+		_fileSupplierLogger.info("Deleted: '" + file + "'.");
+	}
+	
+	public static String readFile(String path) {
+		
+		File file = new File(path);
+		String content = "";
+		
+		if (!file.exists()) {
+			_fileSupplierLogger.error("File '" + path + "' does not exist.");
+			throw new IllegalArgumentException("File does not exist.");
+		}
+		
+		try {
+			content = Files.readString(Path.of(path));
+		} catch (IOException e) {
+			_fileSupplierLogger.error(e);
+		}
+		return content;
+	}
+	
+	public static void writeFile(String fileName, String content) {
+		
+		try {
+			Files.writeString(Path.of(fileName), content, StandardOpenOption.CREATE_NEW);
+		} catch (IOException e) {
+			_fileSupplierLogger.error(e);
+			throw new RuntimeException("Could not write to file.");
+		}
+		
 	}
 }

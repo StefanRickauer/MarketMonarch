@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ public class FileSupplierTest {
 
 	private static final String CWD = System.getProperty("user.dir");
 	private static final String TMP = CWD + "/temp";
+	private static final String TXT_FILE = CWD + "\\src\\test\\resources\\test.txt";
 	
 	@Test
 	void A_creationTest() {
@@ -44,5 +46,28 @@ public class FileSupplierTest {
 		assertFalse(new File(TMP).exists());
 	}
 	
-	// Creation and deletion of backup folder won't be tested since there might be production data which is not supposed to be deleted.
+	@Test
+	void C_writeTest() {
+		File file = new File(TXT_FILE);
+		
+		assertFalse(file.exists());
+		
+		FileSupplier.writeFile(TXT_FILE, "Das ist ein Test");
+		
+		assertTrue(file.exists());
+	}
+	
+	@Test
+	void D_readTest() {
+		String content = FileSupplier.readFile(TXT_FILE);
+		
+		assertEquals("Das ist ein Test", content);
+	}
+	
+	@AfterAll
+	static void cleanTestEnvironment() {
+		File file = new File(TXT_FILE);
+		
+		file.delete();
+	}
 }
