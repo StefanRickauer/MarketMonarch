@@ -5,6 +5,9 @@ import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import com.ib.client.Contract;
 import com.ib.client.ScannerSubscription;
@@ -62,15 +65,13 @@ public final class MarketMonarch {
 	private static Object _sharedLock;
 	public static ScannerResponse _responses;
 	public static Map<Integer, StockMetrics> _stocks;
-	private static Map<String, Long> _sharedFloatBySymbol;
-	private static String _allCompanyFloats;
+	private static Map<String, Long> _allCompanyFloats;
 
 	static {
 		_sharedLock = new Object();
 		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
-		_sharedFloatBySymbol = new HashMap<>();
-		_allCompanyFloats = "";
+		_allCompanyFloats = new HashMap<>();
 
 		_ibController = new InteractiveBrokersApiController(_responses);
 
@@ -98,14 +99,14 @@ public final class MarketMonarch {
 			
 			getAllCompanyFloats();
 			scanMarketAndSaveResult();
-			filterByFloat();
-			filterByProfitLossAndRVOL();
+			filterScanResultsByFloat();
+			filterScanResultsByProfitLossAndRVOL();
 			addFloatToStock();
 			
 			// DEBUG ONLY: Remove before going live =======================================
 			for (StockMetrics metric : _stocks.values()) {
 				System.out.println("[DEBUG] -> Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
-				+ ", Company Share Float: " + _sharedFloatBySymbol.get(metric.getSymbol()));
+				+ ", Company Share Float: " + _allCompanyFloats.get(metric.getSymbol()));
 			}
 			// DEBUG ONLY END =============================================================
 			
@@ -159,6 +160,8 @@ public final class MarketMonarch {
 	private static void getAllCompanyFloats() {
 		_marketMonarchLogger.info("Requesting all company floats...");
 		
+		String companyFloats = "";
+		
 		DateTime today = DateTime.now();
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
 		
@@ -167,19 +170,19 @@ public final class MarketMonarch {
 		File todaysBackupFile = new File(todaysBackupFileName);
 
 		if (todaysBackupFile.exists()) {
-			_allCompanyFloats = FileSupplier.readFile(todaysBackupFileName);
+			companyFloats = FileSupplier.readFile(todaysBackupFileName);
 		} else {
 			
 			try {
-				_allCompanyFloats = _fmpController.requestAllShareFloat();
-				FileSupplier.writeFile(todaysBackupFileName, _allCompanyFloats);
+				companyFloats = _fmpController.requestAllShareFloat();
+				FileSupplier.writeFile(todaysBackupFileName,companyFloats);
 				_marketMonarchLogger.info("Saved company floats to '" + todaysBackupFileName + "'.");		
 			} catch (Exception e) {
 				_marketMonarchLogger.error("Could not fetch data.");
 			}
 		}
 		
-		if (_allCompanyFloats.equals("")) {
+		if (companyFloats.equals("")) {
 			_marketMonarchLogger.warn("No backups today and received empty response from FMP. Trying to fall back on latest save point...");
 			
 			File backupFolder = new File(COMPANY_FLOATS_BACKUP_FOLDER);
@@ -188,14 +191,52 @@ public final class MarketMonarch {
 			
 			if (backupFiles.length > 0 ) {
 				String latestBackup = backupFiles[backupFiles.length - 1].getAbsolutePath();
-				_allCompanyFloats = FileSupplier.readFile(latestBackup);
+				companyFloats = FileSupplier.readFile(latestBackup);
 				_marketMonarchLogger.info("Loaded latest save file: '" + latestBackup + "'.");
 			} else {
 				_marketMonarchLogger.fatal("Could not obtain company floats.");
 			}
 		}
-		
+		 _allCompanyFloats = convertResponseToMap(companyFloats);
+		 
 		_marketMonarchLogger.info("Received all company floats.");
+	}
+	
+	private static Map<String, Long> convertResponseToMap(String response) {
+		_marketMonarchLogger.info("Saving responses to map in order to increase performance...");
+		
+		HashMap<String, Long> convertedResponses = new HashMap<>();
+		
+		String sym = "";
+		long fl = 0L;
+		
+		try {
+			Object responseObject = new JSONParser().parse(response);
+			JSONArray array = (JSONArray) responseObject;
+
+			for (int i = 0; i < array.size(); i++) {
+				JSONObject dataObject = (JSONObject) array.get(i);
+				sym = (String) dataObject.get("symbol");
+				
+				if (dataObject.get("floatShares") == null) {
+					continue;
+				} else if (dataObject.get("floatShares").toString().contains(".")) {
+					Double doubleFl = (Double) dataObject.get("floatShares");
+					fl = doubleFl.longValue();
+				} else {
+					fl = (Long) dataObject.get("floatShares");
+				}
+				
+				convertedResponses.put(sym , fl);
+			}
+		} catch (Exception e ) {
+			System.out.println(sym);
+			System.err.println(e.getMessage());
+		}
+		
+		_marketMonarchLogger.info("Saved responses to map.");
+		
+		return convertedResponses;
 	}
 	
 	private static void scanMarketAndSaveResult() {
@@ -224,9 +265,12 @@ public final class MarketMonarch {
 		_marketMonarchLogger.info("Received scan results.");
 	}
 	
-	private static void filterByFloat() {
+	private static void filterScanResultsByFloat() {
 		
 		_marketMonarchLogger.info("Filtering scan results by company share float...");
+		
+		Map<String, Long> scanResultCompanyFloat = new HashMap<>();
+		
 		long floatShares = 0L;
 		int numberOfStocksBeforeFiltering = _responses.getRankings().size();
 		
@@ -234,22 +278,23 @@ public final class MarketMonarch {
 			
 			String currentSymbol = entry.getValue().symbol();
 			
-			if (currentSymbol.contains(" ")) {
-				floatShares = StockUtils.filterAllFloatsForSymbol(_allCompanyFloats, currentSymbol.replace(" ", "-"));	// The symbol "GTN A" wasn't found but list contains "GTN-A".
-			} else {
-				floatShares = StockUtils.filterAllFloatsForSymbol(_allCompanyFloats, currentSymbol);
+			try {
+				floatShares = _allCompanyFloats.get(currentSymbol.replace(" ", "-"));		// The symbol "GTN A" wasn't found but list contains "GTN-A".
+			} catch (NullPointerException e) {
+				floatShares = -1L;
+				_marketMonarchLogger.warn("Did not find company share float for symbol: '" + currentSymbol + "'.");
 			}
 			
-			_sharedFloatBySymbol.put(currentSymbol, floatShares); 
+			scanResultCompanyFloat.put(currentSymbol, floatShares); 
 		}
 		
 		_responses.getRankings().entrySet()
-			.removeIf(entry -> _sharedFloatBySymbol.get(entry.getValue().symbol()) > MAX_NUMBER_OF_SHARES || _sharedFloatBySymbol.get(entry.getValue().symbol()) < MIN_NUMBER_OF_SHARES);
+			.removeIf(entry -> scanResultCompanyFloat.get(entry.getValue().symbol()) > MAX_NUMBER_OF_SHARES || scanResultCompanyFloat.get(entry.getValue().symbol()) < MIN_NUMBER_OF_SHARES);
 		
 		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _responses.getRankings().size()) + " entries.");
 	}
 	
-	private static void filterByProfitLossAndRVOL() {
+	private static void filterScanResultsByProfitLossAndRVOL() {
 		
 		_marketMonarchLogger.info("Filtering stocks by profit and loss (P&L) and relative trading volume...");
 		int requestId = 0;
@@ -275,7 +320,7 @@ public final class MarketMonarch {
 	
 	private static void addFloatToStock() {
 		for (Map.Entry<Integer, StockMetrics> entry : _stocks.entrySet()) {
-			entry.getValue().setCompanyShareFloat(_sharedFloatBySymbol.get(entry.getValue().getSymbol()));
+			entry.getValue().setCompanyShareFloat(_allCompanyFloats.get(entry.getValue().getSymbol()));
 		}
 	}
 }

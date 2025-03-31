@@ -75,39 +75,4 @@ public class StockUtils {
 	public static int getMinuteOfLastEntry(int intervalLength) {
 		return TradingTime.SIXTEEN.toMinutes() - intervalLength;
 	}
-	
-	public static Long filterAllFloatsForSymbol(String allFloats, String symbolToSearchFor) {
-		_stockUtilsLogger.info("Filtering all shares floats for symbol: '" + symbolToSearchFor +"'...");
-		String symbol = "";
-
-		Long companyShareFloat = -1L;
-
-		try {
-			Object responseObject = new JSONParser().parse(allFloats);
-			JSONArray array = (JSONArray) responseObject;
-
-			for (int i = 0; i < array.size(); i++) {
-
-				JSONObject dataObject = (JSONObject) array.get(i);
-				symbol = (String) dataObject.get("symbol");
-				
-				if (symbol.equals(symbolToSearchFor)) {
-					
-					Long floatShares = (Long) dataObject.get("floatShares");
-					
-					if (floatShares != null) {
-						_stockUtilsLogger.info("Found company share float for symbol: '" + symbolToSearchFor + "'.");
-						return floatShares;
-					}
-				}
-			}
-			
-
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
-		
-		_stockUtilsLogger.warn("Did not find company share float for symbol: '" + symbolToSearchFor + "'.");
-		return companyShareFloat;
-	}
 }
