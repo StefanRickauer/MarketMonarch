@@ -94,7 +94,8 @@ public class StockMetrics {
 		int subtrahend = _candleChart.getLast().getDate().getDayOfWeek() == 1 ? 3 : 1;
 		
 		for (CandleStick candleStick : _candleChart) {
-			if (candleStick.getDate().getDayOfMonth() != ( _candleChart.getLast().getDate().getDayOfMonth() - subtrahend ) ) {
+			
+			if (!isDateYesterday(candleStick.getDate(), _candleChart.getLast().getDate(), subtrahend) ) {
 				continue;
 			}
 			
@@ -104,5 +105,17 @@ public class StockMetrics {
 		}
 		
 		_profitLossChange = ( (actualPrice - yesterdaysClosePrice) / yesterdaysClosePrice ) * 100; 
+	}
+	
+	private boolean isDateYesterday(DateTime date, DateTime todaysDate, int subtrahend) {
+		
+		int lastTradingDay = todaysDate.getDayOfMonth() - subtrahend;
+		
+		if (todaysDate.getDayOfMonth() == 1) {
+			// subtract one month, get the last day of last month, subtract the subtrahend and add one day because getting the previous day already subtracts one day
+			lastTradingDay = todaysDate.minusMonths(1).dayOfMonth().withMaximumValue().getDayOfMonth() - subtrahend + 1; 
+		}
+		
+		return (date.getDayOfMonth() == lastTradingDay ); 
 	}
 }
