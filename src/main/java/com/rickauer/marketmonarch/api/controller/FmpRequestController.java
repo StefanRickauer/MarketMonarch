@@ -3,6 +3,8 @@ package com.rickauer.marketmonarch.api.controller;
 import java.io.Reader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,5 +77,41 @@ public class FmpRequestController {
 		
 		_fmpRequestLogger.info("Received all shares float.");
 		return response;
+	}
+	
+	public static Map<String, Long> convertResponseToMap(String response) {
+		_fmpRequestLogger.info("Saving responses to map in order to increase performance...");
+		
+		HashMap<String, Long> convertedResponses = new HashMap<>();
+		
+		String sym = "";
+		long fl = 0L;
+		
+		try {
+			Object responseObject = new JSONParser().parse(response);
+			JSONArray array = (JSONArray) responseObject;
+
+			for (int i = 0; i < array.size(); i++) {
+				JSONObject dataObject = (JSONObject) array.get(i);
+				sym = (String) dataObject.get("symbol");
+				
+				if (dataObject.get("floatShares") == null) {
+					continue;
+				} else if (dataObject.get("floatShares").toString().contains(".")) {
+					Double doubleFl = (Double) dataObject.get("floatShares");
+					fl = doubleFl.longValue();
+				} else {
+					fl = (Long) dataObject.get("floatShares");
+				}
+				
+				convertedResponses.put(sym , fl);
+			}
+		} catch (Exception e ) {
+			_fmpRequestLogger.error("Error converting response:\n" + e);
+		}
+		
+		_fmpRequestLogger.info("Saved responses to map.");
+		
+		return convertedResponses;
 	}
 }

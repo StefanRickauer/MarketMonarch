@@ -166,7 +166,6 @@ public final class MarketMonarch {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
 		
 		String todaysBackupFileName = COMPANY_FLOATS_BACKUP_FOLDER + today.toString(formatter);
-		
 		File todaysBackupFile = new File(todaysBackupFileName);
 
 		if (todaysBackupFile.exists()) {
@@ -186,7 +185,6 @@ public final class MarketMonarch {
 			_marketMonarchLogger.warn("No backups today and received empty response from FMP. Trying to fall back on latest save point...");
 			
 			File backupFolder = new File(COMPANY_FLOATS_BACKUP_FOLDER);
-			
 			File[] backupFiles = backupFolder.listFiles(); 
 			
 			if (backupFiles.length > 0 ) {
@@ -197,46 +195,8 @@ public final class MarketMonarch {
 				_marketMonarchLogger.fatal("Could not obtain company floats.");
 			}
 		}
-		 _allCompanyFloats = convertResponseToMap(companyFloats);
-		 
+		 _allCompanyFloats = FmpRequestController.convertResponseToMap(companyFloats);
 		_marketMonarchLogger.info("Received all company floats.");
-	}
-	
-	private static Map<String, Long> convertResponseToMap(String response) {
-		_marketMonarchLogger.info("Saving responses to map in order to increase performance...");
-		
-		HashMap<String, Long> convertedResponses = new HashMap<>();
-		
-		String sym = "";
-		long fl = 0L;
-		
-		try {
-			Object responseObject = new JSONParser().parse(response);
-			JSONArray array = (JSONArray) responseObject;
-
-			for (int i = 0; i < array.size(); i++) {
-				JSONObject dataObject = (JSONObject) array.get(i);
-				sym = (String) dataObject.get("symbol");
-				
-				if (dataObject.get("floatShares") == null) {
-					continue;
-				} else if (dataObject.get("floatShares").toString().contains(".")) {
-					Double doubleFl = (Double) dataObject.get("floatShares");
-					fl = doubleFl.longValue();
-				} else {
-					fl = (Long) dataObject.get("floatShares");
-				}
-				
-				convertedResponses.put(sym , fl);
-			}
-		} catch (Exception e ) {
-			System.out.println(sym);
-			System.err.println(e.getMessage());
-		}
-		
-		_marketMonarchLogger.info("Saved responses to map.");
-		
-		return convertedResponses;
 	}
 	
 	private static void scanMarketAndSaveResult() {
