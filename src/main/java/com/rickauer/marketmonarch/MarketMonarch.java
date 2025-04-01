@@ -105,7 +105,7 @@ public final class MarketMonarch {
 			
 			// DEBUG ONLY: Remove before going live =======================================
 			for (StockMetrics metric : _stocks.values()) {
-				System.out.println("[DEBUG] -> Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
+				_marketMonarchLogger.debug("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
 				+ ", Company Share Float: " + _allCompanyFloats.get(metric.getSymbol()));
 			}
 			// DEBUG ONLY END =============================================================
@@ -268,6 +268,7 @@ public final class MarketMonarch {
 					_stocks.put(requestId, new StockMetrics(entry.getValue()));
 					_ibController.getSocket().reqHistoricalData(requestId, entry.getValue(), "", "12 D", "5 mins", "TRADES", 1, 1, false, null);
 					_stocks.wait();
+					_marketMonarchLogger.info(_stocks.get(requestId).getSymbol() + ": P&L = " + _stocks.get(requestId).getProfitLossChange() + ", RVOL = " + _stocks.get(requestId).getRelativeVolume());
 				} catch (InterruptedException e) {
 					throw new RuntimeException("Error scanning market.", e);
 				}
