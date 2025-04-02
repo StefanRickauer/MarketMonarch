@@ -109,11 +109,13 @@ public class StockMetrics {
 	
 	private boolean isDateYesterday(DateTime date, DateTime todaysDate, int subtrahend) {
 		
-		int lastTradingDay = todaysDate.getDayOfMonth() - subtrahend;
+		int lastTradingDay;	
 		
 		if (todaysDate.getDayOfMonth() == 1) {
 			// subtract one month, get the last day of last month, subtract the subtrahend and add one day because getting the previous day already subtracts one day
 			lastTradingDay = todaysDate.minusMonths(1).dayOfMonth().withMaximumValue().getDayOfMonth() - subtrahend + 1; 
+		} else {
+			lastTradingDay = todaysDate.getDayOfMonth() - subtrahend;
 		}
 		
 		return (date.getDayOfMonth() == lastTradingDay ); 

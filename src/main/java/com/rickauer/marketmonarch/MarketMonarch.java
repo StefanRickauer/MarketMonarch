@@ -94,8 +94,6 @@ public final class MarketMonarch {
 			ensureOperationalReadiness();
 			setUpWorkingEnvironment();
 			// TODO: Request account summary and quit execution if account balance is below certain amount!
-			// TODO: Add functionality that saves all received float values in separate file an in case there is no connection to load saved values instead or in case there was already a request today!
-			// TODO: Convert _allCompanyFloats to HashMap<String, Long>. Tests revealed the usage of HashMap to be up to six times faster than iterative approach. 
 			
 			getAllCompanyFloats();
 			scanMarketAndSaveResult();
