@@ -95,7 +95,7 @@ public final class MarketMonarch {
 			setUpWorkingEnvironment();
 			// TODO: Request account summary and quit execution if account balance is below certain amount!
 			
-			getAllCompanyFloats();
+			getAllCompanyFreeFloats();
 			scanMarketAndSaveResult();
 			filterScanResultsByFloat();
 			requestHistoricalDataAndfilterScanResultsByProfitLossAndRVOL();
@@ -155,8 +155,8 @@ public final class MarketMonarch {
 		_marketMonarchLogger.info("Set up environment.");
 	}
 
-	private static void getAllCompanyFloats() {
-		_marketMonarchLogger.info("Requesting all company floats...");
+	private static void getAllCompanyFreeFloats() {
+		_marketMonarchLogger.info("Requesting all company free floats...");
 		
 		String companyFloats = "";
 		
@@ -180,7 +180,7 @@ public final class MarketMonarch {
 		}
 		
 		if (companyFloats.equals("")) {
-			_marketMonarchLogger.warn("No backups today and received empty response from FMP. Trying to fall back on latest save point...");
+			_marketMonarchLogger.warn("No backups today and received an empty response from FMP. Attempting to restore latest save point...");
 			
 			File backupFolder = new File(COMPANY_FLOATS_BACKUP_FOLDER);
 			File[] backupFiles = backupFolder.listFiles(); 
@@ -190,11 +190,11 @@ public final class MarketMonarch {
 				companyFloats = FileSupplier.readFile(latestBackup);
 				_marketMonarchLogger.info("Loaded latest save file: '" + latestBackup + "'.");
 			} else {
-				_marketMonarchLogger.fatal("Could not obtain company floats.");
+				_marketMonarchLogger.fatal("Could not fetch company free floats.");
 			}
 		}
 		 _allCompanyFloats = FmpRequestController.convertResponseToMap(companyFloats);
-		_marketMonarchLogger.info("Received all company floats.");
+		_marketMonarchLogger.info("Received all company free floats.");
 	}
 	
 	private static void scanMarketAndSaveResult() {
