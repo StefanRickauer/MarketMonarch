@@ -12,9 +12,6 @@ public class InteractiveBrokersApiControllerTest {
 	ScannerResponse _responses;
 	InteractiveBrokersApiController _ibController;
 	
-	// getRequestId() will increment the requestId. Therefore, in order to ensure the requestId starts from 0 at each new test, a new object of 
-	// the class InteractiveBrokersApiController must be instantiated. 
-	
 	@BeforeEach
 	void initializeData() {
 		_responses = new ScannerResponse(new Object());
