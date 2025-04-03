@@ -62,8 +62,12 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 		_scanResult = scanResult;
 	}
 	
+	public int getRequestId() {
+		return _requestId;
+	}
+	
 	public int getNextRequestId() {
-		return _requestId++;
+		return ++_requestId;
 	}
 
 	public EReaderSignal getReaderSignal() {
@@ -240,15 +244,16 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	}
 
 	@Override
-	public void scannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark,
-			String projection, String legsStr) {
+	public void scannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {
 		_scanResult.addItem(rank, contractDetails.contract());
-
 	}
 
 	@Override
 	public void scannerDataEnd(int reqId) {
-		_ibRequestHandlerLogger.info("Market scanner subscription canceled.");
+		synchronized(_scanResult._lock) {
+			_scanResult._lock.notify();
+		}
+		_ibRequestHandlerLogger.info("Received scan results for request ID: '"  + reqId + "'.");
 	}
 
 	@Override

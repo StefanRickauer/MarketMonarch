@@ -68,7 +68,6 @@ public class StockMetrics {
 			_historicalVolumesByInterval[StockUtils.timeToIndex(candleStick.getDate().getMinuteOfDay())] += Double.parseDouble(candleStick.getVolume().toString());
 			_volumeCountsPerInterval[StockUtils.timeToIndex(candleStick.getDate().getMinuteOfDay())]++;
 		}
-		
 		_rvol = Double.parseDouble(_candleChart.getLast().getVolume().toString()) / getAverageTradingVolumeForInterval(_candleChart.getLast().getDate());
 	}
 	

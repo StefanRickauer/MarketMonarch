@@ -201,16 +201,7 @@ public final class MarketMonarch {
 	
 		_marketMonarchLogger.info("Setting up market scanner subscription and requesting scan results...");
 		
-		int requestId = _ibController.getRequestId();
-		
-		ScannerSubscription subscription = new ScannerSubscription();
-		subscription.instrument("STK");
-		subscription.locationCode("STK.US.MAJOR");
-		subscription.scanCode("TOP_PERC_GAIN");
-		List<TagValue> filterTagValues = new LinkedList<>();
-		filterTagValues.add(new TagValue("priceAbove", "2"));
-		filterTagValues.add(new TagValue("priceBelow", "20"));
-		_ibController.getSocket().reqScannerSubscription(requestId, subscription, null, filterTagValues);
+		_ibController.requestScannerSubscription("2", "20");
 
 		synchronized (_sharedLock) {
 			try {
@@ -219,7 +210,7 @@ public final class MarketMonarch {
 				throw new RuntimeException("Error scanning market.", e);
 			}
 		}
-		_ibController.getSocket().cancelScannerSubscription(requestId);
+		_ibController.cancelScannerSubscription(_ibController.getRequestId());
 		_marketMonarchLogger.info("Received scan results.");
 	}
 	

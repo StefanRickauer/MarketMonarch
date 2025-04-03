@@ -8,7 +8,7 @@ import com.ib.client.Contract;
 public class ScannerResponse {
 
 	Map<Integer, Contract> _ranking;
-	Object _lock;
+	public Object _lock;
 	
 	public ScannerResponse(Object lock) {
 		_ranking = new HashMap<>();
@@ -17,12 +17,6 @@ public class ScannerResponse {
 	
 	public void addItem(Integer rank, Contract contract) {
 		_ranking.put(rank, contract);
-		synchronized(_lock) {
-			; // TODO: Find better solution 
-			if (_ranking.size() >= 50) {
-				_lock.notify();
-			}
-		}
 	}
 	
 	public Map<Integer, Contract> getRankings() {
