@@ -98,7 +98,7 @@ public final class MarketMonarch {
 			getAllCompanyFloats();
 			scanMarketAndSaveResult();
 			filterScanResultsByFloat();
-			filterScanResultsByProfitLossAndRVOL();
+			requestHistoricalDataAndfilterScanResultsByProfitLossAndRVOL();
 			addFloatToStock();
 			
 			// DEBUG ONLY: Remove before going live =======================================
@@ -252,25 +252,14 @@ public final class MarketMonarch {
 		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _responses.getRankings().size()) + " entries.");
 	}
 	
-	private static void filterScanResultsByProfitLossAndRVOL() {
+	private static void requestHistoricalDataAndfilterScanResultsByProfitLossAndRVOL() {
 		
 		_marketMonarchLogger.info("Filtering stocks by profit and loss (P&L) and relative trading volume...");
-		int requestId = 0;
+		
 		int numberOfStocksBeforeFiltering = _responses.getRankings().size();
 		
 		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
-			
-			synchronized (_stocks) {
-				try {
-					requestId = _ibController.getRequestId();
-					_stocks.put(requestId, new StockMetrics(entry.getValue()));
-					_ibController.getSocket().reqHistoricalData(requestId, entry.getValue(), "", "12 D", "5 mins", "TRADES", 1, 1, false, null);
-					_stocks.wait();
-					_marketMonarchLogger.info(_stocks.get(requestId).getSymbol() + ": P&L = " + _stocks.get(requestId).getProfitLossChange() + ", RVOL = " + _stocks.get(requestId).getRelativeVolume());
-				} catch (InterruptedException e) {
-					throw new RuntimeException("Error scanning market.", e);
-				}
-			}
+			_ibController.requestHistoricalDataUntilToday(entry.getValue(), "12 D", "5 mins");
 		}
 		
 		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10 || Math.floor(entry.getValue().getRelativeVolume()) < 5);
