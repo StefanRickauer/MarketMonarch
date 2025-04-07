@@ -86,6 +86,28 @@ public final class InteractiveBrokersApiController implements Verifyable {
 	public EClientSocket getSocket() {
 		return _requestHandler.getClientSocket();
 	}
+	
+	// Maximum number of requests is 3 -> Error occurred during test when 4 requests were sent. 
+	public void requestAccountSummaryItem(String tag) {
+		
+		_ibApiControllerLogger.info("Account summary item '" + tag + "' is being requested...");
+		
+		String group = "All";		
+		int requestId = 0;
+		
+		synchronized (MarketMonarch._accountSummary) {
+			try {
+				requestId = getNextRequestId();
+				getSocket().reqAccountSummary(requestId, group, tag);
+				MarketMonarch._accountSummary.wait();
+				_ibApiControllerLogger.info("Retrieved account summary item '" + tag + "'.");
+			} catch (InterruptedException e) {
+				_ibApiControllerLogger.error("Account summary item '" + tag + "' could not be retrieved.");
+				throw new RuntimeException("Account summary item '" + tag + "' could not be retrieved.");
+			}
+		}
+		
+	}
 
 	public void requestScannerSubscription(String priceAbove, String priceBelow) {
 		

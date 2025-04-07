@@ -41,6 +41,7 @@ import com.ib.client.TickAttribLast;
 import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
+import com.rickauer.marketmonarch.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.data.CandleStick;
 
 public final class InteractiveBrokersApiRequestHandler implements EWrapper {
@@ -313,13 +314,16 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void accountSummary(int reqId, String account, String tag, String value, String currency) {
-		// TODO Auto-generated method stub
-
+		synchronized (MarketMonarch._accountSummary) {
+			MarketMonarch._accountSummary.put(tag, new AccountSummaryItem(reqId, account, tag, value, currency));
+		}
 	}
 
 	@Override
 	public void accountSummaryEnd(int reqId) {
-		// TODO Auto-generated method stub
+		synchronized (MarketMonarch._accountSummary) {
+			MarketMonarch._accountSummary.notify();
+		}
 
 	}
 

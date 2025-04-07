@@ -12,6 +12,7 @@ import org.json.simple.parser.JSONParser;
 import com.ib.client.Contract;
 import com.ib.client.ScannerSubscription;
 import com.ib.client.TagValue;
+import com.ib.controller.AccountSummaryTag;
 import com.rickauer.marketmonarch.api.connect.AlphaVantageConnector;
 import com.rickauer.marketmonarch.api.connect.FmpConnector;
 import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
@@ -21,6 +22,7 @@ import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.data.CandleStick;
 import com.rickauer.marketmonarch.data.StockMetrics;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
@@ -53,6 +55,7 @@ public final class MarketMonarch {
 	
 	private static final int MAX_NUMBER_OF_SHARES = 20_000_000;
 	private static final int MIN_NUMBER_OF_SHARES = 5_000_000;
+	private static final int MINIMUM_ACCOUNT_BALANCE = 500;
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyAccess _apiAccess;
@@ -63,12 +66,14 @@ public final class MarketMonarch {
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _ibController;
 	private static Object _sharedLock;
+	public static Map<String, AccountSummaryItem> _accountSummary;
 	public static ScannerResponse _responses;
 	public static Map<Integer, StockMetrics> _stocks;
 	private static Map<String, Long> _allCompanyFloats;
 
 	static {
 		_sharedLock = new Object();
+		_accountSummary = new HashMap<>();
 		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
 		_allCompanyFloats = new HashMap<>();
@@ -93,7 +98,17 @@ public final class MarketMonarch {
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			ensureOperationalReadiness();
 			setUpWorkingEnvironment();
-			// TODO: Request account summary and quit execution if account balance is below certain amount!
+			
+			requestAccountMetrics();
+			// DEBUG ONLY: Remove before going live =======================================
+			_marketMonarchLogger.debug("Total cash: " + _accountSummary.get("TotalCashValue").getValueAsDouble()); 
+			_marketMonarchLogger.debug("Total in stocks: " + _accountSummary.get("GrossPositionValue").getValueAsDouble()); 
+			// DEBUG ONLY END =============================================================
+			
+			if ( ( (long)Math.floor(_accountSummary.get("TotalCashValue").getValueAsDouble()) ) < MINIMUM_ACCOUNT_BALANCE) {
+				_marketMonarchLogger.fatal("Less than 500 Euros in cash available. Exiting.");
+				System.exit(0);
+			}
 			
 			getAllCompanyFreeFloats();
 			scanMarketAndSaveResult();
@@ -155,6 +170,11 @@ public final class MarketMonarch {
 		_marketMonarchLogger.info("Set up environment.");
 	}
 
+	private static void requestAccountMetrics() {
+		_ibController.requestAccountSummaryItem("TotalCashValue");
+		_ibController.requestAccountSummaryItem("GrossPositionValue");
+	}
+	
 	private static void getAllCompanyFreeFloats() {
 		_marketMonarchLogger.info("Requesting all company free floats...");
 		
