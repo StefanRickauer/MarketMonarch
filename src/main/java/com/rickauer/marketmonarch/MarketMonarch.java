@@ -189,9 +189,14 @@ public final class MarketMonarch {
 		if (todaysBackupFile.exists()) {
 			companyFloats = FileSupplier.readFile(todaysBackupFileName);
 		} else {
-			
+			// Latest test returned significantly fewer shares which is why the length of the response will be checked and if the response is incomplete, backup will be used instead.
 			try {
 				companyFloats = _fmpController.requestAllShareFloat();
+				if (companyFloats.length() < 1000000) {
+					_marketMonarchLogger.error("Received incomplete response.");
+					companyFloats = "";
+					throw new RuntimeException("Incomplete response won't be saved.");
+				}
 				FileSupplier.writeFile(todaysBackupFileName,companyFloats);
 				_marketMonarchLogger.info("Saved company floats to '" + todaysBackupFileName + "'.");		
 			} catch (Exception e) {
@@ -200,7 +205,7 @@ public final class MarketMonarch {
 		}
 		
 		if (companyFloats.equals("")) {
-			_marketMonarchLogger.warn("No backups today and received an empty response from FMP. Attempting to restore latest save point...");
+			_marketMonarchLogger.warn("No backups today and received an empty or incomplete response from FMP. Attempting to restore latest save point...");
 			
 			File backupFolder = new File(COMPANY_FLOATS_BACKUP_FOLDER);
 			File[] backupFiles = backupFolder.listFiles(); 
