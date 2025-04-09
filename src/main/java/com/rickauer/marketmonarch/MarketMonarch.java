@@ -247,6 +247,7 @@ public final class MarketMonarch {
 		
 		long floatShares = 0L;
 		int numberOfStocksBeforeFiltering = _responses.getRankings().size();
+		int failedSearchesCount = 0;
 		
 		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
 			
@@ -257,6 +258,7 @@ public final class MarketMonarch {
 			} catch (NullPointerException e) {
 				floatShares = -1L;
 				_marketMonarchLogger.warn("Did not find company share float for symbol: '" + currentSymbol + "'.");
+				failedSearchesCount++;
 			}
 			
 			scanResultCompanyFloat.put(currentSymbol, floatShares); 
@@ -265,7 +267,7 @@ public final class MarketMonarch {
 		_responses.getRankings().entrySet()
 			.removeIf(entry -> scanResultCompanyFloat.get(entry.getValue().symbol()) > MAX_NUMBER_OF_SHARES || scanResultCompanyFloat.get(entry.getValue().symbol()) < MIN_NUMBER_OF_SHARES);
 		
-		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _responses.getRankings().size()) + " entries.");
+		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _responses.getRankings().size()) + " out of " + numberOfStocksBeforeFiltering+ " + entries. Failed searches in totoal: " + failedSearchesCount);
 	}
 	
 	private static void requestHistoricalDataAndfilterScanResultsByProfitLossAndRVOL() {
