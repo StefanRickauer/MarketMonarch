@@ -25,7 +25,7 @@ public final class LineChartCreator {
 		tradingData = new DefaultCategoryDataset();
 	}
 	
-	public void createLineGraph() {
+	public void createLineGraphAndSaveFile() {
 		
 		lineGraphCreatorLogger.info("Creating line graph.");
 		

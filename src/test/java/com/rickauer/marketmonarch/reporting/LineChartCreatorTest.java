@@ -24,7 +24,7 @@ public class LineChartCreatorTest {
 	@Test
 	void callDefaultConstructorTest() throws IOException, InterruptedException {
 		LineChartCreator creator = new LineChartCreator();
-		creator.createLineGraph();
+		creator.createLineGraphAndSaveFile();
 		Desktop.getDesktop().open(lineChart);
 		Thread.sleep(2000);
 		assertTrue(new File(LineChartCreator.LINECHART).exists());
