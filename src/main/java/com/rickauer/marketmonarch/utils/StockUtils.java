@@ -14,8 +14,6 @@ import com.rickauer.marketmonarch.api.enums.TradingTime;
 
 public class StockUtils {
 
-	private static Logger _stockUtilsLogger = LogManager.getLogger(StockUtils.class.getName());
-	
 	public static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern("yyyyMMdd HH:mm:ss");
 	public static final int TRADING_DAY_INTERVALS = 13;
 	private static final int DATESTRING_LENGTH_WITHOUT_TIMEZONE = 17;

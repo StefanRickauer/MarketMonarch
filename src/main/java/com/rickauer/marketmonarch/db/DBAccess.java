@@ -14,21 +14,19 @@ import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
-; // Unvollständing preparedStatement noch verwenden.
-
 public abstract class DBAccess implements Verifyable {
 
 	private static Logger _dbLogger = LogManager.getLogger(DBAccess.class.getName()); 
 	
+	// PreparedStatement verwenden!
+	
 	private Connection connect;
 	private Statement statement;
-	private PreparedStatement preparedStatement;
 	private ResultSet resultSet;
 
 	public DBAccess() {
 		connect = null;
 		statement = null;
-		preparedStatement = null;
 		resultSet = null;
 	}
 	

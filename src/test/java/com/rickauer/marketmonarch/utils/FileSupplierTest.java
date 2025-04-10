@@ -30,7 +30,6 @@ public class FileSupplierTest {
 	@Test
 	void B_deletionTest() {
 		
-		@SuppressWarnings("unused")
 		File subfolder = new File(TMP + "/subfolder");
 		File subfolder2 = new File(TMP + "/subfolder/subfolder2");
 		

@@ -21,7 +21,8 @@ public final class LineChartCreator {
 	private DefaultCategoryDataset tradingData;
 	
 	public LineChartCreator() {
-		; // Constructor must query database for trading stats
+		
+		// Constructor must query database for trading stats
 		tradingData = new DefaultCategoryDataset();
 	}
 	
