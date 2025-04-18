@@ -12,6 +12,7 @@ import org.json.simple.parser.JSONParser;
 import com.ib.client.Contract;
 import com.ib.client.ScannerSubscription;
 import com.ib.client.TagValue;
+import com.ib.client.Types.TimeInForce;
 import com.ib.controller.AccountSummaryTag;
 import com.rickauer.marketmonarch.api.connect.AlphaVantageConnector;
 import com.rickauer.marketmonarch.api.connect.FmpConnector;
@@ -127,6 +128,35 @@ public final class MarketMonarch {
 			// Docs: Orders are submitted via the EClient.placeOrder method. From the
 			// snippet below, note how a variable holding the nextValidId is incremented
 			// automatically.
+			
+			// for each remaining search result 
+			//		- request 5 sec candles of the past 3 days
+			//		- convert these candles to barseries
+			//		- request live data for symbol
+			//			-- add live candle to bar series
+			//			-- analyze bar series
+			//			-- if should enter is true
+			//				--- stop monitoring other stocks
+			//				--- calculate entry price from last close + puffer
+			//				--- calculate total quantity											-> (available money - buffer) / entry price -> floor the result 
+			//				--- create order object for BUY 										-> orderType = "LMT" for limit order
+			//				--- place order
+			//				--- if order is filled													-> 	EWrapper.orderStatus()	will be called every time the status changes:	order.status == "Filled" means order has been placed 
+			// 					---- get price														->																			order.avgFillPrice is the average price for each stock
+			//					---- calculate desired win and maximum loss for the stock based on the average fill price
+			//					---- create new order object for SELL								-> orderType = "STPLMT" for stop limit order
+			//					---- keep monitoring live data
+			//							----- if actual price > average fill price
+			//										------ set stop loss to desired win				-> set auxPrice() and lmtPrice() of the order and place it again
+			//							----- if actual price < average fill price	
+			//										------ set stop loss to maximum loss			-> set auxPrice() and lmtPrice() of the order and place it again
+			// Order example
+			//			order.action("BUY");		or "SELL"
+			//			order.orderType("LMT");		or "STPLMT"
+			//			order.totalQuantity(quantity);
+			//			order.lmtPrice(Double);				+ order.auxPrice(Double) if "STPLMT" is used
+			//			order.tif(TimeInForce.DAY);			// default
+			
 		} catch (Throwable t) {
 			// Workaround because usage of t will throw exception.
 			String stackTrace = ExceptionUtils.getStackTrace(t);
