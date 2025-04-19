@@ -112,7 +112,8 @@ public final class MarketMonarch {
 			}
 			
 			getAllCompanyFreeFloats();
-			scanMarketAndSaveResult();
+			scanMarket();
+			; // log results?
 			filterScanResultsByFloat();
 			requestHistoricalDataAndfilterScanResultsByProfitLossAndRVOL();
 			addFloatToStock();
@@ -252,7 +253,7 @@ public final class MarketMonarch {
 		_marketMonarchLogger.info("Received all company free floats.");
 	}
 	
-	private static void scanMarketAndSaveResult() {
+	private static void scanMarket() {
 	
 		_marketMonarchLogger.info("Setting up market scanner subscription and requesting scan results...");
 		
