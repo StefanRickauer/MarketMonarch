@@ -113,7 +113,6 @@ public final class MarketMonarch {
 			
 			getAllCompanyFreeFloats();
 			scanMarket();
-			; // log results?
 			filterScanResultsByFloat();
 			requestHistoricalDataAndfilterScanResultsByProfitLossAndRVOL();
 			addFloatToStock();
@@ -311,7 +310,7 @@ public final class MarketMonarch {
 			_ibController.requestHistoricalDataUntilToday(entry.getValue(), "12 D", "5 mins");
 		}
 		
-		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10 || Math.floor(entry.getValue().getRelativeVolume()) < 5);
+		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
 		_marketMonarchLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed " + (numberOfStocksBeforeFiltering - _stocks.size()) + " entries.");
 	}
 	
