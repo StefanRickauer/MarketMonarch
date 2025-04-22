@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,7 +70,8 @@ public final class MarketMonarch {
 	private static Object _sharedLock;
 	public static Map<String, AccountSummaryItem> _accountSummary;
 	public static ScannerResponse _responses;
-	public static Map<Integer, StockMetrics> _stocks;
+	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
+	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
 	private static Map<String, Long> _allCompanyFloats;
 
 	static {
@@ -77,6 +79,7 @@ public final class MarketMonarch {
 		_accountSummary = new HashMap<>();
 		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
+		_contractsToObserve = new ArrayList<>();
 		_allCompanyFloats = new HashMap<>();
 
 		_ibController = new InteractiveBrokersApiController(_responses);
@@ -121,6 +124,10 @@ public final class MarketMonarch {
 			for (StockMetrics metric : _stocks.values()) {
 				_marketMonarchLogger.debug("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
 				+ ", Company Share Float: " + _allCompanyFloats.get(metric.getSymbol()));
+			}
+			
+			for (Contract contract : _contractsToObserve) {
+				_marketMonarchLogger.debug("Contract to observe: " + contract.symbol());
 			}
 			// DEBUG ONLY END =============================================================
 			
@@ -311,6 +318,11 @@ public final class MarketMonarch {
 		}
 		
 		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
+		
+		for (Map.Entry<Integer, StockMetrics> filteredResult : _stocks.entrySet()) {
+			_contractsToObserve.add(filteredResult.getValue().getContract());
+		}
+		
 		_marketMonarchLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed " + (numberOfStocksBeforeFiltering - _stocks.size()) + " entries.");
 	}
 	
