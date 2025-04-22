@@ -10,8 +10,7 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class StockMetrics {
 
-	private Contract _contract;
-	private List<CandleStick> _candleChart;
+	private CandleSeries _candleStickChart;
 	private double[] _historicalVolumesByInterval;
 	private double[] _volumeCountsPerInterval;
 	private double _rvol;
@@ -20,8 +19,7 @@ public class StockMetrics {
 	
 	public StockMetrics(Contract contract) {
 		
-		_contract = contract;
-		_candleChart = new ArrayList<>();
+		_candleStickChart = new CandleSeries(contract);
 		_historicalVolumesByInterval = new double[StockUtils.TRADING_DAY_INTERVALS];
 		_volumeCountsPerInterval = new double[StockUtils.TRADING_DAY_INTERVALS];
 		_rvol = 0;
@@ -29,8 +27,12 @@ public class StockMetrics {
 		_companyShareFloat = 0;
 	}
 	
+	public Contract getContract() {
+		return _candleStickChart.getContract();
+	}
+	
 	public String getSymbol() {
-		return _contract.symbol();
+		return _candleStickChart.getSymbol();
 	}
 	
 	public double getRelativeVolume() {
@@ -54,21 +56,21 @@ public class StockMetrics {
 		if (!StockUtils.isValidTradingTime(candleStick.getDate().getMinuteOfDay())) {
 			throw new IllegalArgumentException("Invalid argument: " + candleStick.getDateAsString());
 		}
-		_candleChart.add(candleStick);
+		_candleStickChart.addCandleStick(candleStick);
 	}
 	
 	// call from within InteractiveBrokersApiRequestHandler::historicalDataEnd; executed once the last candle is received
 	public void calculateRelativeTradingVolume() {
 		
-		for (CandleStick candleStick : _candleChart) {
-			if (candleStick.getDate().getDayOfMonth() == _candleChart.getLast().getDate().getDayOfMonth()) {
+		for (CandleStick candleStick : _candleStickChart.getSeries()) {
+			if (candleStick.getDate().getDayOfMonth() ==  _candleStickChart.getSeries().getLast().getDate().getDayOfMonth()) {
 				continue;
 			}
 			
 			_historicalVolumesByInterval[StockUtils.timeToIndex(candleStick.getDate().getMinuteOfDay())] += Double.parseDouble(candleStick.getVolume().toString());
 			_volumeCountsPerInterval[StockUtils.timeToIndex(candleStick.getDate().getMinuteOfDay())]++;
 		}
-		_rvol = Double.parseDouble(_candleChart.getLast().getVolume().toString()) / getAverageTradingVolumeForInterval(_candleChart.getLast().getDate());
+		_rvol = Double.parseDouble(_candleStickChart.getSeries().getLast().getVolume().toString()) / getAverageTradingVolumeForInterval(_candleStickChart.getSeries().getLast().getDate());
 	}
 	
 
@@ -86,15 +88,15 @@ public class StockMetrics {
 	
 	public void calculateProfitLossChange() {
 		
-		double actualPrice = _candleChart.getLast().getClose();
+		double actualPrice = _candleStickChart.getSeries().getLast().getClose();
 		double yesterdaysClosePrice = 0;
 		
 		// If today is Monday, subtract three days to get Friday, otherwise one day to get yesterday
-		int subtrahend = _candleChart.getLast().getDate().getDayOfWeek() == 1 ? 3 : 1;
+		int subtrahend = _candleStickChart.getSeries().getLast().getDate().getDayOfWeek() == 1 ? 3 : 1;
 		
-		for (CandleStick candleStick : _candleChart) {
+		for (CandleStick candleStick : _candleStickChart.getSeries()) {
 			
-			if (!isDateYesterday(candleStick.getDate(), _candleChart.getLast().getDate(), subtrahend) ) {
+			if (!isDateYesterday(candleStick.getDate(), _candleStickChart.getSeries().getLast().getDate(), subtrahend) ) {
 				continue;
 			}
 			
