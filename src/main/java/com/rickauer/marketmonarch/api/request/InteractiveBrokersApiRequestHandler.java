@@ -235,7 +235,15 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void historicalData(int reqId, Bar bar) {
-		MarketMonarch._stocks.get(reqId).addCandleStick(new CandleStick(bar.time(), bar.open(), bar.close(), bar.high(), bar.low(), bar.volume()));
+		
+		if (MarketMonarch._stocks.get(reqId) != null) {
+			MarketMonarch._stocks.get(reqId).addCandleStick(new CandleStick(bar.time(), bar.open(), bar.close(), bar.high(), bar.low(), bar.volume()));			
+		}
+
+		if (MarketMonarch._stocksToTradeWith.get(reqId) != null) {
+			MarketMonarch._stocksToTradeWith.get(reqId).addCandleStick(new CandleStick(bar.time(), bar.open(), bar.close(), bar.high(), bar.low(), bar.volume()));
+			
+		}
 	}
 
 	@Override
@@ -449,12 +457,25 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
-		_ibRequestHandlerLogger.info("Gathered historical data for Symbol: '" + MarketMonarch._stocks.get(reqId).getSymbol() + "', Request-ID: " + reqId + ".");
 		
-		synchronized(MarketMonarch._stocks) {
-			MarketMonarch._stocks.get(reqId).calculateProfitLossChange();
-			MarketMonarch._stocks.get(reqId).calculateRelativeTradingVolume();
-			MarketMonarch._stocks.notify();			
+		; // Refaktorisieren!
+		if (MarketMonarch._stocks.get(reqId) != null) {
+			_ibRequestHandlerLogger.info("Gathered historical data for Symbol: '" + MarketMonarch._stocks.get(reqId).getSymbol() + "', Request-ID: " + reqId + ".");
+
+			synchronized(MarketMonarch._stocks) {
+				MarketMonarch._stocks.get(reqId).calculateProfitLossChange();
+				MarketMonarch._stocks.get(reqId).calculateRelativeTradingVolume();
+				MarketMonarch._stocks.notify();			
+			}
+		}
+		
+		if (MarketMonarch._stocksToTradeWith.get(reqId) != null) {
+			_ibRequestHandlerLogger.info("Gathered historical data for Symbol: '" + MarketMonarch._stocksToTradeWith.get(reqId).getSymbol() + "', Request-ID: " + reqId + ".");
+			
+			synchronized(MarketMonarch._stocksToTradeWith) {
+				MarketMonarch._stocksToTradeWith.notify();
+		}
+		
 		}
 	}
 

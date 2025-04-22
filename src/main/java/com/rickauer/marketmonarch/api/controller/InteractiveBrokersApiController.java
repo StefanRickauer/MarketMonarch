@@ -11,6 +11,7 @@ import com.ib.client.TagValue;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
+import com.rickauer.marketmonarch.data.CandleSeries;
 import com.rickauer.marketmonarch.data.StockMetrics;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
@@ -146,11 +147,29 @@ public final class InteractiveBrokersApiController implements Verifyable {
 						+ MarketMonarch._stocks.get(requestId).getProfitLossChange() + ", RVOL = "
 						+ MarketMonarch._stocks.get(requestId).getRelativeVolume());
 			} catch (InterruptedException e) {
-				throw new RuntimeException("Error scanning market.", e);
+				throw new RuntimeException("Error fetching data.", e);
 			}
 		}
 	}
 
+	; // Refaktorisieren
+	public void requestHistoricalDataForAnalysis(Contract contract, String lookbackPeriod, String barSizeSetting) {
+		int requestId = 0;
+
+		synchronized (MarketMonarch._stocksToTradeWith) {
+			try {
+				requestId = getNextRequestId();
+				MarketMonarch._stocksToTradeWith.put(requestId, new CandleSeries(contract));
+				getSocket().reqHistoricalData(requestId, contract, "", lookbackPeriod, barSizeSetting, "TRADES", 1, 1,
+						false, null);
+				MarketMonarch._stocksToTradeWith.wait();
+				_ibApiControllerLogger.info("Received data for '" + MarketMonarch._stocksToTradeWith.get(requestId).getSymbol() + "' for analysis.");
+			} catch (InterruptedException e) {
+				throw new RuntimeException("Error fetching data.", e);
+			}
+		}
+	}
+	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);

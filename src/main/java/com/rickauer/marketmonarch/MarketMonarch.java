@@ -24,6 +24,7 @@ import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.ConfigReader;
 import com.rickauer.marketmonarch.data.AccountSummaryItem;
+import com.rickauer.marketmonarch.data.CandleSeries;
 import com.rickauer.marketmonarch.data.CandleStick;
 import com.rickauer.marketmonarch.data.StockMetrics;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
@@ -72,6 +73,7 @@ public final class MarketMonarch {
 	public static ScannerResponse _responses;
 	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
 	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
+	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
 	private static Map<String, Long> _allCompanyFloats;
 
 	static {
@@ -80,6 +82,7 @@ public final class MarketMonarch {
 		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
 		_contractsToObserve = new ArrayList<>();
+		_stocksToTradeWith = new HashMap<>();
 		_allCompanyFloats = new HashMap<>();
 
 		_ibController = new InteractiveBrokersApiController(_responses);
@@ -125,10 +128,6 @@ public final class MarketMonarch {
 				_marketMonarchLogger.debug("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
 				+ ", Company Share Float: " + _allCompanyFloats.get(metric.getSymbol()));
 			}
-			
-			for (Contract contract : _contractsToObserve) {
-				_marketMonarchLogger.debug("Contract to observe: " + contract.symbol());
-			}
 			// DEBUG ONLY END =============================================================
 			
 			// Make money
@@ -136,8 +135,11 @@ public final class MarketMonarch {
 			// snippet below, note how a variable holding the nextValidId is incremented
 			// automatically.
 			
-			// for each remaining search result 
+			// for each remaining search result
 			//		- request 5 sec candles of the past 3 days
+			
+			requestHistoricalDataForPotentialBuy();
+			
 			//		- convert these candles to barseries
 			//		- request live data for symbol
 			//			-- add live candle to bar series
@@ -163,6 +165,13 @@ public final class MarketMonarch {
 			//			order.totalQuantity(quantity);
 			//			order.lmtPrice(Double);				+ order.auxPrice(Double) if "STPLMT" is used
 			//			order.tif(TimeInForce.DAY);			// default
+			
+			
+			// DEBUG ONLY: Remove before going live =======================================
+			for (CandleSeries entry : _stocksToTradeWith.values()) {
+				System.out.println("======>  " + entry.getSymbol());
+			}
+			// DEBUG ONLY END =============================================================
 			
 		} catch (Throwable t) {
 			// Workaround because usage of t will throw exception.
@@ -330,5 +339,18 @@ public final class MarketMonarch {
 		for (Map.Entry<Integer, StockMetrics> entry : _stocks.entrySet()) {
 			entry.getValue().setCompanyShareFloat(_allCompanyFloats.get(entry.getValue().getSymbol()));
 		}
+	}
+	
+	public static void requestHistoricalDataForPotentialBuy() {
+		
+		_marketMonarchLogger.info("Requesting historical chart data to prepare for live entry signal detection...");
+		
+		_stocksToTradeWith.clear(); 			// since it's been filled always historical data is being requested
+		
+		for (Contract contract : _contractsToObserve) {
+			_ibController.requestHistoricalDataForAnalysis(contract, "10000 S", "5 secs");		// 10000 S = 10000 seconds = 2 hrs 46 minutes
+		}
+		
+		_marketMonarchLogger.info("Done requesting historical chart data.");
 	}
 }
