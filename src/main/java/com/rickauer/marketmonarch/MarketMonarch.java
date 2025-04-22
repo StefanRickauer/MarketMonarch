@@ -114,7 +114,7 @@ public final class MarketMonarch {
 			getAllCompanyFreeFloats();
 			scanMarket();
 			filterScanResultsByFloat();
-			requestHistoricalDataAndfilterScanResultsByProfitLossAndRVOL();
+			requestHistoricalDataAndfilterScanResultsByProfitLoss();
 			addFloatToStock();
 			
 			// DEBUG ONLY: Remove before going live =======================================
@@ -300,7 +300,7 @@ public final class MarketMonarch {
 		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _responses.getRankings().size()) + " out of " + numberOfStocksBeforeFiltering+ " + entries. Failed searches in totoal: " + failedSearchesCount);
 	}
 	
-	private static void requestHistoricalDataAndfilterScanResultsByProfitLossAndRVOL() {
+	private static void requestHistoricalDataAndfilterScanResultsByProfitLoss() {
 		
 		_marketMonarchLogger.info("Filtering stocks by profit and loss (P&L) and relative trading volume...");
 		
