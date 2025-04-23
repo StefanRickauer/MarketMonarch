@@ -1,5 +1,9 @@
 package com.rickauer.marketmonarch.utils;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
@@ -8,6 +12,9 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.indicators.helpers.LowPriceIndicator;
+import org.ta4j.core.indicators.helpers.LowestValueIndicator;
 
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.enums.TradingTime;
@@ -72,5 +79,28 @@ public class StockUtils {
 	
 	public static int getMinuteOfLastEntry(int intervalLength) {
 		return TradingTime.SIXTEEN.toMinutes() - intervalLength;
+	}
+	
+	public static ZonedDateTime toZonedDateTime(String string) {
+		String dateTimeStr = string.substring(0, DATESTRING_LENGTH_WITHOUT_TIMEZONE);
+		java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss");
+		LocalDateTime localDateTime = LocalDateTime.parse(dateTimeStr, formatter);
+		
+		ZoneId systemZone = ZoneId.systemDefault();
+		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, systemZone);
+		
+		return zonedDateTime;
+	}
+	
+	public static double calculateStopLoss(BarSeries series, int periodInBars) {
+		if (series.getBarCount() < periodInBars) {
+			return Double.NaN;
+		}
+		
+		LowPriceIndicator lowPrice = new LowPriceIndicator(series);
+		LowestValueIndicator lowestLow = new LowestValueIndicator(lowPrice, periodInBars);
+		
+		int lastIndex = series.getEndIndex();
+		return lowestLow.getValue(lastIndex).doubleValue();
 	}
 }
