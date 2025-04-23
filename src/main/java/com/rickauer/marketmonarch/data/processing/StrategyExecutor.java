@@ -1,7 +1,9 @@
 package com.rickauer.marketmonarch.data.processing;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.ta4j.core.Bar;
 import org.ta4j.core.BaseBar;
@@ -91,16 +93,27 @@ public class StrategyExecutor {
 		return new BaseStrategy("AlphaEntry", entryRule, exitRule);
 	}
 	
-	; // einbauen, wie bei shouldEnter weitergemacht wird (prüfen, welche Datentypen bei Orders mitgegeben werden müssen)
-	public static void isEntry(BarSeries series) {
+	; // call from outside. Define Map and maybe use Enum for keys
+	public static Map<String, Double> isEntry(BarSeries series) {
+		Map<String, Double> entryExitPrices = new HashMap<>();
+		
 		Strategy strategy = buildStrategy(series);
 		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
 		int lastIndex = series.getEndIndex();
-		double exit = StockUtils.calculateStopLoss(series, 720);
 		
 		if (strategy.shouldEnter(lastIndex)) {
-			Num price = closePrice.getValue(lastIndex);
-//			price.doubleValue();
+			
+			Num entry = closePrice.getValue(lastIndex);
+			
+			double entryPrice = entry.doubleValue(); 
+			double stopLossPrice = StockUtils.calculateStopLoss(series, 720);
+			double takeProfit = StockUtils.calculateTakeProfit(entryPrice);
+			
+			entryExitPrices.put("buy", entryPrice);
+			entryExitPrices.put("stop loss", stopLossPrice);
+			entryExitPrices.put("take profit", takeProfit);
 		}
+		
+		return entryExitPrices;
 	}
 }
