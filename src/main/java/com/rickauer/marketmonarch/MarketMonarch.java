@@ -348,7 +348,7 @@ public final class MarketMonarch {
 		_stocksToTradeWith.clear(); 			// since it's been filled always historical data is being requested
 		
 		for (Contract contract : _contractsToObserve) {
-			_ibController.requestHistoricalDataForAnalysis(contract, "15000 S", "5 secs");		// 10000 S = 10000 seconds = 2 hrs 46 minutes
+			_ibController.requestHistoricalDataForAnalysis(contract, "15000 S", "5 secs");		
 		}
 		
 		_marketMonarchLogger.info("Done requesting historical chart data.");
