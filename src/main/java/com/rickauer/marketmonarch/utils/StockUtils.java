@@ -103,4 +103,11 @@ public class StockUtils {
 		int lastIndex = series.getEndIndex();
 		return lowestLow.getValue(lastIndex).doubleValue();
 	}
+	
+	public static double calculateTakeProfit(double actualPrice) {
+		double takeProfitRaw = actualPrice * MarketMonarch.TAKE_PROFIT;
+		double takeProfitRounded = Math.round(takeProfitRaw * 100.0) / 100.0;
+		
+		return takeProfitRounded;
+	}
 }
