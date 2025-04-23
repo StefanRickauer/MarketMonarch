@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 import com.rickauer.marketmonarch.db.FinancialDataAccess;
 
@@ -19,18 +19,18 @@ class HealthCheckerTest {
 	
 	@BeforeAll
 	public static void initializeTestData() {
-		ConfigReader.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeConfigReader();
 		_healthChecker = new HealthChecker();
-		_apiValid = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
-		_finValid = new FinancialDataAccess(ConfigReader.INSTANCE.getUrlFinancialData(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
-		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+		_apiValid = new ApiKeyAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		_finValid = new FinancialDataAccess(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 	
 	@Test
 	void isOperationalConfigReaderTrue() {
-		_healthChecker.add(ConfigReader.INSTANCE);
+		_healthChecker.add(DatabaseConnector.INSTANCE);
 		_healthChecker.runHealthCheck();
-		assertTrue(_healthChecker.isTypeOperational(ConfigReader.INSTANCE));
+		assertTrue(_healthChecker.isTypeOperational(DatabaseConnector.INSTANCE));
 	}
 	
 	@Test

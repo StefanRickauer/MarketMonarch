@@ -7,14 +7,14 @@ import java.sql.SQLException;
 
 import org.junit.jupiter.api.Test;
 
-import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 
 public class ApiKeyAccessTest {
 
 	@Test
 	void queryDatabaseTest() {
-		ConfigReader.INSTANCE.initializeConfigReader();
-		ApiKeyAccess db = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
+		DatabaseConnector.INSTANCE.initializeConfigReader();
+		ApiKeyAccess db = new ApiKeyAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		
 		try (ResultSet result = db.executeSqlQuery("SELECT token FROM credentials where provider = 'mailtrap'")) {
 			
@@ -28,7 +28,7 @@ public class ApiKeyAccessTest {
 			e.printStackTrace();
 		}
 		
-		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 
 }

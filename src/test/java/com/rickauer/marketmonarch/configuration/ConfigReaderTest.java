@@ -17,17 +17,17 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class ConfigReaderTest {
 
 	@Test
 	void A_initializationTest() {
-		ConfigReader.INSTANCE.initializeConfigReader();
-		assertEquals("jdbc:mysql://localhost:3306/test_db", ConfigReader.INSTANCE.getUrlTestDB());
-		assertEquals("root", ConfigReader.INSTANCE.getUsername());
-		assertTrue(ConfigReader.INSTANCE.getPassword().length() > 0);
+		DatabaseConnector.INSTANCE.initializeConfigReader();
+		assertEquals("jdbc:mysql://localhost:3306/test_db", DatabaseConnector.INSTANCE.getUrlTestDB());
+		assertEquals("root", DatabaseConnector.INSTANCE.getUsername());
+		assertTrue(DatabaseConnector.INSTANCE.getPassword().length() > 0);
 	}
 
 	@Test
@@ -39,9 +39,9 @@ public class ConfigReaderTest {
 		expectedValues.put("id2", "my new value2");
 		
 		try (Connection conn = DriverManager.getConnection(
-				ConfigReader.INSTANCE.getUrlTestDB(), 
-				ConfigReader.INSTANCE.getUsername(), 
-				ConfigReader.INSTANCE.getPassword());
+				DatabaseConnector.INSTANCE.getUrlTestDB(), 
+				DatabaseConnector.INSTANCE.getUsername(), 
+				DatabaseConnector.INSTANCE.getPassword());
 			PreparedStatement ps = conn.prepareStatement(sqlSelectAll);
 			ResultSet rs = ps.executeQuery();)
 				{
@@ -59,14 +59,14 @@ public class ConfigReaderTest {
 
 	@Test
 	void C_flushTest() {
-		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
-		assertEquals("", ConfigReader.INSTANCE.getUrlTestDB());
-		assertEquals("", ConfigReader.INSTANCE.getUsername());
-		assertEquals("", ConfigReader.INSTANCE.getPassword());
+		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
+		assertEquals("", DatabaseConnector.INSTANCE.getUrlTestDB());
+		assertEquals("", DatabaseConnector.INSTANCE.getUsername());
+		assertEquals("", DatabaseConnector.INSTANCE.getPassword());
 	}
 	
 	@Test
 	void D_existenceTest() {
-		assertTrue(ConfigReader.INSTANCE.isSourceFilePresent());
+		assertTrue(DatabaseConnector.INSTANCE.isSourceFilePresent());
 	}
 }

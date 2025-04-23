@@ -5,7 +5,7 @@ import com.rickauer.marketmonarch.api.connect.FmpConnector;
 import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
-import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 import com.rickauer.marketmonarch.db.FinancialDataAccess;
 
@@ -22,7 +22,7 @@ public final class IsCoreTypeCheckVisitor implements Visitor {
 	}
 	
 	@Override
-	public void visit(ConfigReader config) {
+	public void visit(DatabaseConnector config) {
 		_isCoreType = true;
 	}
 

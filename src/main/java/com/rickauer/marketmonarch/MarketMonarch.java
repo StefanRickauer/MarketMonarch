@@ -22,7 +22,7 @@ import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
-import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.data.CandleSeries;
 import com.rickauer.marketmonarch.data.CandleStick;
@@ -50,7 +50,7 @@ import org.apache.commons.lang3.exception.*;
 public final class MarketMonarch {
 
 	public static final String PROGRAM = "MarketMonarch";
-	private static final String VERSION = "0.3";
+	private static final String VERSION = "0.5";
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 
@@ -59,6 +59,7 @@ public final class MarketMonarch {
 	private static final int MAX_NUMBER_OF_SHARES = 20_000_000;
 	private static final int MIN_NUMBER_OF_SHARES = 5_000_000;
 	private static final int MINIMUM_ACCOUNT_BALANCE = 500;
+	public static final double TAKE_PROFIT = 1.05;				// number * TAKE_PROFIT = 5%
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyAccess _apiAccess;
@@ -87,15 +88,15 @@ public final class MarketMonarch {
 
 		_ibController = new InteractiveBrokersApiController(_responses);
 
-		ConfigReader.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeConfigReader();
 
-		_apiAccess = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
-		_finAccess = new FinancialDataAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
+		_apiAccess = new ApiKeyAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		_finAccess = new FinancialDataAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
 		_fmpConnector = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
 		_fmpController = new FmpRequestController(_fmpConnector.getToken(), FmpServiceRequest.ALL_SHARES_FLOAT);
 		_alphaVantage = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
-		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 
 	}
 
@@ -147,6 +148,8 @@ public final class MarketMonarch {
 			//			-- if should enter is true
 			//				--- stop monitoring other stocks
 			//				--- calculate entry price from last close + puffer
+			//				--- calculate exit price
+			//					---- all prices in orders are of type double
 			//				--- calculate total quantity											-> (available money - buffer) / entry price -> floor the result 
 			//				--- create order object for BUY 										-> orderType = "LMT" for limit order
 			//				--- place order
@@ -187,7 +190,7 @@ public final class MarketMonarch {
 	private static void ensureOperationalReadiness() {
 		_marketMonarchLogger.info("Preparing for operational readiness check...");
 
-		_healthChecker.add(ConfigReader.INSTANCE);
+		_healthChecker.add(DatabaseConnector.INSTANCE);
 		_healthChecker.add(_apiAccess);
 		_healthChecker.add(_finAccess);
 		_healthChecker.add(_mailtrapService);

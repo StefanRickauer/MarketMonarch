@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.rickauer.marketmonarch.api.connect.FmpConnector;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
-import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 
 public class FmpRequestControllerTest {
@@ -20,12 +20,12 @@ public class FmpRequestControllerTest {
 	
 	@BeforeAll
 	public static void initializeTestData() {
-		ConfigReader.INSTANCE.initializeConfigReader();
-		_apiAccess = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
+		DatabaseConnector.INSTANCE.initializeConfigReader();
+		_apiAccess = new ApiKeyAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_fmpConnector = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
 		_controller = new FmpRequestController(_fmpConnector.getToken(), FmpServiceRequest.ALL_SHARES_FLOAT);
 		_response = _controller.requestAllShareFloat();
-		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 	
 	@Test

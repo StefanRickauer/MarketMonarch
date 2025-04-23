@@ -5,16 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 
 public class AlphaVantageConnectorTest {
 
 	@Test
 	void isOperationalTrueTest() {
-		ConfigReader.INSTANCE.initializeConfigReader();
-		ApiKeyAccess key = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
-		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+		DatabaseConnector.INSTANCE.initializeConfigReader();
+		ApiKeyAccess key = new ApiKeyAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 		AlphaVantageConnector conn = new AlphaVantageConnector("alphavantageapi", key.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
 		assertTrue(conn.isOperational());
 	}

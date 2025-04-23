@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.rickauer.marketmonarch.api.connect.AlphaVantageConnector;
-import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 
 public class AlhaVantageRequestControllerTest {
@@ -17,11 +17,11 @@ public class AlhaVantageRequestControllerTest {
 	
 	@BeforeAll
 	public static void initializeTestData() {
-		ConfigReader.INSTANCE.initializeConfigReader();
-		_apiAccess = new ApiKeyAccess(ConfigReader.INSTANCE.getUrlAPIKey(), ConfigReader.INSTANCE.getUsername(), ConfigReader.INSTANCE.getPassword());
+		DatabaseConnector.INSTANCE.initializeConfigReader();
+		_apiAccess = new ApiKeyAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_alphaVantageConnector = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
 		_controller = new AlphaVantageRequestController(_alphaVantageConnector.getToken());
-		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 	
 	@Test

@@ -5,11 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.connect.FmpConnector;
 import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.enums.TradingTime;
-import com.rickauer.marketmonarch.configuration.ConfigReader;
+import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.ApiKeyAccess;
 
 public class StockUtilsTest {
@@ -17,8 +18,8 @@ public class StockUtilsTest {
 	
 	@BeforeAll
 	public static void initializeTestData() {
-		ConfigReader.INSTANCE.initializeConfigReader();
-		ConfigReader.INSTANCE.flushDatabaseConnectionEssentials();
+		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 	
 	@Test
@@ -248,5 +249,17 @@ public class StockUtilsTest {
 	void isValidTradingTimeTooHigh() {
 		boolean result = StockUtils.isValidTradingTime(TradingTime.SIXTEEN.toMinutes());
 		assertFalse(result);
+	}
+	
+	@Test
+	void calculateTakeProfitTest() {
+		double first = 1.0;
+		assertEquals(1.05, StockUtils.calculateTakeProfit(first));
+	}
+
+	@Test
+	void calculateTakeProfitTest2() {
+		double first = 1.1;
+		assertEquals(1.16, StockUtils.calculateTakeProfit(first));
 	}
 }

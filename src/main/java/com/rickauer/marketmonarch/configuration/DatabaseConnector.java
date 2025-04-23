@@ -16,11 +16,11 @@ import org.json.simple.parser.ParseException;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
-public enum ConfigReader implements Verifyable {
+public enum DatabaseConnector implements Verifyable {
 	INSTANCE;
 	
 	private static final String SOURCE_FILE = "./src/main/resources/Configuration.json";
-	private Logger configReaderLogger = LogManager.getLogger(ConfigReader.class.getName());
+	private Logger configReaderLogger = LogManager.getLogger(DatabaseConnector.class.getName());
 	
 	private String urlTestDB;
 	private String urlAPIKey;
@@ -56,7 +56,7 @@ public enum ConfigReader implements Verifyable {
 		return password;
 	}
 
-	ConfigReader() {
+	DatabaseConnector() {
 		urlTestDB = "";
 		urlAPIKey = "";
 		urlFinancialData = "";
