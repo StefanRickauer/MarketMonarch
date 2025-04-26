@@ -1,5 +1,6 @@
 package com.rickauer.marketmonarch.data;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -36,7 +37,14 @@ public class CandleStick {
 		return jodaDateTime;
 	}
 	
-	// for insertion to database
+	/**
+	 * Returns an object of Timestamp in order to be saved in a database.
+	 * @return	The time of the Candlestick
+	 */
+	public Timestamp getTimeStamp() {
+		return Timestamp.valueOf(getLocalDateTime());
+	}
+	
 	public LocalDateTime getLocalDateTime() {
 		return _zonedDateTime.toLocalDateTime();
 	}
