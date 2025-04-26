@@ -326,7 +326,7 @@ public final class MarketMonarch {
 		int numberOfStocksBeforeFiltering = _responses.getRankings().size();
 		
 		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
-			_ibController.requestHistoricalDataUntilToday(entry.getValue(), "12 D", "5 mins");
+			_ibController.requestHistoricalDataUntilToday(entry.getValue(), "4 D", "5 mins");
 		}
 		
 		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
@@ -348,7 +348,7 @@ public final class MarketMonarch {
 		
 		_marketMonarchLogger.info("Requesting historical chart data to prepare for live entry signal detection...");
 		
-		_stocksToTradeWith.clear(); 			// since it's been filled always historical data is being requested
+		_stocksToTradeWith.clear(); 			// this method will iterate over all contracts that need to be observed. Hence, delete before use.
 		
 		for (Contract contract : _contractsToObserve) {
 			_ibController.requestHistoricalDataForAnalysis(contract, "15000 S", "5 secs");		

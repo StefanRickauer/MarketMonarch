@@ -242,7 +242,6 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 		if (MarketMonarch._stocksToTradeWith.get(reqId) != null) {
 			MarketMonarch._stocksToTradeWith.get(reqId).addCandleStick(new CandleStick(bar.time(), bar.open(), bar.close(), bar.high(), bar.low(), bar.volume()));
-			
 		}
 	}
 
