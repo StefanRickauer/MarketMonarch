@@ -1,15 +1,17 @@
 package com.rickauer.marketmonarch.data;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.ib.client.Decimal;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class CandleStick {
 
-	private DateTime _dateTime;
 	private ZonedDateTime _zonedDateTime;
 	private double _open;
 	private double _close;
@@ -18,7 +20,6 @@ public class CandleStick {
 	private Decimal _volume;
 	
 	public CandleStick(String date, double open, double close, double high, double low, Decimal volume) {
-		_dateTime = StockUtils.convertStringToDateTime(date);
 		_zonedDateTime = StockUtils.toZonedDateTime(date);
 		_open = open;
 		_close = close;
@@ -27,8 +28,17 @@ public class CandleStick {
 		_volume = volume;
 	}
 	
-	public DateTime getDate() {
-		return _dateTime;
+	public DateTime getJodaDateTime() {
+
+		Instant instant = _zonedDateTime.toInstant();
+		DateTime jodaDateTime = new DateTime(instant.toEpochMilli(), DateTimeZone.forID(_zonedDateTime.getZone().getId()));
+		
+		return jodaDateTime;
+	}
+	
+	// for insertion to database
+	public LocalDateTime getLocalDateTime() {
+		return _zonedDateTime.toLocalDateTime();
 	}
 	
 	public ZonedDateTime getZonedDateTime() {
@@ -36,7 +46,7 @@ public class CandleStick {
 	}
 	
 	public String getDateAsString() {
-		return StockUtils.FORMATTER.print(_dateTime);
+		return StockUtils.FORMATTER.print(getJodaDateTime());
 	}
 	
 	public double getOpen() {

@@ -53,7 +53,7 @@ public class StockMetrics {
 	
 	// call from within InteractiveBrokersApiRequestHandler::historicalData
 	public void addCandleStick(CandleStick candleStick) {
-		if (!StockUtils.isValidTradingTime(candleStick.getDate().getMinuteOfDay())) {
+		if (!StockUtils.isValidTradingTime(candleStick.getJodaDateTime().getMinuteOfDay())) {
 			throw new IllegalArgumentException("Invalid argument: " + candleStick.getDateAsString());
 		}
 		_candleStickChart.addCandleStick(candleStick);
@@ -63,14 +63,14 @@ public class StockMetrics {
 	public void calculateRelativeTradingVolume() {
 		
 		for (CandleStick candleStick : _candleStickChart.getSeries()) {
-			if (candleStick.getDate().getDayOfMonth() ==  _candleStickChart.getSeries().getLast().getDate().getDayOfMonth()) {
+			if (candleStick.getJodaDateTime().getDayOfMonth() ==  _candleStickChart.getSeries().getLast().getJodaDateTime().getDayOfMonth()) {
 				continue;
 			}
 			
-			_historicalVolumesByInterval[StockUtils.timeToIndex(candleStick.getDate().getMinuteOfDay())] += Double.parseDouble(candleStick.getVolume().toString());
-			_volumeCountsPerInterval[StockUtils.timeToIndex(candleStick.getDate().getMinuteOfDay())]++;
+			_historicalVolumesByInterval[StockUtils.timeToIndex(candleStick.getJodaDateTime().getMinuteOfDay())] += Double.parseDouble(candleStick.getVolume().toString());
+			_volumeCountsPerInterval[StockUtils.timeToIndex(candleStick.getJodaDateTime().getMinuteOfDay())]++;
 		}
-		_rvol = Double.parseDouble(_candleStickChart.getSeries().getLast().getVolume().toString()) / getAverageTradingVolumeForInterval(_candleStickChart.getSeries().getLast().getDate());
+		_rvol = Double.parseDouble(_candleStickChart.getSeries().getLast().getVolume().toString()) / getAverageTradingVolumeForInterval(_candleStickChart.getSeries().getLast().getJodaDateTime());
 	}
 	
 
@@ -92,16 +92,16 @@ public class StockMetrics {
 		double yesterdaysClosePrice = 0;
 		
 		// If today is Monday, subtract three days to get Friday, otherwise one day to get yesterday
-		int subtrahend = _candleStickChart.getSeries().getLast().getDate().getDayOfWeek() == 1 ? 3 : 1;
+		int subtrahend = _candleStickChart.getSeries().getLast().getJodaDateTime().getDayOfWeek() == 1 ? 3 : 1;
 		
 		for (CandleStick candleStick : _candleStickChart.getSeries()) {
 			
-			if (!isDateYesterday(candleStick.getDate(), _candleStickChart.getSeries().getLast().getDate(), subtrahend) ) {
+			if (!isDateYesterday(candleStick.getJodaDateTime(), _candleStickChart.getSeries().getLast().getJodaDateTime(), subtrahend) ) {
 				continue;
 			}
 			
 			// Code will reach this point only for yesterday's (or, in case today is Monday, Friday's) entries
-			if (candleStick.getDate().getMinuteOfDay() == StockUtils.getMinuteOfLastEntry(5))	// 955 is 15:55 PM, which is the last entry for a trading day (5-Minute-Intervalls)
+			if (candleStick.getJodaDateTime().getMinuteOfDay() == StockUtils.getMinuteOfLastEntry(5))	// 955 is 15:55 PM, which is the last entry for a trading day (5-Minute-Intervalls)
 				yesterdaysClosePrice = candleStick.getClose();
 		}
 		
