@@ -171,6 +171,7 @@ public final class MarketMonarch {
 			
 			
 			// DEBUG ONLY: Remove before going live =======================================
+			System.out.println("IMPORTATN NOTICE: Order is not based on greatest profit loss first, which must be changed.");
 			for (CandleSeries entry : _stocksToTradeWith.values()) {
 				System.out.println("======>  " + entry.getSymbol());
 			}
@@ -316,7 +317,7 @@ public final class MarketMonarch {
 		_responses.getRankings().entrySet()
 			.removeIf(entry -> scanResultCompanyFloat.get(entry.getValue().symbol()) > MAX_NUMBER_OF_SHARES || scanResultCompanyFloat.get(entry.getValue().symbol()) < MIN_NUMBER_OF_SHARES);
 		
-		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _responses.getRankings().size()) + " out of " + numberOfStocksBeforeFiltering+ " + entries. Failed searches in totoal: " + failedSearchesCount);
+		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _responses.getRankings().size()) + " out of " + numberOfStocksBeforeFiltering + " entries. Failed searches in totoal: " + failedSearchesCount);
 	}
 	
 	private static void requestHistoricalDataAndfilterScanResultsByProfitLoss() {
