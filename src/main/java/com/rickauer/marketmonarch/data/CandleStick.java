@@ -45,6 +45,10 @@ public class CandleStick {
 		return Timestamp.valueOf(getLocalDateTime());
 	}
 	
+	public Instant getInstant() {
+		return _zonedDateTime.toInstant();
+	}
+	
 	public LocalDateTime getLocalDateTime() {
 		return _zonedDateTime.toLocalDateTime();
 	}
