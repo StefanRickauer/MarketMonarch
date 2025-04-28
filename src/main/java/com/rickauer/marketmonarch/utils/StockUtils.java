@@ -1,5 +1,6 @@
 package com.rickauer.marketmonarch.utils;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -109,5 +110,13 @@ public class StockUtils {
 		double takeProfitRounded = Math.round(takeProfitRaw * 100.0) / 100.0;
 		
 		return takeProfitRounded;
+	}
+	
+	public static LocalDateTime timestampToLocalDateTime(Timestamp time) {
+		return time.toLocalDateTime();
+	}
+	
+	public static Timestamp localDateTimeToTimestamp(LocalDateTime time) {
+		return Timestamp.valueOf(time);
 	}
 }

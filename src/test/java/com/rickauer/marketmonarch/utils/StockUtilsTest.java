@@ -2,6 +2,9 @@ package com.rickauer.marketmonarch.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -261,5 +264,21 @@ public class StockUtilsTest {
 	void calculateTakeProfitTest2() {
 		double first = 1.1;
 		assertEquals(1.16, StockUtils.calculateTakeProfit(first));
+	}
+	
+	@Test
+	void conversionTest1() {
+		LocalDateTime ldt = LocalDateTime.parse("1879-03-14T11:30:00.00");
+		Timestamp ts = Timestamp.valueOf("1879-03-14 11:30:00.00");
+		
+		assertEquals(ldt, StockUtils.timestampToLocalDateTime(ts));
+	}
+
+	@Test
+	void conversionTest2() {
+		LocalDateTime ldt = LocalDateTime.parse("1879-03-14T11:30:00.00");
+		Timestamp ts = Timestamp.valueOf("1879-03-14 11:30:00.00");
+		
+		assertEquals(ts, StockUtils.localDateTimeToTimestamp(ldt));
 	}
 }
