@@ -14,7 +14,7 @@ public class ApiKeyAccessTest {
 	@Test
 	void queryDatabaseTest() {
 		DatabaseConnector.INSTANCE.initializeConfigReader();
-		ApiKeyAccess db = new ApiKeyAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		ApiKeyDao db = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		
 		try (ResultSet result = db.executeSqlQuery("SELECT token FROM credentials where provider = 'mailtrap'")) {
 			

@@ -9,8 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
-import com.rickauer.marketmonarch.db.ApiKeyAccess;
-import com.rickauer.marketmonarch.db.FinancialDataAccess;
+import com.rickauer.marketmonarch.db.ApiKeyDao;
+import com.rickauer.marketmonarch.db.FinancialDataDao;
 import com.rickauer.marketmonarch.utils.IsCoreTypeCheckVisitor;
 import com.rickauer.marketmonarch.utils.OperationalCheckVisitor;
 import com.rickauer.marketmonarch.utils.Verifyable;

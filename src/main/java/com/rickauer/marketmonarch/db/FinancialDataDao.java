@@ -3,9 +3,9 @@ package com.rickauer.marketmonarch.db;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.utils.Visitor;
 
-public final class FinancialDataAccess extends DBAccess {
+public final class FinancialDataDao extends DatabaseDao {
 
-	public FinancialDataAccess(String dbUrl, String user, String password) {
+	public FinancialDataDao(String dbUrl, String user, String password) {
 		super(dbUrl, user, password);
 	}
 

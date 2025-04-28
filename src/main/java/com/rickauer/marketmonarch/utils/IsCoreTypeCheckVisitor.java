@@ -6,8 +6,8 @@ import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
-import com.rickauer.marketmonarch.db.ApiKeyAccess;
-import com.rickauer.marketmonarch.db.FinancialDataAccess;
+import com.rickauer.marketmonarch.db.ApiKeyDao;
+import com.rickauer.marketmonarch.db.FinancialDataDao;
 
 public final class IsCoreTypeCheckVisitor implements Visitor {
 
@@ -27,12 +27,12 @@ public final class IsCoreTypeCheckVisitor implements Visitor {
 	}
 
 	@Override
-	public void visit(ApiKeyAccess apiAccess) {
+	public void visit(ApiKeyDao apiAccess) {
 		_isCoreType = true;
 	}
 
 	@Override
-	public void visit(FinancialDataAccess finAccess) {
+	public void visit(FinancialDataDao finAccess) {
 		_isCoreType = false;
 	}
 	

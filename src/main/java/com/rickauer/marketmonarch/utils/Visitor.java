@@ -6,14 +6,14 @@ import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
-import com.rickauer.marketmonarch.db.ApiKeyAccess;
-import com.rickauer.marketmonarch.db.FinancialDataAccess;
+import com.rickauer.marketmonarch.db.ApiKeyDao;
+import com.rickauer.marketmonarch.db.FinancialDataDao;
 
 public interface Visitor {
 	void visit(DatabaseConnector config);
 	
-	void visit(ApiKeyAccess apiAccess);
-	void visit(FinancialDataAccess finAccess);
+	void visit(ApiKeyDao apiAccess);
+	void visit(FinancialDataDao finAccess);
 	
 	void visit(MailtrapServiceConnector mailtrap);
 	void visit(StockNewsConnector stocknews);

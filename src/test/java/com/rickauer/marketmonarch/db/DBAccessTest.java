@@ -12,7 +12,7 @@ public class DBAccessTest {
 	void assertThrowsException1() {
 		@SuppressWarnings("unused")
 		Exception exception = assertThrows(RuntimeException.class, () -> {
-			new ApiKeyAccess("", "", ""); 
+			new ApiKeyDao("", "", ""); 
 		});
 		
 		String expectedMessage = "Error creating object.";
@@ -25,7 +25,7 @@ public class DBAccessTest {
 	void assertThrowsException2() {
 		@SuppressWarnings("unused")
 		Exception exception = assertThrows(RuntimeException.class, () -> {
-			new FinancialDataAccess("", "", "");
+			new FinancialDataDao("", "", "");
 		});
 		
 		String expectedMessage = "Error creating object.";

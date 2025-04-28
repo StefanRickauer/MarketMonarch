@@ -3,9 +3,9 @@ package com.rickauer.marketmonarch.db;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.utils.Visitor;
 
-public final class ApiKeyAccess extends DBAccess {
+public final class ApiKeyDao extends DatabaseDao {
 
-	public ApiKeyAccess(String dbUrl, String user, String password) {
+	public ApiKeyDao(String dbUrl, String user, String password) {
 		super(dbUrl, user, password);
 	}
 

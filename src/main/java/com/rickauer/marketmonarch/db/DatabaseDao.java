@@ -14,9 +14,9 @@ import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
-public abstract class DBAccess implements Verifyable {
+public abstract class DatabaseDao implements Verifyable {
 
-	private static Logger _dbLogger = LogManager.getLogger(DBAccess.class.getName()); 
+	private static Logger _dbLogger = LogManager.getLogger(DatabaseDao.class.getName()); 
 	
 	// PreparedStatement verwenden!
 	
@@ -24,13 +24,13 @@ public abstract class DBAccess implements Verifyable {
 	private Statement statement;
 	private ResultSet resultSet;
 
-	public DBAccess() {
+	public DatabaseDao() {
 		connect = null;
 		statement = null;
 		resultSet = null;
 	}
 	
-	public DBAccess(final String dbUrl, final String user, final String password) {
+	public DatabaseDao(final String dbUrl, final String user, final String password) {
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

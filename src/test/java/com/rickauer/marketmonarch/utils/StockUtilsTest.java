@@ -11,7 +11,7 @@ import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.enums.TradingTime;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
-import com.rickauer.marketmonarch.db.ApiKeyAccess;
+import com.rickauer.marketmonarch.db.ApiKeyDao;
 
 public class StockUtilsTest {
 

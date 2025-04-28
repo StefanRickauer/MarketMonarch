@@ -8,21 +8,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
-import com.rickauer.marketmonarch.db.ApiKeyAccess;
-import com.rickauer.marketmonarch.db.FinancialDataAccess;
+import com.rickauer.marketmonarch.db.ApiKeyDao;
+import com.rickauer.marketmonarch.db.FinancialDataDao;
 
 class HealthCheckerTest {
 
 	private static HealthChecker _healthChecker;
-	private static ApiKeyAccess _apiValid;
-	private static FinancialDataAccess _finValid;
+	private static ApiKeyDao _apiValid;
+	private static FinancialDataDao _finValid;
 	
 	@BeforeAll
 	public static void initializeTestData() {
 		DatabaseConnector.INSTANCE.initializeConfigReader();
 		_healthChecker = new HealthChecker();
-		_apiValid = new ApiKeyAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
-		_finValid = new FinancialDataAccess(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		_apiValid = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		_finValid = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 	

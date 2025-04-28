@@ -27,8 +27,8 @@ import com.rickauer.marketmonarch.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.data.CandleSeries;
 import com.rickauer.marketmonarch.data.CandleStick;
 import com.rickauer.marketmonarch.data.StockMetrics;
-import com.rickauer.marketmonarch.db.ApiKeyAccess;
-import com.rickauer.marketmonarch.db.FinancialDataAccess;
+import com.rickauer.marketmonarch.db.ApiKeyDao;
+import com.rickauer.marketmonarch.db.FinancialDataDao;
 import com.rickauer.marketmonarch.reporting.LineChartCreator;
 import com.rickauer.marketmonarch.utils.FileSupplier;
 import com.rickauer.marketmonarch.utils.StockUtils;
@@ -62,8 +62,8 @@ public final class MarketMonarch {
 	public static final double TAKE_PROFIT = 1.05;				// number * TAKE_PROFIT = 5%
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
-	public static ApiKeyAccess _apiAccess;
-	private static FinancialDataAccess _finAccess;
+	public static ApiKeyDao _apiAccess;
+	private static FinancialDataDao _finAccess;
 	private static FmpConnector _fmpConnector;
 	private static FmpRequestController _fmpController;
 	private static AlphaVantageConnector _alphaVantage;
@@ -90,8 +90,8 @@ public final class MarketMonarch {
 
 		DatabaseConnector.INSTANCE.initializeConfigReader();
 
-		_apiAccess = new ApiKeyAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
-		_finAccess = new FinancialDataAccess(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		_apiAccess = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		_finAccess = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
 		_fmpConnector = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
 		_fmpController = new FmpRequestController(_fmpConnector.getToken(), FmpServiceRequest.ALL_SHARES_FLOAT);
