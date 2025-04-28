@@ -28,7 +28,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import com.rickauer.marketmonarch.data.CandleStick;
+import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.utils.FileSupplier;
 
 public final class LineChartCreator {

@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.data;
+package com.rickauer.marketmonarch.api.data;
 
 public class AccountSummaryItem {
 

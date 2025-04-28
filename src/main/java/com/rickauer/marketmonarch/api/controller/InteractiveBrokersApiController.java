@@ -9,10 +9,10 @@ import com.ib.client.EReader;
 import com.ib.client.ScannerSubscription;
 import com.ib.client.TagValue;
 import com.rickauer.marketmonarch.MarketMonarch;
+import com.rickauer.marketmonarch.api.data.CandleSeries;
+import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
-import com.rickauer.marketmonarch.data.CandleSeries;
-import com.rickauer.marketmonarch.data.StockMetrics;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 

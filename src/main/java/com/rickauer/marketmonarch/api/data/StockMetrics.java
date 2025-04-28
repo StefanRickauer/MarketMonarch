@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.data;
+package com.rickauer.marketmonarch.api.data;
 
 import java.util.ArrayList;
 import java.util.List;

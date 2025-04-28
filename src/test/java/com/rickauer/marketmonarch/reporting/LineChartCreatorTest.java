@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.ib.client.Decimal;
-import com.rickauer.marketmonarch.data.CandleStick;
+import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.utils.FileSupplier;
 import com.rickauer.marketmonarch.utils.StockUtils;
 

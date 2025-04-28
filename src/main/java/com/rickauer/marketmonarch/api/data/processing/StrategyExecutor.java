@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.data.processing;
+package com.rickauer.marketmonarch.api.data.processing;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import org.ta4j.core.rules.OverIndicatorRule;
 import org.ta4j.core.rules.StopLossRule;
 import org.ta4j.core.rules.UnderIndicatorRule;
 
-import com.rickauer.marketmonarch.data.CandleStick;
+import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class StrategyExecutor {

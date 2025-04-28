@@ -40,9 +40,9 @@ import com.ib.client.TickAttribBidAsk;
 import com.ib.client.TickAttribLast;
 import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.MarketMonarch;
+import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
+import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
-import com.rickauer.marketmonarch.data.AccountSummaryItem;
-import com.rickauer.marketmonarch.data.CandleStick;
 
 public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
