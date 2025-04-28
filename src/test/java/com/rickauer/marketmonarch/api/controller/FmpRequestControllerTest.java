@@ -20,7 +20,7 @@ public class FmpRequestControllerTest {
 	
 	@BeforeAll
 	public static void initializeTestData() {
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		_apiAccess = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_fmpConnector = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
 		_controller = new FmpRequestController(_fmpConnector.getToken(), FmpServiceRequest.ALL_SHARES_FLOAT);

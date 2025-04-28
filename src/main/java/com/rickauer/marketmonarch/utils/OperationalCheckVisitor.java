@@ -24,7 +24,7 @@ public final class OperationalCheckVisitor implements Visitor {
 	@Override
 	public void visit(DatabaseConnector config) {
 		
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		
 		if (DatabaseConnector.INSTANCE.getUrlFinancialData().isEmpty())
 			_isOperational = false;

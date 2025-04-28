@@ -88,7 +88,7 @@ public final class MarketMonarch {
 
 		_ibController = new InteractiveBrokersApiController(_responses);
 
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 
 		_apiAccess = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_finAccess = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());

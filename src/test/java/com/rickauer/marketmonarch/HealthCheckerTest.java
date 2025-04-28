@@ -19,7 +19,7 @@ class HealthCheckerTest {
 	
 	@BeforeAll
 	public static void initializeTestData() {
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		_healthChecker = new HealthChecker();
 		_apiValid = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_finValid = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());

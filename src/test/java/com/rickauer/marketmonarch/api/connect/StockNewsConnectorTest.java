@@ -14,7 +14,7 @@ public class StockNewsConnectorTest {
 	
 	@Test
 	void isOperationalTrueTest() {
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		ApiKeyDao key = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 		StockNewsConnector conn = new StockNewsConnector("stocknewsapi", key.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));

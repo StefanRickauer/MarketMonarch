@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-public class DBAccessTest {
+public class DatabaseDaoTest {
 
 	// Successful initializations are being tested in HealthCheckerTest class
 	

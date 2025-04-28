@@ -20,7 +20,7 @@ public enum DatabaseConnector implements Verifyable {
 	INSTANCE;
 	
 	private static final String SOURCE_FILE = "./src/main/resources/Configuration.json";
-	private Logger configReaderLogger = LogManager.getLogger(DatabaseConnector.class.getName());
+	private Logger databaseConnectorLogger = LogManager.getLogger(DatabaseConnector.class.getName());
 	
 	private String urlTestDB;
 	private String urlAPIKey;
@@ -64,8 +64,8 @@ public enum DatabaseConnector implements Verifyable {
 		password = "";
 	}
 	
-	public void initializeConfigReader() {
-		configReaderLogger.info("Reading database essentials.");
+	public void initializeDatabaseConnector() {
+		databaseConnectorLogger.info("Reading database essentials.");
 		readDatabaseConnectionEssentials();
 	}
 
@@ -97,7 +97,7 @@ public enum DatabaseConnector implements Verifyable {
 		username = "";
 		password = "";
 
-		configReaderLogger.info("Flushed database essentials.");
+		databaseConnectorLogger.info("Flushed database essentials.");
 	}
 
 	public void accept(Visitor visitor) {

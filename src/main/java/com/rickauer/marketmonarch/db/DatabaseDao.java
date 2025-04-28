@@ -75,6 +75,15 @@ public abstract class DatabaseDao implements Verifyable {
 		}
 	}
 	
+	public int executeSqlUpdate(String query) {
+		try {
+			return statement.executeUpdate(query);
+		} catch (Exception e) {
+			System.out.println(e);
+			throw new RuntimeException("Error executing '" + query + "'.");
+		}
+	}
+	
 	public void close() {
 		try {
 

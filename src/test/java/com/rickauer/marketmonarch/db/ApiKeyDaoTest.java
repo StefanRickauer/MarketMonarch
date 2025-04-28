@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 
-public class ApiKeyAccessTest {
+public class ApiKeyDaoTest {
 
 	@Test
 	void queryDatabaseTest() {
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		ApiKeyDao db = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		
 		try (ResultSet result = db.executeSqlQuery("SELECT token FROM credentials where provider = 'mailtrap'")) {

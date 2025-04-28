@@ -21,7 +21,7 @@ public class StockNewsRequestControllerTest {
 	
 	@BeforeAll
 	public static void initializeTestData() {
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		_apiAccess = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_stockNewsConnector = new StockNewsConnector("stocknewsapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'stocknewsapi'", "token"));
 		_controller = new StockNewsRequestController(_stockNewsConnector.getToken());

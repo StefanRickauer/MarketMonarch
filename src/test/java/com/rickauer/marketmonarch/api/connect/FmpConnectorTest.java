@@ -12,7 +12,7 @@ public class FmpConnectorTest {
 
 	@Test
 	void isOperationalTrueTest() {
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		ApiKeyDao key = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 		FmpConnector conn = new FmpConnector("fmp", key.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));

@@ -21,7 +21,7 @@ public class StockUtilsTest {
 	
 	@BeforeAll
 	public static void initializeTestData() {
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 	

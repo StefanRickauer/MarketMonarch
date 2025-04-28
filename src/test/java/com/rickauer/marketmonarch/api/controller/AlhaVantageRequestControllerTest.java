@@ -17,7 +17,7 @@ public class AlhaVantageRequestControllerTest {
 	
 	@BeforeAll
 	public static void initializeTestData() {
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		_apiAccess = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_alphaVantageConnector = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
 		_controller = new AlphaVantageRequestController(_alphaVantageConnector.getToken());

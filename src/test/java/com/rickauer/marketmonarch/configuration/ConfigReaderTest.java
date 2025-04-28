@@ -24,7 +24,7 @@ public class ConfigReaderTest {
 
 	@Test
 	void A_initializationTest() {
-		DatabaseConnector.INSTANCE.initializeConfigReader();
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		assertEquals("jdbc:mysql://localhost:3306/test_db", DatabaseConnector.INSTANCE.getUrlTestDB());
 		assertEquals("root", DatabaseConnector.INSTANCE.getUsername());
 		assertTrue(DatabaseConnector.INSTANCE.getPassword().length() > 0);
