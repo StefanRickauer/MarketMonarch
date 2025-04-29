@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public class TradeDto {
 	private int _id;
+	private String _symbol;
 	private int _buyOrderId;
 	private int _sellOrderId;
 	private double _entryPrice;
@@ -15,6 +16,14 @@ public class TradeDto {
 	
 	public int getId() {
 		return _id;
+	}
+	
+	public String getSymbol() {
+		return _symbol;
+	}
+	
+	public void setSymbol(String symbol) {
+		_symbol = symbol;
 	}
 	
 	public int getBuyOrderId() {
