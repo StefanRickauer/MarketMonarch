@@ -27,8 +27,9 @@ public class FinancialDataDaoTest {
 	private static final String entryTime = "2025-04-23 21:16:35";
 	private static final String exitTime = "2025-04-28 21:16:35";
 	private static final String stopLoss = "12.0";
-	public static final String query = String.format("INSERT INTO trade VALUES(%s, '%s', %s, %s, %s, %s, %s, '%s', '%s', %s)", 
-			id, symbol, buyId, sellId, entry, exit, quan, entryTime, exitTime, stopLoss);
+	private static final String takeProfit = "19.8";
+	public static final String query = String.format("INSERT INTO trade VALUES(%s, '%s', %s, %s, %s, %s, %s, '%s', '%s', %s, %s)", 
+			id, symbol, buyId, sellId, entry, exit, quan, entryTime, exitTime, stopLoss, takeProfit);
 	
 	@Test
 	void A_insertIntoDatabaseTest() {
@@ -82,6 +83,8 @@ public class FinancialDataDaoTest {
 			assertEquals(Integer.parseInt(quan), trade.getQuantity());
 			assertEquals(LocalDateTime.parse(entryTime.replace(" ", "T")), trade.getEntryTime());
 			assertEquals(LocalDateTime.parse(exitTime.replace(" ", "T")), trade.getExitTime());
+			assertEquals(Double.parseDouble(stopLoss), trade.getStopLoss());
+			assertEquals(Double.parseDouble(takeProfit), trade.getTakeProfit());
 		}
 	}
 	

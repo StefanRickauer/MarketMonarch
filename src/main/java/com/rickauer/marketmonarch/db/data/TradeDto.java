@@ -13,6 +13,7 @@ public class TradeDto {
 	private LocalDateTime _entryTime;
 	private LocalDateTime _exitTime;
 	private double _stopLoss;
+	private double _takeProfit;
 	
 	public int getId() {
 		return _id;
@@ -88,5 +89,13 @@ public class TradeDto {
 	
 	public void setStopLoss(double stopLoss) {
 		_stopLoss = stopLoss;
+	}
+	
+	public double getTakeProfit() {
+		return _takeProfit;
+	}
+	
+	public void setTakeProfit(double takeProfit) {
+		_takeProfit = takeProfit;
 	}
 }
