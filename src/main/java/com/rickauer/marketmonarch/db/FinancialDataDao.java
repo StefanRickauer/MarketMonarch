@@ -44,6 +44,7 @@ public final class FinancialDataDao extends DatabaseDao {
 				row.setEntryTime(StockUtils.timestampToLocalDateTime(allTrades.getTimestamp("entry_time")));
 				row.setExitTime(StockUtils.timestampToLocalDateTime(allTrades.getTimestamp("exit_time")));
 				row.setTakeProfit(allTrades.getDouble("take_profit"));
+				row.setOrderEfficiencyRatio(allTrades.getDouble("order_efficiency_ratio"));
 				
 				trades.add(row);
 			}

@@ -14,6 +14,7 @@ public class TradeDto {
 	private LocalDateTime _exitTime;
 	private double _stopLoss;
 	private double _takeProfit;
+	private double _orderEfficiencyRatio;
 	
 	public int getId() {
 		return _id;
@@ -97,5 +98,13 @@ public class TradeDto {
 	
 	public void setTakeProfit(double takeProfit) {
 		_takeProfit = takeProfit;
+	}
+	
+	public double getOrderEfficiencyRatio() {
+		return _orderEfficiencyRatio;
+	}
+	
+	public void setOrderEfficiencyRatio(double orderEfficiencyRatio) {
+		_orderEfficiencyRatio = orderEfficiencyRatio;
 	}
 }
