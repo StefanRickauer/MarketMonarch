@@ -15,6 +15,7 @@ import com.rickauer.marketmonarch.api.controller.StockNewsRequestControllerTest;
 import com.rickauer.marketmonarch.configuration.*;
 import com.rickauer.marketmonarch.data.StockMetricsTest;
 import com.rickauer.marketmonarch.db.*;
+import com.rickauer.marketmonarch.db.data.processing.SingleTradeMetricsCalculatorTest;
 import com.rickauer.marketmonarch.reporting.*;
 import com.rickauer.marketmonarch.utils.FileSupplierTest;
 import com.rickauer.marketmonarch.utils.StockUtilsTest;
@@ -23,7 +24,7 @@ import com.rickauer.marketmonarch.utils.StockUtilsTest;
 @SelectClasses({ HealthCheckerTest.class, FileSupplierTest.class, 
 	ConfigReaderTest.class, DatabaseDaoTest.class, LineChartCreatorTest.class, ApiKeyDaoTest.class, MailtrapServiceConnectorTest.class,
 	AlphaVantageConnectorTest.class, AlhaVantageRequestControllerTest.class, FmpConnectorTest.class, FmpRequestControllerTest.class,
-	InteractiveBrokersApiControllerTest.class, StockUtilsTest.class, StockMetricsTest.class, FinancialDataDaoTest.class})
+	InteractiveBrokersApiControllerTest.class, StockUtilsTest.class, StockMetricsTest.class, FinancialDataDaoTest.class, SingleTradeMetricsCalculatorTest.class})
 public class MarketMonarchTestSuite {
 	// Nothing to do
 }

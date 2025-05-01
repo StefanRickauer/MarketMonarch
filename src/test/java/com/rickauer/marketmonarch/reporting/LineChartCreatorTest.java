@@ -21,7 +21,6 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class LineChartCreatorTest {
 
-	private File lineChart = new File(LineChartCreator.LINECHART);
 	private static List<CandleStick> mockData;
 	private static double stopLoss;
 	
@@ -49,10 +48,9 @@ public class LineChartCreatorTest {
 	}
 	
 	@Test
-	void callDefaultConstructorTest() throws IOException, InterruptedException {
+	void callDefaultConstructorTest() throws InterruptedException {
 		LineChartCreator creator = new LineChartCreator();
 		creator.createLineGraphAndSaveFile(mockData, stopLoss);
-		Desktop.getDesktop().open(lineChart);
 		Thread.sleep(2000);
 		assertTrue(new File(LineChartCreator.LINECHART).exists());
 	}
