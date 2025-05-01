@@ -7,10 +7,12 @@ import com.rickauer.marketmonarch.db.data.TradeDto;
 
 public class SingleTradeMetricsCalculator {
 
-	; // write unit tests
+	private SingleTradeMetricsCalculator() {
+		throw new UnsupportedOperationException("The utility class '" + SingleTradeMetricsCalculator.class + "' is not meant to be instanciated.");
+	}
 	
-	public static double calculateProfitAbsolute(TradeDto data) {
-		return ( data.getExitPrice() - data.getEntryPrice() ) * data.getQuantity();
+	public static double calculateProfitPerStock(TradeDto data) {
+		return data.getExitPrice() - data.getEntryPrice();
 	}
 	
 	public static double calculateProfitPercentage(TradeDto data) {
@@ -19,6 +21,10 @@ public class SingleTradeMetricsCalculator {
 	
 	public static double calculateProfitDecimal(TradeDto data) {
 		return  ( data.getExitPrice() - data.getEntryPrice() ) / data.getEntryPrice();
+	}
+
+	public static double calculateProfitAbsolute(TradeDto data) {
+		return calculateProfitPerStock(data) * data.getQuantity();
 	}
 	
 	public static String calculateHoldingPeriod(TradeDto data) {
@@ -61,6 +67,6 @@ public class SingleTradeMetricsCalculator {
 	 * 4. Monte-Carlo-Analysis
 	 */
 	public static double calculateRewardToRiskMultiple(TradeDto data) {
-		return calculateProfitAbsolute(data) / calculateExpectedRisk(data);
+		return calculateProfitPerStock(data) / calculateExpectedRisk(data);
 	}
 }
