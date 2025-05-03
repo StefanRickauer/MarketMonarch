@@ -46,7 +46,7 @@ public class AggregateTradeMetricsCalculatorTest {
 	
 	@Test
 	void calculateAverageProfitTest() {
-		double avgProfitAbsolute = AggregateTradeMetricsCalculator.calculateAverageProfitAbsolute(testData);
+		double avgProfitAbsolute = AggregateTradeMetricsCalculator.calculateAverageReturnAbsolute(testData);
 		assertEquals(15.0, avgProfitAbsolute);
 	}
 	
@@ -79,6 +79,12 @@ public class AggregateTradeMetricsCalculatorTest {
 	void calculateAllLossesAbsoluteTest() {
 		double allLosses = AggregateTradeMetricsCalculator.calculateAllLossesAbsolute(testData);
 		assertEquals(-110.0, allLosses);
+	}
+	
+	@Test
+	void calculateSortinoRatioTest() {
+		double sortinoRatio = AggregateTradeMetricsCalculator.calculateSortinoRatio(testData);
+		assertEquals(0.25, sortinoRatio);
 	}
 	
 	private static String truncateUsingBigDecimal(double value) {

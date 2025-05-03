@@ -7,9 +7,16 @@ import com.rickauer.marketmonarch.db.data.TradeDto;
 
 public class AggregateTradeMetricsCalculator {
 
-	public static double calculateAverageProfitAbsolute(List<TradeDto> trades) {
+	public static double calculateAverageReturnAbsolute(List<TradeDto> trades) {
 		return trades.stream()
 				.mapToDouble(trade -> SingleTradeMetricsCalculator.calculateProfitAbsolute(trade))
+				.average()
+				.orElse(0.0);
+	}
+	
+	public static double calculateAverageReturnDecimal(List<TradeDto> trades) {
+		return trades.stream()
+				.mapToDouble(trade -> SingleTradeMetricsCalculator.calculateProfitDecimal(trade))
 				.average()
 				.orElse(0.0);
 	}
@@ -18,6 +25,9 @@ public class AggregateTradeMetricsCalculator {
 		return calculateSharpeRatio(trades, 0.0);
 	}
 	
+	/*
+	 * Shows the overall volatility
+	 */
 	public static double calculateSharpeRatio(List<TradeDto> trades, double riskFreeRate) {
 		List<Double> returns = trades.stream()
 				.map(trade -> SingleTradeMetricsCalculator.calculateProfitDecimal(trade))
@@ -43,6 +53,11 @@ public class AggregateTradeMetricsCalculator {
 	    return Math.sqrt(variance);
 	}
 	
+	/*
+	 * Shows the win loss ratio
+	 * 1: 	Break-Even
+	 * <1:	Loss
+	 */
 	public static double calculateProfitFactor(List<TradeDto> trades) {
 		return calculateAllProfitsAbsolute(trades) / Math.abs(calculateAllLossesAbsolute(trades));
 	}
@@ -63,5 +78,43 @@ public class AggregateTradeMetricsCalculator {
 				.sum();
 		
 		return allLosses == 0 ? 1.0 : allLosses; 
+	}
+	
+	public static double calculateSortinoRatio(List<TradeDto> trades) {
+		return calculateSortinoRatio(trades, 0.0);
+	}
+
+	/*
+	 * The Sortino Ratio shows the return in relation to the loss risk
+	 * Sortino Ratio < 0.0:			lossy 
+	 * 0.0 <= Sortino Ratio < 0.5:	poor
+	 * 0.5 <= Sortino Ratio < 1.0:	medium - returns to low in relation to the risk taken
+	 * 1.0 <= Sortino Ratio < 2.0:	good
+	 * Sortino Ratio > 2.0:			very good
+	 */
+	public static double calculateSortinoRatio(List<TradeDto> trades, double riskFreeRate) {
+		double averageReturnDecimal = calculateAverageReturnDecimal(trades);
+		double downsideDeviation = calculateDownsideDeviation(trades);
+		
+		return downsideDeviation == 0 ? Double.POSITIVE_INFINITY : ( ( averageReturnDecimal - riskFreeRate) / downsideDeviation );
+	}
+	
+	public static double calculateDownsideDeviation(List<TradeDto> trades) {
+		return calculateDownsideDeviation(trades, 0.0);
+	}
+
+	public static double calculateDownsideDeviation(List<TradeDto> trades, double riskFreeRate) {
+		List<Double> returns = trades.stream()
+				.map(trade -> SingleTradeMetricsCalculator.calculateProfitDecimal(trade))
+				.toList();
+		
+		return Math.sqrt(
+				returns.stream()
+					.map(r -> r - riskFreeRate)
+					.filter(diff -> diff < 0)
+					.mapToDouble(diff -> diff * diff)
+					.average()
+					.orElse(0.0)
+				);
 	}
 }
