@@ -1,9 +1,11 @@
 package com.rickauer.marketmonarch.utils;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,11 +15,16 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
+import org.ta4j.core.BaseBar;
+import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.indicators.helpers.LowPriceIndicator;
 import org.ta4j.core.indicators.helpers.LowestValueIndicator;
+import org.ta4j.core.num.DecimalNum;
 
 import com.rickauer.marketmonarch.MarketMonarch;
+import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.enums.TradingTime;
 
 public class StockUtils {
@@ -106,7 +113,7 @@ public class StockUtils {
 	}
 	
 	public static double calculateTakeProfit(double actualPrice) {
-		double takeProfitRaw = actualPrice * MarketMonarch.TAKE_PROFIT;
+		double takeProfitRaw = actualPrice * MarketMonarch.TAKE_PROFIT_FACTOR;
 		double takeProfitRounded = Math.round(takeProfitRaw * 100.0) / 100.0;
 		
 		return takeProfitRounded;
@@ -118,5 +125,29 @@ public class StockUtils {
 	
 	public static Timestamp localDateTimeToTimestamp(LocalDateTime time) {
 		return Timestamp.valueOf(time);
+	}
+	
+	public static BarSeries buildSeriesFromCandleBars(List<CandleStick> candles) {
+		BarSeries series = new BaseBarSeriesBuilder()
+				.withName("stock_series")
+				.withNumTypeOf(DecimalNum::valueOf)
+				.build();
+		
+		for (CandleStick candle : candles) {
+			Bar bar = new BaseBar(
+					Duration.ofMillis(5),
+					candle.getZonedDateTime(),
+					DecimalNum.valueOf(candle.getOpen()),
+					DecimalNum.valueOf(candle.getHigh()),
+					DecimalNum.valueOf(candle.getLow()),
+					DecimalNum.valueOf(candle.getClose()),
+					DecimalNum.valueOf(candle.getVolumeAsDouble()),
+					DecimalNum.valueOf(0)
+					);
+			
+			series.addBar(bar);
+		}
+		
+		return series;
 	}
 }

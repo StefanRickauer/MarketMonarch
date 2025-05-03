@@ -32,30 +32,6 @@ public class StrategyExecutor {
 		throw new UnsupportedOperationException(StrategyExecutor.class + " ist not meant to be instanciated.");
 	}
 	
-	public static BarSeries buildSeriesFromCandleBars(List<CandleStick> candles) {
-		BarSeries series = new BaseBarSeriesBuilder()
-				.withName("stock_series")
-				.withNumTypeOf(DecimalNum::valueOf)
-				.build();
-		
-		for (CandleStick candle : candles) {
-			Bar bar = new BaseBar(
-					Duration.ofMillis(5),
-					candle.getZonedDateTime(),
-					DecimalNum.valueOf(candle.getOpen()),
-					DecimalNum.valueOf(candle.getHigh()),
-					DecimalNum.valueOf(candle.getLow()),
-					DecimalNum.valueOf(candle.getClose()),
-					DecimalNum.valueOf(candle.getVolumeAsDouble()),
-					DecimalNum.valueOf(0)
-					);
-			
-			series.addBar(bar);
-		}
-		
-		return series;
-	}
-	
 	public static Strategy buildStrategy(BarSeries series) {
 		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
 		VolumeIndicator volume = new VolumeIndicator(series);
