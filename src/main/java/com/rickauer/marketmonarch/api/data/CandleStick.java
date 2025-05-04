@@ -21,7 +21,7 @@ public class CandleStick {
 	private Decimal _volume;
 	
 	public CandleStick(String date, double open, double close, double high, double low, Decimal volume) {
-		_zonedDateTime = StockUtils.toZonedDateTime(date);
+		_zonedDateTime = StockUtils.stringToZonedDateTime(date);
 		_open = open;
 		_close = close;
 		_low = low;

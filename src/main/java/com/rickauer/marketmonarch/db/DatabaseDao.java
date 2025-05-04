@@ -18,8 +18,6 @@ public abstract class DatabaseDao implements Verifyable {
 
 	private static Logger _dbLogger = LogManager.getLogger(DatabaseDao.class.getName()); 
 	
-	// PreparedStatement verwenden!
-	
 	private Connection connect;
 	private Statement statement;
 	private ResultSet resultSet;

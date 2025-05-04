@@ -1,6 +1,8 @@
 package com.rickauer.marketmonarch.db;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,7 @@ public final class FinancialDataDao extends DatabaseDao {
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
 	}
-
+	
 	public List<TradeDto> getAllTrades() {
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		FinancialDataDao db = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
@@ -34,6 +36,7 @@ public final class FinancialDataDao extends DatabaseDao {
 			while (allTrades.next()) {
 				row = new TradeDto();
 
+				row.setId(allTrades.getInt("id"));
 				row.setSymbol(allTrades.getString("symbol"));
 				row.setBuyOrderId(allTrades.getInt("buy_order_id"));
 				row.setSellOrderId(allTrades.getInt("sell_order_id"));
