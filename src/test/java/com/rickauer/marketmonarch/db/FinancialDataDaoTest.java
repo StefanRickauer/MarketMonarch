@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.AfterAll;
@@ -14,33 +15,44 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.data.TradeDto;
+import com.rickauer.marketmonarch.utils.StockUtils;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class FinancialDataDaoTest {
 
-	private static final String ID = "9999999";
+	private static final int ID = 9999999;
 	private static final String SYMBOL = "Test-Symbol";
-	private static final String BUY_ID = "2";
-	private static final String SELL_ID = "3";
-	private static final String ENTRY_PRICE = "15.0";
-	private static final String EXIT_PRICE = "20.0";
-	private static final String QUANTITY = "100";
-	private static final String ENTRY_TIME = "2025-04-23 21:16:35";
-	private static final String EXIT_TIME = "2025-04-28 21:16:35";
-	private static final String STOP_LOSS = "12.0";
-	private static final String TAKE_PROFIT = "19.8";
-	private static final String ORDER_EFFICIENCY_RATIO = "0.1";
-	public static final String INSERTION_QUERY = String.format("INSERT INTO trade VALUES(%s, '%s', %s, %s, %s, %s, %s, '%s', '%s', %s, %s, %s)", 
-			ID, SYMBOL, BUY_ID, SELL_ID, ENTRY_PRICE, EXIT_PRICE, QUANTITY, ENTRY_TIME, EXIT_TIME, STOP_LOSS, TAKE_PROFIT, ORDER_EFFICIENCY_RATIO);
-	
+	private static final int BUY_ID = 2;
+	private static final int SELL_ID = 3;
+	private static final double ENTRY_PRICE = 15.0;
+	private static final double EXIT_PRICE = 20.0;
+	private static final int QUANTITY = 100;
+	private static final LocalDateTime ENTRY_TIME = StockUtils.stringToLocalDateTime("20250423 21:16:35");
+	private static final LocalDateTime EXIT_TIME = StockUtils.stringToLocalDateTime("20250428 21:16:35");
+	private static final double STOP_LOSS = 12.0;
+	private static final double TAKE_PROFIT = 19.8;
+	private static final double ORDER_EFFICIENCY_RATIO = 0.1;
 	
 	@Test
 	void A_insertIntoDatabaseTest() {
+		TradeDto testData = new TradeDto();
+		testData.setId(ID);
+		testData.setSymbol(SYMBOL);
+		testData.setBuyOrderId(BUY_ID);
+		testData.setSellOrderId(SELL_ID);
+		testData.setEntryPrice(ENTRY_PRICE);
+		testData.setExitPrice(EXIT_PRICE);
+		testData.setQuantity(QUANTITY);
+		testData.setEntryTime(ENTRY_TIME);
+		testData.setExitTime(EXIT_TIME);
+		testData.setStopLoss(STOP_LOSS);
+		testData.setTakeProfit(TAKE_PROFIT);
+		testData.setOrderEfficiencyRatio(ORDER_EFFICIENCY_RATIO);
 		
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		FinancialDataDao db = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		
-		int result = db.executeSqlUpdate(INSERTION_QUERY);
+		int result = db.insertRow(testData);  
 		assertTrue(result != 0);		
 		
 	}
@@ -73,23 +85,23 @@ public class FinancialDataDaoTest {
 		List<TradeDto> trades = db.getAllTrades();
 		
 		for (TradeDto trade : trades) {
-			System.out.println(trade);
-			if (trade.getId() != Integer.parseInt(ID)) {
+			
+			if (trade.getId() != ID) {
 				continue;		// skip other entries in case there is more data
 			}
 
-			assertEquals(Integer.parseInt(ID), trade.getId());
+			assertEquals(ID, trade.getId());
 			assertEquals(SYMBOL, trade.getSymbol());
-			assertEquals(Integer.parseInt(BUY_ID), trade.getBuyOrderId());
-			assertEquals(Integer.parseInt(SELL_ID), trade.getSellOrderId());
-			assertEquals(Double.parseDouble(ENTRY_PRICE), trade.getEntryPrice());
-			assertEquals(Double.parseDouble(EXIT_PRICE), trade.getExitPrice());
-			assertEquals(Integer.parseInt(QUANTITY), trade.getQuantity());
-			assertEquals(LocalDateTime.parse(ENTRY_TIME.replace(" ", "T")), trade.getEntryTime());
-			assertEquals(LocalDateTime.parse(EXIT_TIME.replace(" ", "T")), trade.getExitTime());
-			assertEquals(Double.parseDouble(STOP_LOSS), trade.getStopLoss());
-			assertEquals(Double.parseDouble(TAKE_PROFIT), trade.getTakeProfit());
-			assertEquals(Double.parseDouble(ORDER_EFFICIENCY_RATIO), trade.getOrderEfficiencyRatio());
+			assertEquals(BUY_ID, trade.getBuyOrderId());
+			assertEquals(SELL_ID, trade.getSellOrderId());
+			assertEquals(ENTRY_PRICE, trade.getEntryPrice());
+			assertEquals(EXIT_PRICE, trade.getExitPrice());
+			assertEquals(QUANTITY, trade.getQuantity());
+			assertEquals(ENTRY_TIME, trade.getEntryTime());
+			assertEquals(EXIT_TIME, trade.getExitTime());
+			assertEquals(STOP_LOSS, trade.getStopLoss());
+			assertEquals(TAKE_PROFIT, trade.getTakeProfit());
+			assertEquals(ORDER_EFFICIENCY_RATIO, trade.getOrderEfficiencyRatio());
 		}
 	}
 	

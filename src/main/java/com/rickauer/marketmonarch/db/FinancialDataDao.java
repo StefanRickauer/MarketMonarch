@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.data.TradeDto;
@@ -12,7 +13,7 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 import com.rickauer.marketmonarch.utils.Visitor;
 
 public final class FinancialDataDao extends DatabaseDao {
-
+	
 	public FinancialDataDao(String dbUrl, String user, String password) {
 		super(dbUrl, user, password);
 	}
@@ -22,16 +23,25 @@ public final class FinancialDataDao extends DatabaseDao {
 		visitor.visit(this);
 	}
 	
-	public List<TradeDto> getAllTrades() {
-		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
-		FinancialDataDao db = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+	public int insertRow(TradeDto trade) {
+		String insertion = "INSERT INTO trade VALUES(%d, '%s', %d, %d, %f, %f, %d, '%s', '%s', %f, %f, %f)";
 		
+		// Locale.US is necessary, because otherwise double-values cause Exception: Guess because they are being turned into 1,0 whereas the ',' is interpreted 
+		// as a separator instead of a floating point!
+		String query = String.format(Locale.US, insertion, trade.getId(), trade.getSymbol(), trade.getBuyOrderId(),
+				trade.getSellOrderId(), trade.getEntryPrice(), trade.getExitPrice(), trade.getQuantity(), trade.getEntryTime(),
+				trade.getExitTime(), trade.getStopLoss(), trade.getTakeProfit(), trade.getOrderEfficiencyRatio()); 
+		
+		return executeSqlUpdate(query);
+	}
+	
+	public List<TradeDto> getAllTrades() {
 		String query = "SELECT * FROM trade";
 		
 		List<TradeDto> trades = new ArrayList<>();
 		TradeDto row = null;
 		
-		try (ResultSet allTrades = db.executeSqlQuery(query)) {
+		try (ResultSet allTrades = executeSqlQuery(query)) {
 			
 			while (allTrades.next()) {
 				row = new TradeDto();
