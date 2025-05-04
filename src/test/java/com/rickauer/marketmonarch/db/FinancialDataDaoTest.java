@@ -17,20 +17,20 @@ import com.rickauer.marketmonarch.db.data.TradeDto;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class FinancialDataDaoTest {
 
-	private static final String id = "9999999";
-	private static final String symbol = "APPL";
-	private static final String buyId = "2";
-	private static final String sellId = "3";
-	private static final String entry = "15.0";
-	private static final String exit = "20.0";
-	private static final String quan = "100";
-	private static final String entryTime = "2025-04-23 21:16:35";
-	private static final String exitTime = "2025-04-28 21:16:35";
-	private static final String stopLoss = "12.0";
-	private static final String takeProfit = "19.8";
-	private static final String orderEfficiencyRatio = "0.1";
-	public static final String query = String.format("INSERT INTO trade VALUES(%s, '%s', %s, %s, %s, %s, %s, '%s', '%s', %s, %s, %s)", 
-			id, symbol, buyId, sellId, entry, exit, quan, entryTime, exitTime, stopLoss, takeProfit, orderEfficiencyRatio);
+	private static final String ID = "9999999";
+	private static final String SYMBOL = "APPL";
+	private static final String BUY_ID = "2";
+	private static final String SELL_ID = "3";
+	private static final String ENTRY_PRICE = "15.0";
+	private static final String EXIT_PRICE = "20.0";
+	private static final String QUANTITY = "100";
+	private static final String ENTRY_TIME = "2025-04-23 21:16:35";
+	private static final String EXIT_TIME = "2025-04-28 21:16:35";
+	private static final String STOP_LOSS = "12.0";
+	private static final String TAKE_PROFIT = "19.8";
+	private static final String ORDER_EFFICIENCY_RATIO = "0.1";
+	public static final String INSERTION_QUERY = String.format("INSERT INTO trade VALUES(%s, '%s', %s, %s, %s, %s, %s, '%s', '%s', %s, %s, %s)", 
+			ID, SYMBOL, BUY_ID, SELL_ID, ENTRY_PRICE, EXIT_PRICE, QUANTITY, ENTRY_TIME, EXIT_TIME, STOP_LOSS, TAKE_PROFIT, ORDER_EFFICIENCY_RATIO);
 	
 	@Test
 	void A_insertIntoDatabaseTest() {
@@ -38,7 +38,7 @@ public class FinancialDataDaoTest {
 		FinancialDataDao db = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		
 		int rows = 0;
-		rows = db.executeSqlUpdate(query);
+		rows = db.executeSqlUpdate(INSERTION_QUERY);
 		
 		assertTrue(rows != 0);
 	}
@@ -72,21 +72,21 @@ public class FinancialDataDaoTest {
 		
 		for (TradeDto trade : trades) {
 			
-			if (trade.getId() != Integer.parseInt(id)) {
+			if (trade.getId() != Integer.parseInt(ID)) {
 				continue;		// skip other entries in case there is more data
 			}
 
-			assertEquals(symbol, trade.getSymbol());
-			assertEquals(Integer.parseInt(buyId), trade.getBuyOrderId());
-			assertEquals(Integer.parseInt(sellId), trade.getSellOrderId());
-			assertEquals(Double.parseDouble(entry), trade.getEntryPrice());
-			assertEquals(Double.parseDouble(exit), trade.getExitPrice());
-			assertEquals(Integer.parseInt(quan), trade.getQuantity());
-			assertEquals(LocalDateTime.parse(entryTime.replace(" ", "T")), trade.getEntryTime());
-			assertEquals(LocalDateTime.parse(exitTime.replace(" ", "T")), trade.getExitTime());
-			assertEquals(Double.parseDouble(stopLoss), trade.getStopLoss());
-			assertEquals(Double.parseDouble(takeProfit), trade.getTakeProfit());
-			assertEquals(Double.parseDouble(orderEfficiencyRatio), trade.getOrderEfficiencyRatio());
+			assertEquals(SYMBOL, trade.getSymbol());
+			assertEquals(Integer.parseInt(BUY_ID), trade.getBuyOrderId());
+			assertEquals(Integer.parseInt(SELL_ID), trade.getSellOrderId());
+			assertEquals(Double.parseDouble(ENTRY_PRICE), trade.getEntryPrice());
+			assertEquals(Double.parseDouble(EXIT_PRICE), trade.getExitPrice());
+			assertEquals(Integer.parseInt(QUANTITY), trade.getQuantity());
+			assertEquals(LocalDateTime.parse(ENTRY_TIME.replace(" ", "T")), trade.getEntryTime());
+			assertEquals(LocalDateTime.parse(EXIT_TIME.replace(" ", "T")), trade.getExitTime());
+			assertEquals(Double.parseDouble(STOP_LOSS), trade.getStopLoss());
+			assertEquals(Double.parseDouble(TAKE_PROFIT), trade.getTakeProfit());
+			assertEquals(Double.parseDouble(ORDER_EFFICIENCY_RATIO), trade.getOrderEfficiencyRatio());
 		}
 	}
 	
