@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.time.LocalDateTime;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -18,7 +19,7 @@ import com.rickauer.marketmonarch.db.data.TradeDto;
 public class FinancialDataDaoTest {
 
 	private static final String ID = "9999999";
-	private static final String SYMBOL = "APPL";
+	private static final String SYMBOL = "Test-Symbol";
 	private static final String BUY_ID = "2";
 	private static final String SELL_ID = "3";
 	private static final String ENTRY_PRICE = "15.0";
@@ -32,15 +33,16 @@ public class FinancialDataDaoTest {
 	public static final String INSERTION_QUERY = String.format("INSERT INTO trade VALUES(%s, '%s', %s, %s, %s, %s, %s, '%s', '%s', %s, %s, %s)", 
 			ID, SYMBOL, BUY_ID, SELL_ID, ENTRY_PRICE, EXIT_PRICE, QUANTITY, ENTRY_TIME, EXIT_TIME, STOP_LOSS, TAKE_PROFIT, ORDER_EFFICIENCY_RATIO);
 	
+	
 	@Test
 	void A_insertIntoDatabaseTest() {
+		
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		FinancialDataDao db = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		
-		int rows = 0;
-		rows = db.executeSqlUpdate(INSERTION_QUERY);
+		int result = db.executeSqlUpdate(INSERTION_QUERY);
+		assertTrue(result != 0);		
 		
-		assertTrue(rows != 0);
 	}
 
 	@Test
@@ -71,11 +73,12 @@ public class FinancialDataDaoTest {
 		List<TradeDto> trades = db.getAllTrades();
 		
 		for (TradeDto trade : trades) {
-			
+			System.out.println(trade);
 			if (trade.getId() != Integer.parseInt(ID)) {
 				continue;		// skip other entries in case there is more data
 			}
 
+			assertEquals(Integer.parseInt(ID), trade.getId());
 			assertEquals(SYMBOL, trade.getSymbol());
 			assertEquals(Integer.parseInt(BUY_ID), trade.getBuyOrderId());
 			assertEquals(Integer.parseInt(SELL_ID), trade.getSellOrderId());

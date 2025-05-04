@@ -89,15 +89,18 @@ public class StockUtils {
 		return TradingTime.SIXTEEN.toMinutes() - intervalLength;
 	}
 	
-	public static ZonedDateTime toZonedDateTime(String string) {
+	public static ZonedDateTime stringToZonedDateTime(String string) {
 		String dateTimeStr = string.substring(0, DATESTRING_LENGTH_WITHOUT_TIMEZONE);
-		java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss");
-		LocalDateTime localDateTime = LocalDateTime.parse(dateTimeStr, formatter);
+		LocalDateTime localDateTime = stringToLocalDateTime(dateTimeStr);
 		
 		ZoneId systemZone = ZoneId.systemDefault();
 		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, systemZone);
 		
 		return zonedDateTime;
+	}
+	
+	public static LocalDateTime stringToLocalDateTime(String time) {
+		return LocalDateTime.parse(time, java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
 	}
 	
 	public static double calculateStopLoss(BarSeries series, int periodInBars) {
