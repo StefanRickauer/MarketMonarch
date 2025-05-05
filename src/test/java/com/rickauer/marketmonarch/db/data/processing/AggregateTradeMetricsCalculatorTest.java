@@ -91,4 +91,8 @@ public class AggregateTradeMetricsCalculatorTest {
 		BigDecimal valueAsBD = new BigDecimal(value).setScale(4, RoundingMode.HALF_EVEN);
 		return valueAsBD.toString();
 	}
+	
+	void calculateOverallProfitTest() {
+		fail();
+	}
 }

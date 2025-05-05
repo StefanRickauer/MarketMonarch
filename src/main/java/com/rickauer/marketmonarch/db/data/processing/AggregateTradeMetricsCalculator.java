@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rickauer.marketmonarch.db.data.TradeDto;
+import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class AggregateTradeMetricsCalculator {
 
@@ -116,5 +117,10 @@ public class AggregateTradeMetricsCalculator {
 					.average()
 					.orElse(0.0)
 				);
+	}
+	
+	public static double calculateOverallProfit(List<TradeDto> trades) {
+		; // Add logic to calculate overall profit, therefore you need account balance
+		return 0.0;
 	}
 }
