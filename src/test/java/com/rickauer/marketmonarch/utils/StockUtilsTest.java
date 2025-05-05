@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.enums.TradingTime;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.ApiKeyDao;
+import com.rickauer.marketmonarch.db.data.TradeDto;
 
 public class StockUtilsTest {
 
@@ -280,5 +283,42 @@ public class StockUtilsTest {
 		Timestamp ts = Timestamp.valueOf("1879-03-14 11:30:00.00");
 		
 		assertEquals(ts, StockUtils.localDateTimeToTimestamp(ldt));
+	}
+	
+	@Test
+	void getFirstByIndex() {
+		List<TradeDto> testData = new ArrayList<>();
+		
+		TradeDto first = new TradeDto();
+		first.setId(1);
+		testData.add(first);
+
+		TradeDto second = new TradeDto();
+		second.setId(2);
+		testData.add(second);
+		
+		TradeDto third = new TradeDto();
+		third.setId(3);
+		testData.add(third);
+		
+		assertEquals(1, StockUtils.getFirstByIndex(testData).getId());
+	}
+
+	@Test
+	void getLastByIndex() {
+		List<TradeDto> testData = new ArrayList<>();
+		TradeDto first = new TradeDto();
+		first.setId(1);
+		testData.add(first);
+		
+		TradeDto second = new TradeDto();
+		second.setId(2);
+		testData.add(second);
+		
+		TradeDto third = new TradeDto();
+		third.setId(3);
+		testData.add(third);
+		
+		assertEquals(3, StockUtils.getLastByIndex(testData).getId());
 	}
 }
