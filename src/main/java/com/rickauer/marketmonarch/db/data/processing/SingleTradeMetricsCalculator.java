@@ -36,8 +36,16 @@ public class SingleTradeMetricsCalculator {
 		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
 	}
 	
-	public static double calculateExpectedRisk(TradeDto data) {
+	public static double calculateExpectedRiskPerShareAbsolute(TradeDto data) {
 		return data.getEntryPrice() - data.getStopLoss();
+	}
+	
+	public static double calcualteExpectedRiskPercent(TradeDto data) {
+		return calculateExpectedRiskPerShareAbsolute(data) * 100 / data.getEntryPrice();
+	}
+	
+	public static double calculateExpectedRiskPerTradeAbsolute(TradeDto data) {
+		return calculateExpectedRiskPerShareAbsolute(data) * data.getQuantity();
 	}
 	
 	public static double calculateExpectedProfit(TradeDto data) {
@@ -45,7 +53,7 @@ public class SingleTradeMetricsCalculator {
 	}
 	
 	public static double calculateChanceRiskRatio(TradeDto data) {
-		return calculateExpectedProfit(data) / calculateExpectedRisk(data);
+		return calculateExpectedProfit(data) / calculateExpectedRiskPerShareAbsolute(data);
 	}
 	
 	/**
@@ -67,6 +75,6 @@ public class SingleTradeMetricsCalculator {
 	 * 4. Monte-Carlo-Analysis
 	 */
 	public static double calculateRewardToRiskMultiple(TradeDto data) {
-		return calculateProfitPerStock(data) / calculateExpectedRisk(data);
+		return calculateProfitPerStock(data) / calculateExpectedRiskPerShareAbsolute(data);
 	}
 }

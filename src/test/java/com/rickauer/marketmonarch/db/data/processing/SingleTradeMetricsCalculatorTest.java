@@ -58,8 +58,18 @@ public class SingleTradeMetricsCalculatorTest {
 	}
 	
 	@Test
-	void calculateExpectedRiskTest() {
-		assertEquals(5.0, calculateExpectedRisk(testData));
+	void calculateExpectedRiskPerShareAbsoluteTest() {
+		assertEquals(5.0, calculateExpectedRiskPerShareAbsolute(testData));
+	}
+	
+	@Test
+	void calcualteExpectedRiskPercentTest() {
+		assertEquals(50.0, calcualteExpectedRiskPercent(testData));
+	}
+	
+	@Test
+	void calculateExpectedRiskPerTradeAbsoluteTest() {
+		assertEquals(1000.0, calculateExpectedRiskPerTradeAbsolute(testData));
 	}
 	
 	@Test
