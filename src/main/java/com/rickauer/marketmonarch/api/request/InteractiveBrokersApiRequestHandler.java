@@ -49,17 +49,19 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	private static Logger _ibRequestHandlerLogger = LogManager
 			.getLogger(InteractiveBrokersApiRequestHandler.class.getName());
 
-	public static int ORDER_ID;			// if stored in an instance variable, said variable will be overwritten for unknown reasons (this is a work around)
+	private final Object lock = new Object();
 	
 	private EReaderSignal _readerSignal;
 	private EClientSocket _clientSocket;
 	private int _requestId;
+	private int _orderId;
 	private ScannerResponse _scanResult;
 
 	public InteractiveBrokersApiRequestHandler(ScannerResponse scanResult) {
 		_readerSignal = new EJavaSignal();
 		_clientSocket = new EClientSocket(this, _readerSignal);
 		_requestId = 0;
+		_orderId = -1;
 		_scanResult = scanResult;
 	}
 	
@@ -80,7 +82,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	}
 
 	public int getCurrentOrderId() {
-		return ORDER_ID;
+		return waitForNextOrderId();
 	}
 
 	@Override
@@ -166,11 +168,30 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	}
 
+	; // If called with more than one Controller active, orderId will be reset. Make sure only one Controller is active.
+	public int waitForNextOrderId() {
+        synchronized (lock) {
+            _clientSocket.reqIds(-1); 
+            while (_orderId <= 0) {
+                try {
+					lock.wait();
+				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				}  
+            }
+            return _orderId;
+        }
+    }
+	
 	// Will be invoked automatically upon successful API client connection, or after call to EClient.reqIds.
 	@Override
 	public void nextValidId(int orderId) {
-		_ibRequestHandlerLogger.info(EWrapperMsgGenerator.nextValidId(orderId));
-		ORDER_ID = orderId;
+		synchronized (lock) {
+			_ibRequestHandlerLogger.info(EWrapperMsgGenerator.nextValidId(orderId));
+            _orderId = orderId;
+            lock.notifyAll();  
+        }
 	}
 
 	@Override
