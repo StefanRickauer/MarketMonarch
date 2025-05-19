@@ -6,6 +6,7 @@ public abstract class TradeMonitorState {
 	
 	TradeMonitorState(TradeMonitor context) {
 		_context = context;
+		onEnter();
 	}
 	
 	protected abstract void onEnter();
