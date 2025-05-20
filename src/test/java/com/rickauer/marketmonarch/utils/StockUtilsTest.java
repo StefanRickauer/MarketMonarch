@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -320,5 +322,18 @@ public class StockUtilsTest {
 		testData.add(third);
 		
 		assertEquals(3, StockUtils.getLastByIndex(testData).getId());
+	}
+	
+	@Test
+	void longToZonedDateTimeTest() {
+		                    
+		long epochSeconds = 1747763400L;
+		String zone = "US/Eastern";
+		ZoneId zoneId = ZoneId.of(zone);
+		
+		ZonedDateTime actual = StockUtils.longToZonedDateTime(epochSeconds, zone);
+		ZonedDateTime expected = ZonedDateTime.of(2025, 5, 20, 13, 50, 0, 0, zoneId);
+		
+		assertEquals(expected, actual);
 	}
 }

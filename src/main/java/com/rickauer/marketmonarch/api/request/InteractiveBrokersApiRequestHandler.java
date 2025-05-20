@@ -48,7 +48,9 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	private static Logger _ibRequestHandlerLogger = LogManager
 			.getLogger(InteractiveBrokersApiRequestHandler.class.getName());
-
+	
+	private final static long TWO_MINUTES_IN_MILLIS = 120000L;
+	
 	private final Object lock = new Object();
 	
 	private EReaderSignal _readerSignal;
@@ -174,9 +176,8 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
             _clientSocket.reqIds(-1); 
             while (_orderId <= 0) {
                 try {
-					lock.wait();
+					lock.wait(TWO_MINUTES_IN_MILLIS);
 				} catch (InterruptedException e) {
-					
 					e.printStackTrace();
 				}  
             }

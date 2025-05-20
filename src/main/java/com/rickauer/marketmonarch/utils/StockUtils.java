@@ -2,6 +2,7 @@ package com.rickauer.marketmonarch.utils;
 
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -100,6 +101,10 @@ public class StockUtils {
 
 		return zonedDateTime;
 	}
+	
+	public static ZonedDateTime longToZonedDateTime(long date, String zoneId) {
+		return Instant.ofEpochSecond(date).atZone(ZoneId.of(zoneId));
+	}
 
 	public static LocalDateTime stringToLocalDateTime(String time) {
 		return LocalDateTime.parse(time, java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
@@ -132,14 +137,20 @@ public class StockUtils {
 		return Timestamp.valueOf(time);
 	}
 
+	; // call after all historical data is received.
 	public static BarSeries buildSeriesFromCandleBars(List<CandleStick> candles) {
 		BarSeries series = new BaseBarSeriesBuilder().withName("stock_series").withNumTypeOf(DecimalNum::valueOf)
 				.build();
 
 		for (CandleStick candle : candles) {
-			Bar bar = new BaseBar(Duration.ofMillis(5), candle.getZonedDateTime(), DecimalNum.valueOf(candle.getOpen()),
-					DecimalNum.valueOf(candle.getHigh()), DecimalNum.valueOf(candle.getLow()),
-					DecimalNum.valueOf(candle.getClose()), DecimalNum.valueOf(candle.getVolumeAsDouble()),
+			Bar bar = new BaseBar(
+					Duration.ofMillis(5), 
+					candle.getZonedDateTime(), 
+					DecimalNum.valueOf(candle.getOpen()),
+					DecimalNum.valueOf(candle.getHigh()), 
+					DecimalNum.valueOf(candle.getLow()),
+					DecimalNum.valueOf(candle.getClose()), 
+					DecimalNum.valueOf(candle.getVolumeAsDouble()),
 					DecimalNum.valueOf(0));
 
 			series.addBar(bar);

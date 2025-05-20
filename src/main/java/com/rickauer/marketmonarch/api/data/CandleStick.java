@@ -29,6 +29,19 @@ public class CandleStick {
 		_volume = volume;
 	}
 	
+	public CandleStick(long date, double open, double close, double high, double low, Decimal volume) {
+		this(date, "US/Eastern", open, close, high, low, volume);
+	}
+	
+	public CandleStick(long date, String zoneId, double open, double close, double high, double low, Decimal volume) {
+		_zonedDateTime = StockUtils.longToZonedDateTime(date, zoneId);
+		_open = open;
+		_close = close;
+		_low = low;
+		_high = high;
+		_volume = volume;
+	}
+	
 	public DateTime getJodaDateTime() {
 
 		Instant instant = _zonedDateTime.toInstant();
