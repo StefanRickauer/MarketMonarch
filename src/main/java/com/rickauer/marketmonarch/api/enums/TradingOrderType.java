@@ -1,6 +1,6 @@
 package com.rickauer.marketmonarch.api.enums;
 
-public enum OrderType {
+public enum TradingOrderType {
 	
 	ALERT("ALERT", "Alert"),
 	FUNARI("FUNARI", "Funari"),
@@ -45,7 +45,7 @@ public enum OrderType {
 	String code;
 	String meaning;
 	
-	private OrderType(String code, String meaning) {
+	private TradingOrderType(String code, String meaning) {
 		this.code = code;
 		this.meaning = meaning;
 	}
