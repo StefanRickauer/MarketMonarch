@@ -73,6 +73,11 @@
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.TradeSellProcessingState" level="trace"
+			additivity="false">
+			<AppenderRef ref="ConsoleAppender" />
+			<AppenderRef ref="FileAppender" />
+		</Logger>
 		<Root level="trace">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />

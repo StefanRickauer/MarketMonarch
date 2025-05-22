@@ -1,7 +1,20 @@
 package com.rickauer.marketmonarch.api.data.processing;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.ib.client.Decimal;
+import com.ib.client.Order;
+import com.ib.client.OrderType;
+import com.ib.client.Types.TimeInForce;
+import com.rickauer.marketmonarch.api.enums.TradingOrderType;
+import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
+import com.rickauer.marketmonarch.utils.StockUtils;
+
 public class TradeSellProcessingState extends TradeMonitorState {
 
+	private static Logger _tradeStateLogger = LogManager.getLogger(TradeSellProcessingState.class.getName());
+	
 	TradeSellProcessingState(TradeMonitor context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -9,8 +22,42 @@ public class TradeSellProcessingState extends TradeMonitorState {
 
 	@Override
 	protected void onEnter() {
-		// TODO Auto-generated method stub
+		_tradeStateLogger.info("Trading state 'sell processing' set.");
 		
+		String timeStamp = StockUtils.getCurrentTimestampAsString();
+		String ocaGroup = "oca_group_" + timeStamp;
+		String action = "SELL";
+		String orderTypeTakeProfit = TradingOrderType.LMT.getCode();
+		String orderTypeStopLoss = TradingOrderType.STPLMT.getCode();
+		Decimal quantity = _context.getQuantity();
+		
+		Order takeProfitOrder = new Order();
+		Order stopLossOrder = new Order();
+		
+		// Take Profit
+		takeProfitOrder.action(action);
+		takeProfitOrder.orderType(orderTypeTakeProfit);
+		takeProfitOrder.totalQuantity(quantity);
+		takeProfitOrder.lmtPrice(_context.getTakeProfitLimit());
+		takeProfitOrder.tif(TimeInForce.GTC);
+		takeProfitOrder.ocaGroup(ocaGroup);
+		takeProfitOrder.ocaType(1);
+		
+		// Stop Loss
+		stopLossOrder.action(action);
+		stopLossOrder.orderType(orderTypeStopLoss);
+		stopLossOrder.totalQuantity(quantity);
+		stopLossOrder.auxPrice(_context.getStopLossAuxPrice());
+		stopLossOrder.lmtPrice(_context.getStopLossLimit());
+		stopLossOrder.ocaGroup(ocaGroup);
+		stopLossOrder.ocaType(1);
+		
+		int orderId = _context.getController().getOrderId();
+		
+		_context.getController().placeOrder(orderId++, _context.getContract(), takeProfitOrder);
+		_context.getController().placeOrder(orderId, _context.getContract(), stopLossOrder);
+		
+		; // add Logging 
 	}
 
 	@Override
