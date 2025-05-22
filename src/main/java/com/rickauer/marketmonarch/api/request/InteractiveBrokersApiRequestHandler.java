@@ -42,6 +42,7 @@ import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.CandleStick;
+import com.rickauer.marketmonarch.api.data.processing.TradeMonitorState;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 
 public final class InteractiveBrokersApiRequestHandler implements EWrapper {
@@ -58,7 +59,9 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	private int _requestId;
 	private int _orderId;
 	private ScannerResponse _scanResult;
+	private TradeMonitorState _monitorState;
 
+	; // initialize TradeMonitorState
 	public InteractiveBrokersApiRequestHandler(ScannerResponse scanResult) {
 		_readerSignal = new EJavaSignal();
 		_clientSocket = new EClientSocket(this, _readerSignal);
@@ -129,7 +132,8 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	@Override
 	public void orderStatus(int orderId, String status, Decimal filled, Decimal remaining, double avgFillPrice,
 			int permId, int parentId, double lastFillPrice, int clientId, String whyHeld, double mktCapPrice) {
-		// TODO Auto-generated method stub
+		; // ADD code to handle responses here
+		// check if order status == "Filled", save all other values
 
 	}
 
@@ -477,6 +481,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	}
 
+	; // TODO: Refaktorisieren, so wie Aufruf von waitForNextOrderId()
 	@Override
 	public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
 		
