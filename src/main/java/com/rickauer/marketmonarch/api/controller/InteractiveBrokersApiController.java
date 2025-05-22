@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.ib.client.Contract;
 import com.ib.client.EClientSocket;
 import com.ib.client.EReader;
+import com.ib.client.Order;
 import com.ib.client.ScannerSubscription;
 import com.ib.client.TagValue;
 import com.rickauer.marketmonarch.MarketMonarch;
@@ -168,6 +169,10 @@ public final class InteractiveBrokersApiController implements Verifyable {
 				throw new RuntimeException("Error fetching data.", e);
 			}
 		}
+	}
+	
+	public void placeOrder(int id, Contract contract, Order order) {
+		getSocket().placeOrder(id, contract, order);
 	}
 	
 	@Override
