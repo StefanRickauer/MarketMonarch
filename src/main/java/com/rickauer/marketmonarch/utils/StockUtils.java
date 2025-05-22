@@ -170,4 +170,8 @@ public class StockUtils {
 				.max(Comparator.comparingInt(TradeDto::getId))
 				.orElse(null);
 	}
+	
+	public static String getCurrentTimestampAsString() {
+		return String.valueOf(System.currentTimeMillis());
+	}
 }
