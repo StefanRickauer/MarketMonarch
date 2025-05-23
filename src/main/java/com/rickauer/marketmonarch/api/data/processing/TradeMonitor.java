@@ -24,6 +24,10 @@ public class TradeMonitor {
 		return _controller;
 	}
 	
+	public TradeMonitorState getState() {
+		return _state;
+	}
+	
 	public void setState(TradeMonitorState state) {
 		_state = state;
 	}

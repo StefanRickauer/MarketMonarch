@@ -1,5 +1,7 @@
 package com.rickauer.marketmonarch.api.data.processing;
 
+import com.ib.client.Decimal;
+
 public class TradeBuyProcessingState extends TradeMonitorState {
 
 	TradeBuyProcessingState(TradeMonitor context) {
@@ -8,19 +10,19 @@ public class TradeBuyProcessingState extends TradeMonitorState {
 	}
 
 	@Override
-	protected void onEnter() {
+	public void onEnter() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void processTradingData() {
+	public void processTradingData() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void processOrderData() {
+	public void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
 		// TODO Auto-generated method stub
 		
 	}

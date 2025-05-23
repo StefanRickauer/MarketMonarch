@@ -1,5 +1,7 @@
 package com.rickauer.marketmonarch.api.data.processing;
 
+import com.ib.client.Decimal;
+
 public abstract class TradeMonitorState {
 	
 	TradeMonitor _context;
@@ -9,7 +11,7 @@ public abstract class TradeMonitorState {
 		onEnter();
 	}
 	
-	protected abstract void onEnter();
-	protected abstract void processTradingData();
-	protected abstract void processOrderData();
+	public abstract void onEnter();
+	public abstract void processTradingData();
+	public abstract void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice);
 }

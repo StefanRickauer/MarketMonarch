@@ -7,6 +7,7 @@ import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderType;
 import com.ib.client.Types.TimeInForce;
+import com.rickauer.marketmonarch.api.enums.OrderStatus;
 import com.rickauer.marketmonarch.api.enums.TradingOrderType;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
 import com.rickauer.marketmonarch.utils.StockUtils;
@@ -17,11 +18,10 @@ public class TradeSellProcessingState extends TradeMonitorState {
 	
 	TradeSellProcessingState(TradeMonitor context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected void onEnter() {
+	public void onEnter() {
 		_tradeStateLogger.info("Trading state 'sell processing' set.");
 		
 		String timeStamp = StockUtils.getCurrentTimestampAsString();
@@ -57,19 +57,24 @@ public class TradeSellProcessingState extends TradeMonitorState {
 		_context.getController().placeOrder(orderId++, _context.getContract(), takeProfitOrder);
 		_context.getController().placeOrder(orderId, _context.getContract(), stopLossOrder);
 		
-		; // add Logging 
+		_tradeStateLogger.info("Placed OCA group order: groupId=" + ocaGroup + ", orders=2 [" + action + " " + quantity.toString() + " " + _context.getContract().symbol() + " @ limit=" + _context.getTakeProfitLimit() + ", "
+				+  action + " " + quantity.toString() + " " + _context.getContract().symbol() + " @ " + "stop=" + _context.getStopLossAuxPrice() + " and limit=" + _context.getStopLossLimit());
 	}
 
 	@Override
-	protected void processTradingData() {
+	public void processTradingData() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void processOrderData() {
-		// TODO Auto-generated method stub
+	public void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
+		_tradeStateLogger.info(msg);
 		
+		if (status.equals(OrderStatus.FILLED.getOrderStatus())) {
+			; // save data, 
+			_context.setState(new TradeInactiveState(_context));
+		}
 	}
 
 }

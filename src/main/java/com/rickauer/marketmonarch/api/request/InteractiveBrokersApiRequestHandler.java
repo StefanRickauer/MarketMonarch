@@ -42,7 +42,7 @@ import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.CandleStick;
-import com.rickauer.marketmonarch.api.data.processing.TradeMonitorState;
+import com.rickauer.marketmonarch.api.data.processing.TradeMonitor;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 
 public final class InteractiveBrokersApiRequestHandler implements EWrapper {
@@ -59,7 +59,6 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	private int _requestId;
 	private int _orderId;
 	private ScannerResponse _scanResult;
-	private TradeMonitorState _monitorState;
 
 	; // initialize TradeMonitorState
 	public InteractiveBrokersApiRequestHandler(ScannerResponse scanResult) {
@@ -134,13 +133,14 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 			int permId, int parentId, double lastFillPrice, int clientId, String whyHeld, double mktCapPrice) {
 		; // ADD code to handle responses here
 		// check if order status == "Filled", save all other values
-
-	}
+		String message = EWrapperMsgGenerator.orderStatus( orderId, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld, mktCapPrice);
+		MarketMonarch._tradingContext.getState().processOrderData(message, status, filled, remaining, avgFillPrice);
+	}										
 
 	@Override
 	public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
-		// TODO Auto-generated method stub
-
+		String message = EWrapperMsgGenerator.openOrder(orderId, contract, order, orderState);
+		MarketMonarch._tradingContext.getState().processOrderData(message, null, null, null, 0.0);
 	}
 
 	@Override
