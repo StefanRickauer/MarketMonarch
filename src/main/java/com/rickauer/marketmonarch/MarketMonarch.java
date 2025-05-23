@@ -24,6 +24,7 @@ import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.CandleSeries;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
+import com.rickauer.marketmonarch.api.data.processing.TradeMonitor;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
@@ -76,6 +77,7 @@ public final class MarketMonarch {
 	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
 	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
 	private static Map<String, Long> _allCompanyFloats;
+	public static TradeMonitor _tradingContext;
 
 	static {
 		_sharedLock = new Object();
@@ -87,6 +89,8 @@ public final class MarketMonarch {
 		_allCompanyFloats = new HashMap<>();
 
 		_ibController = new InteractiveBrokersApiController(_responses);
+
+		_tradingContext = new TradeMonitor(_ibController);
 
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 
@@ -341,7 +345,13 @@ public final class MarketMonarch {
 	
 	private static void addFloatToStock() {
 		for (Map.Entry<Integer, StockMetrics> entry : _stocks.entrySet()) {
-			entry.getValue().setCompanyShareFloat(_allCompanyFloats.get(entry.getValue().getSymbol()));
+			
+			String symbol = entry.getValue().getSymbol().replace(" ", "-");
+			Long floatForSymbol = _allCompanyFloats.get(symbol);
+			entry.getValue().setCompanyShareFloat(floatForSymbol);
+			
+			// replace before getting value
+//			entry.getValue().setCompanyShareFloat(_allCompanyFloats.get(entry.getValue().getSymbol()));
 		}
 	}
 	
