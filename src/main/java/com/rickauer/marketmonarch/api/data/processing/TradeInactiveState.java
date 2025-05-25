@@ -4,7 +4,7 @@ import com.ib.client.Decimal;
 
 public class TradeInactiveState extends TradeMonitorState {
 
-	TradeInactiveState(TradeMonitor context) {
+	TradeInactiveState(TradeMonitorContext context) {
 		super(context);
 	}
 

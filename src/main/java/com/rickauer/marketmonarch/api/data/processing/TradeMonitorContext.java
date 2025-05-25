@@ -4,7 +4,7 @@ import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 
-public class TradeMonitor {
+public class TradeMonitorContext {
 	; // context class: https://www.youtube.com/watch?v=abX4xzaAsoc , 2:52
 	TradeMonitorState _state;
 	private final InteractiveBrokersApiController _controller;
@@ -15,7 +15,7 @@ public class TradeMonitor {
 	long _quantity;
 	
 	; // Must be MarketMonarchs Controller!
-	public TradeMonitor(InteractiveBrokersApiController controller) {
+	public TradeMonitorContext(InteractiveBrokersApiController controller) {
 		_state = new TradeInactiveState(this);
 		_controller = controller;
 	}

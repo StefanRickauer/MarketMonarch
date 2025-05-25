@@ -4,9 +4,9 @@ import com.ib.client.Decimal;
 
 public abstract class TradeMonitorState {
 	
-	TradeMonitor _context;
+	TradeMonitorContext _context;
 	
-	TradeMonitorState(TradeMonitor context) {
+	TradeMonitorState(TradeMonitorContext context) {
 		_context = context;
 		onEnter();
 	}

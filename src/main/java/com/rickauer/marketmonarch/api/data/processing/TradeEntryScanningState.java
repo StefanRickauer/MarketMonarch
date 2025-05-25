@@ -4,7 +4,7 @@ import com.ib.client.Decimal;
 
 public class TradeEntryScanningState extends TradeMonitorState {
 
-	TradeEntryScanningState(TradeMonitor context) {
+	TradeEntryScanningState(TradeMonitorContext context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 	}

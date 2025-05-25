@@ -16,7 +16,7 @@ public class TradeSellProcessingState extends TradeMonitorState {
 
 	private static Logger _tradeStateLogger = LogManager.getLogger(TradeSellProcessingState.class.getName());
 	
-	TradeSellProcessingState(TradeMonitor context) {
+	TradeSellProcessingState(TradeMonitorContext context) {
 		super(context);
 	}
 

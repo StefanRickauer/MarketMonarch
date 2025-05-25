@@ -24,7 +24,7 @@ import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.CandleSeries;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
-import com.rickauer.marketmonarch.api.data.processing.TradeMonitor;
+import com.rickauer.marketmonarch.api.data.processing.TradeMonitorContext;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
@@ -71,17 +71,17 @@ public final class MarketMonarch {
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _ibController;
 	private static Object _sharedLock;
-	public static Map<String, AccountSummaryItem> _accountSummary;
+	public static List<AccountSummaryItem> _accountSummary;
 	public static ScannerResponse _responses;
 	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
 	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
 	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
 	private static Map<String, Long> _allCompanyFloats;
-	public static TradeMonitor _tradingContext;
+	public static TradeMonitorContext _tradingContext;
 
 	static {
 		_sharedLock = new Object();
-		_accountSummary = new HashMap<>();
+		_accountSummary = new ArrayList<>();
 		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
 		_contractsToObserve = new ArrayList<>();
@@ -90,7 +90,7 @@ public final class MarketMonarch {
 
 		_ibController = new InteractiveBrokersApiController(_responses);
 
-		_tradingContext = new TradeMonitor(_ibController);
+		_tradingContext = new TradeMonitorContext(_ibController);
 
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 
@@ -112,12 +112,22 @@ public final class MarketMonarch {
 			setUpWorkingEnvironment();
 			
 			requestAccountMetrics();
+			double balance = 0.0;
 			// DEBUG ONLY: Remove before going live =======================================
-			_marketMonarchLogger.debug("Total cash: " + _accountSummary.get("TotalCashValue").getValueAsDouble()); 
-			_marketMonarchLogger.debug("Total in stocks: " + _accountSummary.get("GrossPositionValue").getValueAsDouble()); 
+			for (AccountSummaryItem summary : _accountSummary) {
+
+				if (summary.getTag().equals("TotalCashValue")) {
+					balance = summary.getValueAsDouble();
+					_marketMonarchLogger.debug("Total cash: " + balance); 
+				}
+				
+				if (summary.getTag().equals("GrossPositionValue")) {
+					_marketMonarchLogger.debug("Total in stocks: " + summary.getValueAsDouble()); 
+				}
+			}
 			// DEBUG ONLY END =============================================================
 			
-			if ( ( (long)Math.floor(_accountSummary.get("TotalCashValue").getValueAsDouble()) ) < MINIMUM_ACCOUNT_BALANCE) {
+			if ( ( (long)Math.floor(balance) ) < MINIMUM_ACCOUNT_BALANCE) {
 				_marketMonarchLogger.fatal("Less than 500 Euros in cash available. Exiting.");
 				System.exit(0);
 			}
