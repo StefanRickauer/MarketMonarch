@@ -24,6 +24,8 @@ import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.CandleSeries;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
+import com.rickauer.marketmonarch.api.data.processing.PreTradeAccountValidationState;
+import com.rickauer.marketmonarch.api.data.processing.PreTradeContext;
 import com.rickauer.marketmonarch.api.data.processing.TradeMonitorContext;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
@@ -71,17 +73,16 @@ public final class MarketMonarch {
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _ibController;
 	private static Object _sharedLock;
-	public static List<AccountSummaryItem> _accountSummary;
 	public static ScannerResponse _responses;
 	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
 	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
 	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
 	private static Map<String, Long> _allCompanyFloats;
+	public static PreTradeContext _preTradeContext;
 	public static TradeMonitorContext _tradingContext;
 
 	static {
 		_sharedLock = new Object();
-		_accountSummary = new ArrayList<>();
 		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
 		_contractsToObserve = new ArrayList<>();
@@ -90,6 +91,7 @@ public final class MarketMonarch {
 
 		_ibController = new InteractiveBrokersApiController(_responses);
 
+		_preTradeContext = new PreTradeContext(_ibController);
 		_tradingContext = new TradeMonitorContext(_ibController);
 
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
@@ -111,10 +113,10 @@ public final class MarketMonarch {
 			ensureOperationalReadiness();
 			setUpWorkingEnvironment();
 			
-			requestAccountMetrics();
+			_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));
 			double balance = 0.0;
 			// DEBUG ONLY: Remove before going live =======================================
-			for (AccountSummaryItem summary : _accountSummary) {
+			for (AccountSummaryItem summary : _preTradeContext.getAccountDetails()) {
 
 				if (summary.getTag().equals("TotalCashValue")) {
 					balance = summary.getValueAsDouble();
@@ -232,13 +234,6 @@ public final class MarketMonarch {
 		}
 		
 		_marketMonarchLogger.info("Set up environment.");
-	}
-
-	private static void requestAccountMetrics() {
-		List<AccountSummaryItem> cash = _ibController.getAccountSummary("TotalCashValue");
-		_accountSummary.addAll(cash);
-		List<AccountSummaryItem> grossPosition = _ibController.getAccountSummary("GrossPositionValue");
-		_accountSummary.addAll(grossPosition);
 	}
 	
 	private static void getAllCompanyFreeFloats() {
