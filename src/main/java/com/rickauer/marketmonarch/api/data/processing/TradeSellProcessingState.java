@@ -77,4 +77,10 @@ public class TradeSellProcessingState extends TradeMonitorState {
 		}
 	}
 
+	@Override
+	public void dispose() {
+		// If sell-orders are placed it makes no sense to dispose the scan trade session
+		
+	}
+
 }

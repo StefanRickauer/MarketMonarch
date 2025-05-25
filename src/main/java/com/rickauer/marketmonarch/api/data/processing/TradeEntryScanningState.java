@@ -27,4 +27,12 @@ public class TradeEntryScanningState extends TradeMonitorState {
 		
 	}
 
+	@Override
+	public void dispose() {
+		// Cancel all subscriptions
+		// reset all attributes in context class
+		// reset all attributes in class
+		
+	}
+
 }

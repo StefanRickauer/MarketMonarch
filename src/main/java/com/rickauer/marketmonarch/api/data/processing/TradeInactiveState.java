@@ -17,4 +17,7 @@ public class TradeInactiveState extends TradeMonitorState {
 	@Override
 	public void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) 		{	/* intentionally left blank */ }
 
+	@Override
+	public void dispose() 				{	/* intentionally left blank */ }
+
 }

@@ -27,4 +27,10 @@ public class TradeBuyProcessingState extends TradeMonitorState {
 		
 	}
 
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

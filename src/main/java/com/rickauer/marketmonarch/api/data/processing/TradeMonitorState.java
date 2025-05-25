@@ -14,4 +14,5 @@ public abstract class TradeMonitorState {
 	public abstract void onEnter();
 	public abstract void processTradingData();
 	public abstract void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice);
+	public abstract void dispose();
 }
