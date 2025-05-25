@@ -85,10 +85,6 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 		return _clientSocket;
 	}
 
-	public int getCurrentOrderId() {
-		return waitForNextOrderId();
-	}
-
 	@Override
 	public void tickPrice(int tickerId, int field, double price, TickAttrib attrib) {
 		// TODO Auto-generated method stub

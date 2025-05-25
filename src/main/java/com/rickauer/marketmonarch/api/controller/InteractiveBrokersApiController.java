@@ -82,7 +82,7 @@ public final class InteractiveBrokersApiController implements Verifyable {
 	}
 	
 	public int getOrderId() {
-		return _requestHandler.getCurrentOrderId();
+		return _requestHandler.waitForNextOrderId();
 	}
 
 	public EClientSocket getSocket() {
