@@ -10,6 +10,7 @@ import com.ib.client.Order;
 import com.ib.client.ScannerSubscription;
 import com.ib.client.TagValue;
 import com.rickauer.marketmonarch.MarketMonarch;
+import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.CandleSeries;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
@@ -85,30 +86,16 @@ public final class InteractiveBrokersApiController implements Verifyable {
 		return _requestHandler.waitForNextOrderId();
 	}
 
+	; // sollte nach Refaktorisierung nicht mehr gebrauch werden, weil alles über Controller und Handler läuft
 	public EClientSocket getSocket() {
 		return _requestHandler.getClientSocket();
 	}
 	
 	// Maximum number of requests is 3 -> Error occurred during test when 4 requests were sent. 
-	public void requestAccountSummaryItem(String tag) {
+	public List<AccountSummaryItem> getAccountSummary(String tag) {
 		
 		_ibApiControllerLogger.info("Account summary item '" + tag + "' is being requested...");
-		
-		String group = "All";		
-		int requestId = 0;
-		
-		synchronized (MarketMonarch._accountSummary) {
-			try {
-				requestId = getNextRequestId();
-				getSocket().reqAccountSummary(requestId, group, tag);
-				MarketMonarch._accountSummary.wait();
-				_ibApiControllerLogger.info("Retrieved account summary item '" + tag + "'.");
-			} catch (InterruptedException e) {
-				_ibApiControllerLogger.error("Account summary item '" + tag + "' could not be retrieved.");
-				throw new RuntimeException("Account summary item '" + tag + "' could not be retrieved.");
-			}
-		}
-		
+		return _requestHandler.waitForAccountSummary(tag);		
 	}
 
 	public void requestScannerSubscription(String priceAbove, String priceBelow) {

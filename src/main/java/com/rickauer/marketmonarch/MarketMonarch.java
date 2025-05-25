@@ -235,8 +235,10 @@ public final class MarketMonarch {
 	}
 
 	private static void requestAccountMetrics() {
-		_ibController.requestAccountSummaryItem("TotalCashValue");
-		_ibController.requestAccountSummaryItem("GrossPositionValue");
+		List<AccountSummaryItem> cash = _ibController.getAccountSummary("TotalCashValue");
+		_accountSummary.addAll(cash);
+		List<AccountSummaryItem> grossPosition = _ibController.getAccountSummary("GrossPositionValue");
+		_accountSummary.addAll(grossPosition);
 	}
 	
 	private static void getAllCompanyFreeFloats() {

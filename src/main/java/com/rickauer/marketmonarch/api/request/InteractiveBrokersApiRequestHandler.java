@@ -57,7 +57,8 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	private EReaderSignal _readerSignal;
 	private EClientSocket _clientSocket;
 	private int _requestId;
-	private int _orderId;
+	private int _orderId;					; // necessary? Because orderId will only be retrieved via API call
+	private List<AccountSummaryItem> _accountSummaryResponse;
 	private ScannerResponse _scanResult;
 
 	; // initialize TradeMonitorState
@@ -66,6 +67,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 		_clientSocket = new EClientSocket(this, _readerSignal);
 		_requestId = 0;
 		_orderId = -1;
+		_accountSummaryResponse = new ArrayList<>();
 		_scanResult = scanResult;
 	}
 	
@@ -174,13 +176,11 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	public int waitForNextOrderId() {
         synchronized (lock) {
             _clientSocket.reqIds(-1); 
-            while (_orderId <= 0) {
-                try {
-					lock.wait(TWO_MINUTES_IN_MILLIS);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}  
-            }
+            try {
+				lock.wait(TWO_MINUTES_IN_MILLIS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} 
             return _orderId;
         }
     }
@@ -342,18 +342,34 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	}
 
+	public List<AccountSummaryItem> waitForAccountSummary(String tag) {
+		
+		_accountSummaryResponse.clear();
+		String group = "All";
+		
+        synchronized (lock) {
+            _clientSocket.reqAccountSummary(_requestId++, group, tag); 
+            try {
+				lock.wait(TWO_MINUTES_IN_MILLIS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} 
+            return _accountSummaryResponse;
+        }
+    }
+	
 	@Override
 	public void accountSummary(int reqId, String account, String tag, String value, String currency) {
-		synchronized (MarketMonarch._accountSummary) {
-			MarketMonarch._accountSummary.add(new AccountSummaryItem(reqId, account, tag, value, currency));
-		}
+		_ibRequestHandlerLogger.info(EWrapperMsgGenerator.accountSummary(reqId, account, tag, value, currency));
+		_accountSummaryResponse.add(new AccountSummaryItem(reqId, account, tag, value, currency));
 	}
 
 	@Override
 	public void accountSummaryEnd(int reqId) {
-		synchronized (MarketMonarch._accountSummary) {
-			MarketMonarch._accountSummary.notify();
-		}
+		synchronized (lock) {
+			_ibRequestHandlerLogger.info(EWrapperMsgGenerator.accountSummaryEnd(reqId));
+            lock.notifyAll();  
+        }
 
 	}
 
