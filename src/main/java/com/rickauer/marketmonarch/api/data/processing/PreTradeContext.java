@@ -32,4 +32,49 @@ public class PreTradeContext {
 	public List<AccountSummaryItem> getAccountDetails() {
 		return _accountSummary;
 	}
+	
+	public double getTotalCash() {
+		for (AccountSummaryItem item : _accountSummary) {
+			if (item.getTag().equals("TotalCashValue")) {
+				return item.getValueAsDouble();
+			}
+		}
+		return -1.0;
+	}
+	
+	public double getNetLiquidation() {
+		for (AccountSummaryItem item : _accountSummary) {
+			if (item.getTag().equals("NetLiquidation")) {
+				return item.getValueAsDouble();
+			}
+		}
+		return -1.0;
+	}
+	
+	public double getGrossPosition() {
+		for (AccountSummaryItem item : _accountSummary) {
+			if (item.getTag().equals("GrossPositionValue")) {
+				return item.getValueAsDouble();
+			}
+		}
+		return -1.0;
+	}
+
+	public double getAccruedCash() {
+		for (AccountSummaryItem item : _accountSummary) {
+			if (item.getTag().equals("AccruedCash")) {
+				return item.getValueAsDouble();
+			}
+		}
+		return -1.0;
+	}
+
+	public double getBuyingPower() {
+		for (AccountSummaryItem item : _accountSummary) {
+			if (item.getTag().equals("BuyingPower")) {
+				return item.getValueAsDouble();
+			}
+		}
+		return -1.0;
+	}
 }

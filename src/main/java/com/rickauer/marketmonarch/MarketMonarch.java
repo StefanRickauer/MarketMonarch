@@ -61,7 +61,7 @@ public final class MarketMonarch {
 	
 	private static final int MAX_NUMBER_OF_SHARES = 20_000_000;
 	private static final int MIN_NUMBER_OF_SHARES = 5_000_000;
-	private static final int MINIMUM_ACCOUNT_BALANCE = 500;
+	public static final int MINIMUM_ACCOUNT_BALANCE = 500;
 	public static final double TAKE_PROFIT_FACTOR = 1.05;				// number * TAKE_PROFIT = 5%
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
@@ -113,27 +113,8 @@ public final class MarketMonarch {
 			ensureOperationalReadiness();
 			setUpWorkingEnvironment();
 			
-			_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));
-			double balance = 0.0;
-			// DEBUG ONLY: Remove before going live =======================================
-			for (AccountSummaryItem summary : _preTradeContext.getAccountDetails()) {
-
-				if (summary.getTag().equals("TotalCashValue")) {
-					balance = summary.getValueAsDouble();
-					_marketMonarchLogger.debug("Total cash: " + balance); 
-				}
-				
-				if (summary.getTag().equals("GrossPositionValue")) {
-					_marketMonarchLogger.debug("Total in stocks: " + summary.getValueAsDouble()); 
-				}
-			}
-			// DEBUG ONLY END =============================================================
-			
-			if ( ( (long)Math.floor(balance) ) < MINIMUM_ACCOUNT_BALANCE) {
-				_marketMonarchLogger.fatal("Less than 500 Euros in cash available. Exiting.");
-				System.exit(0);
-			}
-			
+			_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));			
+		
 			getAllCompanyFreeFloats();
 			scanMarket();
 			filterScanResultsByFloat();

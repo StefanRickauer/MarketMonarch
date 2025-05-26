@@ -174,6 +174,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	; // If called with more than one Controller active, orderId will be reset. Make sure only one Controller is active.
 	public int waitForNextOrderId() {
+
         synchronized (lock) {
             _clientSocket.reqIds(-1); 
             try {
@@ -341,35 +342,18 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 		// TODO Auto-generated method stub
 
 	}
-
-	public List<AccountSummaryItem> waitForAccountSummary(String tag) {
-		
-		_accountSummaryResponse.clear();
-		String group = "All";
-		
-        synchronized (lock) {
-            _clientSocket.reqAccountSummary(_requestId++, group, tag); 
-            try {
-				lock.wait(TWO_MINUTES_IN_MILLIS);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} 
-            return _accountSummaryResponse;
-        }
-    }
 	
 	@Override
 	public void accountSummary(int reqId, String account, String tag, String value, String currency) {
 		_ibRequestHandlerLogger.info(EWrapperMsgGenerator.accountSummary(reqId, account, tag, value, currency));
-		_accountSummaryResponse.add(new AccountSummaryItem(reqId, account, tag, value, currency));
+		MarketMonarch._preTradeContext.getAccountDetails().add(new AccountSummaryItem(reqId, account, tag, value, currency));
 	}
 
 	@Override
 	public void accountSummaryEnd(int reqId) {
-		synchronized (lock) {
-			_ibRequestHandlerLogger.info(EWrapperMsgGenerator.accountSummaryEnd(reqId));
-            lock.notifyAll();  
-        }
+		synchronized (MarketMonarch._preTradeContext) {
+			MarketMonarch._preTradeContext.notify();
+		}
 
 	}
 
@@ -421,6 +405,9 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void error(int id, int errorCode, String errorMsg, String advancedOrderRejectJson) {
+		if (advancedOrderRejectJson == null) {
+			advancedOrderRejectJson = "";
+		}
 		_ibRequestHandlerLogger.error("RequestID: " + id + ", Error Code: " + errorCode + ", Error Message: " + errorMsg + "Advanced Order Reject Json:\n" + advancedOrderRejectJson);
 	}
 

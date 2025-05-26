@@ -86,16 +86,8 @@ public final class InteractiveBrokersApiController implements Verifyable {
 		return _requestHandler.waitForNextOrderId();
 	}
 
-	; // sollte nach Refaktorisierung nicht mehr gebrauch werden, weil alles über Controller und Handler läuft
 	public EClientSocket getSocket() {
 		return _requestHandler.getClientSocket();
-	}
-	
-	// Maximum number of requests is 3 -> Error occurred during test when 4 requests were sent. 
-	public List<AccountSummaryItem> getAccountSummary(String tag) {
-		
-		_ibApiControllerLogger.info("Account summary item '" + tag + "' is being requested...");
-		return _requestHandler.waitForAccountSummary(tag);		
 	}
 
 	public void requestScannerSubscription(String priceAbove, String priceBelow) {
