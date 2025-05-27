@@ -2,10 +2,10 @@ package com.rickauer.marketmonarch.api.data.processing;
 
 public abstract class PreTradeState {
 
-	PreTradeContext _preTradeContext;
+	PreTradeContext _context;
 	
 	public PreTradeState(PreTradeContext context) {
-		_preTradeContext = context;
+		_context = context;
 		onEnter();
 	}
 	

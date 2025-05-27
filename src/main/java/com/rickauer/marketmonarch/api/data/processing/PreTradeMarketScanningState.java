@@ -10,8 +10,8 @@ public class PreTradeMarketScanningState extends PreTradeState {
 	public void onEnter() {
 		System.out.println("DEBUG: Entered Market Scanning State.");
 		
-		synchronized(_preTradeContext) {
-			_preTradeContext.notify();
+		synchronized(_context) {
+			_context.notify();
 		}
 	}
 
