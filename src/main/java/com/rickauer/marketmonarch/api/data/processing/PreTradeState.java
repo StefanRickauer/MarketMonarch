@@ -10,4 +10,6 @@ public abstract class PreTradeState {
 	}
 	
 	public abstract void onEnter();
+	public abstract void processAccountSummary(String logMessage, int reqId, String account, String tag, String value, String currency);
+	public abstract void processAccountSummaryEnd(int reqId);
 }

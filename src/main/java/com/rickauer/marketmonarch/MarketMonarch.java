@@ -114,6 +114,10 @@ public final class MarketMonarch {
 			setUpWorkingEnvironment();
 			
 			_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));			
+
+			synchronized(_preTradeContext) {
+				_preTradeContext.wait();
+			}
 		
 			getAllCompanyFreeFloats();
 			scanMarket();

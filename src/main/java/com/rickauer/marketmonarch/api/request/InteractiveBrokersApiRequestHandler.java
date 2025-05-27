@@ -345,16 +345,13 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	
 	@Override
 	public void accountSummary(int reqId, String account, String tag, String value, String currency) {
-		_ibRequestHandlerLogger.info(EWrapperMsgGenerator.accountSummary(reqId, account, tag, value, currency));
-		MarketMonarch._preTradeContext.getAccountDetails().add(new AccountSummaryItem(reqId, account, tag, value, currency));
+		String logMessage = EWrapperMsgGenerator.accountSummary(reqId, account, tag, value, currency);
+		MarketMonarch._preTradeContext.getState().processAccountSummary(logMessage, reqId, account, tag, value, currency);
 	}
 
 	@Override
 	public void accountSummaryEnd(int reqId) {
-		synchronized (MarketMonarch._preTradeContext) {
-			MarketMonarch._preTradeContext.notify();
-		}
-
+		MarketMonarch._preTradeContext.getState().processAccountSummaryEnd(reqId);
 	}
 
 	@Override

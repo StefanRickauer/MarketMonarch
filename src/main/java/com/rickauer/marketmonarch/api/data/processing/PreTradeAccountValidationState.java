@@ -20,16 +20,17 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	@Override
 	public void onEnter() {
 		_tradeAccountValidationLogger.info("Entered Account Validation State.");
-		
-		synchronized(_preTradeContext) {
-			_preTradeContext.getController().getSocket().reqAccountSummary(_preTradeContext.getController().getNextRequestId(), "All", "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue"); 			
-			
-			try {
-				_preTradeContext.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		_preTradeContext.getController().getSocket().reqAccountSummary(_preTradeContext.getController().getNextRequestId(), "All", "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue"); 			
+	}
+	
+	
+	public void processAccountSummary(String logMessage, int reqId, String account, String tag, String value, String currency) {
+		_tradeAccountValidationLogger.info(logMessage);
+		_preTradeContext.getAccountDetails().add(new AccountSummaryItem(reqId, account, tag, value, currency));
+	}
+
+	public void processAccountSummaryEnd(int reqId) {
+		_preTradeContext.getController().getSocket().cancelAccountSummary(reqId);
 		
 		_tradeAccountValidationLogger.info("Accured Cash (unrealized): " + _preTradeContext.getGrossPosition());
 		_tradeAccountValidationLogger.info("Total Market Exposure: " + _preTradeContext.getGrossPosition());
@@ -38,15 +39,15 @@ public class PreTradeAccountValidationState extends PreTradeState {
 		_tradeAccountValidationLogger.info("Buying Power: " + _preTradeContext.getBuyingPower());
 		
 		validateAccount();
-	}
-	
-	private void validateAccount() {
-		if ( ( (long)Math.floor(_preTradeContext.getTotalCash()) ) < MarketMonarch.MINIMUM_ACCOUNT_BALANCE) {
-			_tradeAccountValidationLogger.fatal("Less than " + MarketMonarch.MINIMUM_ACCOUNT_BALANCE + " Euros in cash available. Exiting.");
-			System.exit(0);
-		} else {
-			_preTradeContext.setState(new PreTradeMarketScanningState(_preTradeContext));
-		}
+		_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state.");
+		
+		_preTradeContext.setState(new PreTradeMarketScanningState(_preTradeContext));
 	}
 
+	private void validateAccount() {
+		if ( ( (long)Math.floor(_preTradeContext.getTotalCash()) ) < MarketMonarch.MINIMUM_ACCOUNT_BALANCE) {
+			_tradeAccountValidationLogger.fatal("Account validation failed: Less than " + MarketMonarch.MINIMUM_ACCOUNT_BALANCE + " Euros in cash available. Exiting.");
+			System.exit(0);
+		} 
+	}
 }
