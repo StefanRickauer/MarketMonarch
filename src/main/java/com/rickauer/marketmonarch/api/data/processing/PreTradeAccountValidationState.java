@@ -20,7 +20,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	@Override
 	public void onEnter() {
 		_tradeAccountValidationLogger.info("Entered Account Validation State.");
-		_context.getController().getSocket().reqAccountSummary(_context.getController().getNextRequestId(), "All", "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue"); 			
+		_context.getIbController().getSocket().reqAccountSummary(_context.getIbController().getNextRequestId(), "All", "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue"); 			
 	}
 	
 	
@@ -30,7 +30,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	}
 
 	public void processAccountSummaryEnd(int reqId) {
-		_context.getController().getSocket().cancelAccountSummary(reqId);
+		_context.getIbController().getSocket().cancelAccountSummary(reqId);
 		
 		_tradeAccountValidationLogger.info("Accured Cash (unrealized): " + _context.getGrossPosition());
 		_tradeAccountValidationLogger.info("Total Market Exposure: " + _context.getGrossPosition());
@@ -41,7 +41,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 		validateAccount();
 		_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state.");
 		
-		_context.setState(new PreTradeMarketScanningState(_context));
+		_context.setState(new PreTradeDataFetchingState(_context));
 	}
 
 	private void validateAccount() {

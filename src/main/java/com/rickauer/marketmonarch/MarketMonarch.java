@@ -57,7 +57,7 @@ public final class MarketMonarch {
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 
-	private static final String COMPANY_FLOATS_BACKUP_FOLDER= FileSupplier.getBackupFolder() + "\\Company Floats\\";
+	public static final String COMPANY_FLOATS_BACKUP_FOLDER= FileSupplier.getBackupFolder() + "\\Company Floats\\";
 	
 	private static final int MAX_NUMBER_OF_SHARES = 20_000_000;
 	private static final int MIN_NUMBER_OF_SHARES = 5_000_000;
@@ -68,16 +68,15 @@ public final class MarketMonarch {
 	public static ApiKeyDao _apiAccess;
 	private static FinancialDataDao _finAccess;
 	private static FmpConnector _fmpConnector;
-	private static FmpRequestController _fmpController;
+	private static FmpRequestController _financialModellingPrepController;
 	private static AlphaVantageConnector _alphaVantage;
 	private static MailtrapServiceConnector _mailtrapService;
-	private static InteractiveBrokersApiController _ibController;
+	private static InteractiveBrokersApiController _interactiveBrokersController;
 	private static Object _sharedLock;
 	public static ScannerResponse _responses;
 	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
 	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
 	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
-	private static Map<String, Long> _allCompanyFloats;
 	public static PreTradeContext _preTradeContext;
 	public static TradeMonitorContext _tradingContext;
 
@@ -87,12 +86,9 @@ public final class MarketMonarch {
 		_stocks = new HashMap<>();
 		_contractsToObserve = new ArrayList<>();
 		_stocksToTradeWith = new HashMap<>();
-		_allCompanyFloats = new HashMap<>();
 
-		_ibController = new InteractiveBrokersApiController(_responses);
+		_interactiveBrokersController = new InteractiveBrokersApiController(_responses);
 
-		_preTradeContext = new PreTradeContext(_ibController);
-		_tradingContext = new TradeMonitorContext(_ibController);
 
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 
@@ -100,10 +96,12 @@ public final class MarketMonarch {
 		_finAccess = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
 		_fmpConnector = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
-		_fmpController = new FmpRequestController(_fmpConnector.getToken(), FmpServiceRequest.ALL_SHARES_FLOAT);
+		_financialModellingPrepController = new FmpRequestController(_fmpConnector.getToken(), FmpServiceRequest.ALL_SHARES_FLOAT);
 		_alphaVantage = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
 		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 
+		_preTradeContext = new PreTradeContext(_interactiveBrokersController, _financialModellingPrepController);
+		_tradingContext = new TradeMonitorContext(_interactiveBrokersController);
 	}
 
 	public static void main(String[] args) {
@@ -118,8 +116,7 @@ public final class MarketMonarch {
 			synchronized(_preTradeContext) {
 				_preTradeContext.wait();
 			}
-		
-			getAllCompanyFreeFloats();
+			
 			scanMarket();
 			filterScanResultsByFloat();
 			requestHistoricalDataAndfilterScanResultsByProfitLoss();
@@ -128,7 +125,7 @@ public final class MarketMonarch {
 			// DEBUG ONLY: Remove before going live =======================================
 			for (StockMetrics metric : _stocks.values()) {
 				_marketMonarchLogger.debug("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
-				+ ", Company Share Float: " + _allCompanyFloats.get(metric.getSymbol()));
+				+ ", Company Share Float: " + _preTradeContext.getAllCompanyFloats().get(metric.getSymbol()));
 			}
 			// DEBUG ONLY END =============================================================
 			
@@ -198,7 +195,7 @@ public final class MarketMonarch {
 		_healthChecker.add(_mailtrapService);
 		_healthChecker.add(_fmpConnector);
 		_healthChecker.add(_alphaVantage);
-		_healthChecker.add(_ibController);
+		_healthChecker.add(_interactiveBrokersController);
 
 		_marketMonarchLogger.info("Checking operational readiness...");
 		_healthChecker.runHealthCheck();
@@ -221,58 +218,11 @@ public final class MarketMonarch {
 		_marketMonarchLogger.info("Set up environment.");
 	}
 	
-	private static void getAllCompanyFreeFloats() {
-		_marketMonarchLogger.info("Requesting all company free floats...");
-		
-		String companyFloats = "";
-		
-		DateTime today = DateTime.now();
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
-		
-		String todaysBackupFileName = COMPANY_FLOATS_BACKUP_FOLDER + today.toString(formatter);
-		File todaysBackupFile = new File(todaysBackupFileName);
-
-		if (todaysBackupFile.exists()) {
-			companyFloats = FileSupplier.readFile(todaysBackupFileName);
-		} else {
-			// Latest test returned significantly fewer shares which is why the length of the response will be checked and if the response is incomplete, backup will be used instead.
-			try {
-				companyFloats = _fmpController.requestAllShareFloat();
-				if (companyFloats.length() < 1000000) {
-					_marketMonarchLogger.error("Received incomplete response.");
-					companyFloats = "";
-					throw new RuntimeException("Incomplete response won't be saved.");
-				}
-				FileSupplier.writeFile(todaysBackupFileName,companyFloats);
-				_marketMonarchLogger.info("Saved company floats to '" + todaysBackupFileName + "'.");		
-			} catch (Exception e) {
-				_marketMonarchLogger.error("Could not fetch data.");
-			}
-		}
-		
-		if (companyFloats.equals("")) {
-			_marketMonarchLogger.warn("No backups today and received an empty or incomplete response from FMP. Attempting to restore latest save point...");
-			
-			File backupFolder = new File(COMPANY_FLOATS_BACKUP_FOLDER);
-			File[] backupFiles = backupFolder.listFiles(); 
-			
-			if (backupFiles.length > 0 ) {
-				String latestBackup = backupFiles[backupFiles.length - 1].getAbsolutePath();
-				companyFloats = FileSupplier.readFile(latestBackup);
-				_marketMonarchLogger.info("Loaded latest save file: '" + latestBackup + "'.");
-			} else {
-				_marketMonarchLogger.fatal("Could not fetch company free floats.");
-			}
-		}
-		 _allCompanyFloats = FmpRequestController.convertResponseToMap(companyFloats);
-		_marketMonarchLogger.info("Received all company free floats.");
-	}
-	
 	private static void scanMarket() {
 	
 		_marketMonarchLogger.info("Setting up market scanner subscription and requesting scan results...");
 		
-		_ibController.requestScannerSubscription("2", "20");
+		_interactiveBrokersController.requestScannerSubscription("2", "20");
 
 		synchronized (_sharedLock) {
 			try {
@@ -281,7 +231,7 @@ public final class MarketMonarch {
 				throw new RuntimeException("Error scanning market.", e);
 			}
 		}
-		_ibController.cancelScannerSubscription(_ibController.getRequestId());
+		_interactiveBrokersController.cancelScannerSubscription(_interactiveBrokersController.getRequestId());
 		_marketMonarchLogger.info("Received scan results.");
 	}
 	
@@ -300,7 +250,7 @@ public final class MarketMonarch {
 			String currentSymbol = entry.getValue().symbol();
 			
 			try {
-				floatShares = _allCompanyFloats.get(currentSymbol.replace(" ", "-"));		// The symbol "GTN A" wasn't found but list contains "GTN-A".
+				floatShares = _preTradeContext.getAllCompanyFloats().get(currentSymbol.replace(" ", "-"));		// The symbol "GTN A" wasn't found but list contains "GTN-A".
 			} catch (NullPointerException e) {
 				floatShares = -1L;
 				_marketMonarchLogger.warn("Did not find company share float for symbol: '" + currentSymbol + "'.");
@@ -323,7 +273,7 @@ public final class MarketMonarch {
 		int numberOfStocksBeforeFiltering = _responses.getRankings().size();
 		
 		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
-			_ibController.requestHistoricalDataUntilToday(entry.getValue(), "4 D", "5 mins");
+			_interactiveBrokersController.requestHistoricalDataUntilToday(entry.getValue(), "4 D", "5 mins");
 		}
 		
 		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
@@ -338,8 +288,8 @@ public final class MarketMonarch {
 	private static void addFloatToStock() {
 		for (Map.Entry<Integer, StockMetrics> entry : _stocks.entrySet()) {
 			
-			String symbol = entry.getValue().getSymbol().replace(" ", "-");
-			Long floatForSymbol = _allCompanyFloats.get(symbol);
+			String symbol = entry.getValue().getSymbol().replace(" ", "-");			// <====== NICHT VERGESSEN!!!
+			Long floatForSymbol = _preTradeContext.getAllCompanyFloats().get(symbol);
 			entry.getValue().setCompanyShareFloat(floatForSymbol);
 			
 			// replace before getting value
@@ -354,7 +304,7 @@ public final class MarketMonarch {
 		_stocksToTradeWith.clear(); 			// this method will iterate over all contracts that need to be observed. Hence, delete before use.
 		
 		for (Contract contract : _contractsToObserve) {
-			_ibController.requestHistoricalDataForAnalysis(contract, "15000 S", "5 secs");		
+			_interactiveBrokersController.requestHistoricalDataForAnalysis(contract, "15000 S", "5 secs");		
 		}
 		
 		_marketMonarchLogger.info("Done requesting historical chart data.");
