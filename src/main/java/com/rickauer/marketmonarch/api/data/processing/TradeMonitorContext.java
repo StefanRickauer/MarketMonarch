@@ -28,8 +28,9 @@ public class TradeMonitorContext {
 		return _state;
 	}
 	
-	public void setState(TradeMonitorState state) {
-		_state = state;
+	public void setState(TradeMonitorState newState) {
+		_state = newState;
+		newState.onEnter();
 	}
 	
 	public Contract getContract() {

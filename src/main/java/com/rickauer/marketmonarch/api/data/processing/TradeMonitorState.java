@@ -8,7 +8,6 @@ public abstract class TradeMonitorState {
 	
 	TradeMonitorState(TradeMonitorContext context) {
 		_context = context;
-		onEnter();
 	}
 	
 	public abstract void onEnter();
