@@ -55,11 +55,8 @@ public class PreTradeMarketScanningState extends PreTradeState {
 	@Override
 	public void processDataEnd(int reqId) {
 		_context.getIbController().getSocket().cancelScannerSubscription(reqId);
-		_marketScanningLogger.info("Received scan results for request ID: '"  + reqId + "'.");
-		
-		synchronized(_context) {
-			_context.notify();
-		}
+		_marketScanningLogger.info("Received scan results for request ID: '"  + reqId + "'. Changing state.");
+		_context.setState(new PreTradeFilterByFloatState(_context));
 	}
 
 
