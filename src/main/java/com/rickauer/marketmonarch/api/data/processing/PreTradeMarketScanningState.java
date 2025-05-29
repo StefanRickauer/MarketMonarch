@@ -37,6 +37,8 @@ public class PreTradeMarketScanningState extends PreTradeState {
 		
 		_marketScanningLogger.info("Requesting market scanner subscription using request id: '" + requestId + "'...");
 		MarketMonarch._interactiveBrokersController.getSocket().reqScannerSubscription(requestId, subscription, null, filterTagValues);
+		
+		
 	}
 
 	@Override
@@ -47,17 +49,17 @@ public class PreTradeMarketScanningState extends PreTradeState {
 
 	@Override
 	public void processScannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {
-		_context.getScanResult().put(reqId, contractDetails.contract());
+		_context.getScanResult().put(rank, contractDetails.contract());
 	}
 
 	@Override
 	public void processDataEnd(int reqId) {
 		MarketMonarch._interactiveBrokersController.getSocket().cancelScannerSubscription(reqId);
 		_marketScanningLogger.info("Received scan results for request ID: '"  + reqId + "'.");
+		
 		synchronized(_context) {
 			_context.notify();
 		}
-		
 	}
 
 
