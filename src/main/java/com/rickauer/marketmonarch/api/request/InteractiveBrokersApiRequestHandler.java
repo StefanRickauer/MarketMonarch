@@ -58,17 +58,13 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	private EClientSocket _clientSocket;
 	private int _requestId;
 	private int _orderId;					; // necessary? Because orderId will only be retrieved via API call
-	private List<AccountSummaryItem> _accountSummaryResponse;
-	private ScannerResponse _scanResult;
 
 	; // initialize TradeMonitorState
-	public InteractiveBrokersApiRequestHandler(ScannerResponse scanResult) {
+	public InteractiveBrokersApiRequestHandler() {
 		_readerSignal = new EJavaSignal();
 		_clientSocket = new EClientSocket(this, _readerSignal);
 		_requestId = 0;
 		_orderId = -1;
-		_accountSummaryResponse = new ArrayList<>();
-		_scanResult = scanResult;
 	}
 	
 	public int getRequestId() {
@@ -277,16 +273,12 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void scannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {
-		_scanResult.addItem(rank, contractDetails.contract());
+		MarketMonarch._preTradeContext.getState().processScannerData(reqId, rank, contractDetails, distance, benchmark, projection, legsStr);
 	}
 
 	@Override
 	public void scannerDataEnd(int reqId) {
 		MarketMonarch._preTradeContext.getState().processDataEnd(reqId);
-		synchronized(_scanResult._lock) {
-			_scanResult._lock.notify();
-		}
-		_ibRequestHandlerLogger.info("Received scan results for request ID: '"  + reqId + "'.");
 	}
 
 	@Override

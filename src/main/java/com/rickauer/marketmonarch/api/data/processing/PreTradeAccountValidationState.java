@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.ib.client.ContractDetails;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 
@@ -52,8 +53,15 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	}
 
 	@Override
-	public void processDataEnd(int reqId) {
-		System.out.println("PreTradeAccountValidationState");
+	public void processScannerData(int reqId, int rank, ContractDetails contractDetails, String distance,
+			String benchmark, String projection, String legsStr) {
+		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void processDataEnd(int reqId) {
+		// TODO Auto-generated method stub
+	}
+
 }

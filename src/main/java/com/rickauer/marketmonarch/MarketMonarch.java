@@ -73,7 +73,7 @@ public final class MarketMonarch {
 	private static MailtrapServiceConnector _mailtrapService;
 	public static InteractiveBrokersApiController _interactiveBrokersController;
 	private static Object _sharedLock;
-	public static ScannerResponse _responses;
+//	public static ScannerResponse _responses;
 	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
 	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
 	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
@@ -82,12 +82,12 @@ public final class MarketMonarch {
 
 	static {
 		_sharedLock = new Object();
-		_responses = new ScannerResponse(_sharedLock);
+//		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
 		_contractsToObserve = new ArrayList<>();
 		_stocksToTradeWith = new HashMap<>();
 
-		_interactiveBrokersController = new InteractiveBrokersApiController(_responses);
+		_interactiveBrokersController = new InteractiveBrokersApiController();
 
 
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
@@ -117,15 +117,8 @@ public final class MarketMonarch {
 				_preTradeContext.wait();
 			}
 			
-			for (Thread t : Thread.getAllStackTraces().keySet()) {
-			    System.out.println(t.getName() + " - " + t.getState());
-			}
+//			scanMarket();
 			
-			System.out.println("END HERE");
-			System.exit(0);
-			
-			
-			scanMarket();
 			filterScanResultsByFloat();
 			requestHistoricalDataAndfilterScanResultsByProfitLoss();
 			addFloatToStock();
@@ -250,10 +243,10 @@ public final class MarketMonarch {
 		Map<String, Long> scanResultCompanyFloat = new HashMap<>();
 		
 		long floatShares = 0L;
-		int numberOfStocksBeforeFiltering = _responses.getRankings().size();
+		int numberOfStocksBeforeFiltering = _preTradeContext.getScanResult().size();
 		int failedSearchesCount = 0;
 		
-		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
+		for (Map.Entry<Integer, Contract> entry : _preTradeContext.getScanResult().entrySet()) {
 			
 			String currentSymbol = entry.getValue().symbol();
 			
@@ -268,19 +261,19 @@ public final class MarketMonarch {
 			scanResultCompanyFloat.put(currentSymbol, floatShares); 
 		}
 		
-		_responses.getRankings().entrySet()
+		_preTradeContext.getScanResult().entrySet()
 			.removeIf(entry -> scanResultCompanyFloat.get(entry.getValue().symbol()) > MAX_NUMBER_OF_SHARES || scanResultCompanyFloat.get(entry.getValue().symbol()) < MIN_NUMBER_OF_SHARES);
 		
-		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _responses.getRankings().size()) + " out of " + numberOfStocksBeforeFiltering + " entries. Failed searches in totoal: " + failedSearchesCount);
+		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _preTradeContext.getScanResult().size()) + " out of " + numberOfStocksBeforeFiltering + " entries. Failed searches in totoal: " + failedSearchesCount);
 	}
 	
 	private static void requestHistoricalDataAndfilterScanResultsByProfitLoss() {
 		
 		_marketMonarchLogger.info("Filtering stocks by profit and loss (P&L) and relative trading volume...");
 		
-		int numberOfStocksBeforeFiltering = _responses.getRankings().size();
+		int numberOfStocksBeforeFiltering = _preTradeContext.getScanResult().size();
 		
-		for (Map.Entry<Integer, Contract> entry : _responses.getRankings().entrySet()) {
+		for (Map.Entry<Integer, Contract> entry : _preTradeContext.getScanResult().entrySet()) {
 			_interactiveBrokersController.requestHistoricalDataUntilToday(entry.getValue(), "4 D", "5 mins");
 		}
 		

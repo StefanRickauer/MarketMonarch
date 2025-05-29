@@ -18,8 +18,7 @@ public class InteractiveBrokersApiControllerTest {
 	@Test
 	void getOrderIdTest() {
 		
-		ScannerResponse responses = new ScannerResponse(new Object());
-		InteractiveBrokersApiController ibController = new InteractiveBrokersApiController(responses);	
+		InteractiveBrokersApiController ibController = new InteractiveBrokersApiController();	
 		
 		
 		int id = ibController.getOrderId();

@@ -1,5 +1,7 @@
 package com.rickauer.marketmonarch.api.data.processing;
 
+import com.ib.client.ContractDetails;
+
 public class PreTradeInactiveState extends PreTradeState {
 
 	public PreTradeInactiveState(PreTradeContext context) {
@@ -16,8 +18,8 @@ public class PreTradeInactiveState extends PreTradeState {
 	public void processAccountSummaryEnd(int reqId) 	{	/* intentionally left blank */ }
 
 	@Override
-	public void processDataEnd(int reqId) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void processDataEnd(int reqId) {	/* intentionally left blank */ }
+
+	@Override
+	public void processScannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {	/* intentionally left blank */ }
 }

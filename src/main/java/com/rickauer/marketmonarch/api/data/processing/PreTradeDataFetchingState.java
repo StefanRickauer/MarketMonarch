@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.ib.client.ContractDetails;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.utils.FileSupplier;
@@ -95,9 +96,17 @@ public class PreTradeDataFetchingState extends PreTradeState {
 	}
 
 	@Override
-	public void processDataEnd(int reqId) {
-		System.out.println("PreTradeDataFetchingState");
+	public void processScannerData(int reqId, int rank, ContractDetails contractDetails, String distance,
+			String benchmark, String projection, String legsStr) {
+		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void processDataEnd(int reqId) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

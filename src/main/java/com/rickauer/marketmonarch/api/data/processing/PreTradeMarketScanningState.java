@@ -1,18 +1,42 @@
 package com.rickauer.marketmonarch.api.data.processing;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.ib.client.ContractDetails;
+import com.ib.client.ScannerSubscription;
+import com.ib.client.TagValue;
 import com.rickauer.marketmonarch.MarketMonarch;
 
 public class PreTradeMarketScanningState extends PreTradeState {
 
+	private static Logger _marketScanningLogger = LogManager.getLogger(PreTradeMarketScanningState.class.getName());
+	
 	public PreTradeMarketScanningState(PreTradeContext context) {
 		super(context);
 	}
 
 	@Override
 	public void onEnter() {
-		System.out.println("DEBUG: Entered Market Scanning State.");
+		_marketScanningLogger.info("Setting up market scanner subscription and requesting scan results...");
+//		MarketMonarch._interactiveBrokersController.requestScannerSubscription("2", "20");
 		
-		MarketMonarch._interactiveBrokersController.requestScannerSubscription("2", "20");
+		int requestId = MarketMonarch._interactiveBrokersController.getNextRequestId();
+
+		ScannerSubscription subscription = new ScannerSubscription();
+		subscription.instrument("STK");
+		subscription.locationCode("STK.US.MAJOR");
+		subscription.scanCode("TOP_PERC_GAIN");
+		
+		List<TagValue> filterTagValues = new LinkedList<>();
+		filterTagValues.add(new TagValue("priceAbove", "2"));
+		filterTagValues.add(new TagValue("priceBelow", "20"));
+		
+		_marketScanningLogger.info("Requesting market scanner subscription using request id: '" + requestId + "'...");
+		MarketMonarch._interactiveBrokersController.getSocket().reqScannerSubscription(requestId, subscription, null, filterTagValues);
 	}
 
 	@Override
@@ -22,11 +46,19 @@ public class PreTradeMarketScanningState extends PreTradeState {
 	public void processAccountSummaryEnd(int reqId) 	{	/* intentionally left blank */ }
 
 	@Override
+	public void processScannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {
+		_context.getScanResult().put(reqId, contractDetails.contract());
+	}
+
+	@Override
 	public void processDataEnd(int reqId) {
+		MarketMonarch._interactiveBrokersController.getSocket().cancelScannerSubscription(reqId);
+		_marketScanningLogger.info("Received scan results for request ID: '"  + reqId + "'.");
 		synchronized(_context) {
 			_context.notify();
 		}
 		
 	}
+
 
 }

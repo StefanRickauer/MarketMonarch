@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ib.client.Contract;
 import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
@@ -13,11 +14,13 @@ public class PreTradeContext {
 
 	PreTradeState _state;
 	private List<AccountSummaryItem> _accountSummary;
-	private static Map<String, Long> _allCompanyFloats;
+	private Map<String, Long> _allCompanyFloats;
+	private Map<Integer, Contract> _scanResult;
 	
 	public PreTradeContext() {
 		_accountSummary = new ArrayList<>();
 		_allCompanyFloats = new HashMap<>();
+		_scanResult = new HashMap<>();
 	}
 	
 	public PreTradeState getState() {
@@ -84,5 +87,9 @@ public class PreTradeContext {
 	
 	public Long getCompanyFloatForSymbol(String symbol) {
 		return _allCompanyFloats.get(symbol.replace(" ", "-"));
+	}
+	
+	public Map<Integer, Contract> getScanResult() {
+		return _scanResult;
 	}
 }
