@@ -68,10 +68,10 @@ public final class MarketMonarch {
 	public static ApiKeyDao _apiAccess;
 	private static FinancialDataDao _finAccess;
 	private static FmpConnector _fmpConnector;
-	private static FmpRequestController _financialModellingPrepController;
+	public static FmpRequestController _financialModellingPrepController;
 	private static AlphaVantageConnector _alphaVantage;
 	private static MailtrapServiceConnector _mailtrapService;
-	private static InteractiveBrokersApiController _interactiveBrokersController;
+	public static InteractiveBrokersApiController _interactiveBrokersController;
 	private static Object _sharedLock;
 	public static ScannerResponse _responses;
 	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
@@ -100,7 +100,7 @@ public final class MarketMonarch {
 		_alphaVantage = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
 		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 
-		_preTradeContext = new PreTradeContext(_interactiveBrokersController, _financialModellingPrepController);
+		_preTradeContext = new PreTradeContext();
 		_tradingContext = new TradeMonitorContext(_interactiveBrokersController);
 	}
 
@@ -116,6 +116,10 @@ public final class MarketMonarch {
 			synchronized(_preTradeContext) {
 				_preTradeContext.wait();
 			}
+			
+			System.out.println("END HERE");
+			System.exit(0);
+			
 			
 			scanMarket();
 			filterScanResultsByFloat();

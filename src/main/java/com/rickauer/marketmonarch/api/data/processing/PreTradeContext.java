@@ -12,24 +12,12 @@ import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 public class PreTradeContext {
 
 	PreTradeState _state;
-	private final InteractiveBrokersApiController _ibController;
-	private final FmpRequestController _fmpController;
 	private List<AccountSummaryItem> _accountSummary;
 	private static Map<String, Long> _allCompanyFloats;
 	
-	public PreTradeContext(InteractiveBrokersApiController ibController, FmpRequestController fmpController) {
-		_ibController = ibController;
-		_fmpController = fmpController;
+	public PreTradeContext() {
 		_accountSummary = new ArrayList<>();
 		_allCompanyFloats = new HashMap<>();
-	}
-	
-	public InteractiveBrokersApiController getIbController() {
-		return _ibController;
-	}
-	
-	public FmpRequestController getFmpController() {
-		return _fmpController;
 	}
 	
 	public PreTradeState getState() {
