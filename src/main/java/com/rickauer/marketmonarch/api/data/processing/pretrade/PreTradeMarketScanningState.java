@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.api.data.processing;
+package com.rickauer.marketmonarch.api.data.processing.pretrade;
 
 import java.util.LinkedList;
 import java.util.List;
