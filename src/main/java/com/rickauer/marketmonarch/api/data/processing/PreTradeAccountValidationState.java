@@ -21,7 +21,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	@Override
 	public void onEnter() {
 		_tradeAccountValidationLogger.info("Entered Account Validation State.");
-		MarketMonarch._interactiveBrokersController.getSocket().reqAccountSummary(MarketMonarch._interactiveBrokersController.getNextRequestId(), "All", "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue"); 			
+		_context.getIbController().getSocket().reqAccountSummary(_context.getIbController().getNextRequestId(), "All", "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue"); 			
 	}
 	
 	
@@ -31,7 +31,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	}
 
 	public void processAccountSummaryEnd(int reqId) {
-		MarketMonarch._interactiveBrokersController.getSocket().cancelAccountSummary(reqId);
+		_context.getIbController().getSocket().cancelAccountSummary(reqId);
 		
 		_tradeAccountValidationLogger.info("Accured Cash (unrealized): " + _context.getGrossPosition());
 		_tradeAccountValidationLogger.info("Total Market Exposure: " + _context.getGrossPosition());

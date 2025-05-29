@@ -71,7 +71,7 @@ public final class MarketMonarch {
 	public static FmpRequestController _financialModellingPrepController;
 	private static AlphaVantageConnector _alphaVantage;
 	private static MailtrapServiceConnector _mailtrapService;
-	public static InteractiveBrokersApiController _interactiveBrokersController;
+	private static InteractiveBrokersApiController _interactiveBrokersController;
 
 	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
 	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
@@ -97,7 +97,7 @@ public final class MarketMonarch {
 		_alphaVantage = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
 		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 
-		_preTradeContext = new PreTradeContext();
+		_preTradeContext = new PreTradeContext(_interactiveBrokersController);
 		_tradingContext = new TradeMonitorContext(_interactiveBrokersController);
 	}
 
