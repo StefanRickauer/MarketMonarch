@@ -50,4 +50,10 @@ public class PreTradeAccountValidationState extends PreTradeState {
 			System.exit(0);
 		} 
 	}
+
+	@Override
+	public void processDataEnd(int reqId) {
+		System.out.println("PreTradeAccountValidationState");
+		
+	}
 }

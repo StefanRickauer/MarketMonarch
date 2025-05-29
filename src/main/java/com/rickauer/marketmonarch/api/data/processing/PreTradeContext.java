@@ -26,6 +26,7 @@ public class PreTradeContext {
 	
 	public void setState(PreTradeState state) {
 		_state = state;
+		state.onEnter();
 	}
 	
 	public List<AccountSummaryItem> getAccountDetails() {

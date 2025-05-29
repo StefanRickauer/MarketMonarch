@@ -1,5 +1,7 @@
 package com.rickauer.marketmonarch.api.data.processing;
 
+import com.rickauer.marketmonarch.MarketMonarch;
+
 public class PreTradeMarketScanningState extends PreTradeState {
 
 	public PreTradeMarketScanningState(PreTradeContext context) {
@@ -10,9 +12,7 @@ public class PreTradeMarketScanningState extends PreTradeState {
 	public void onEnter() {
 		System.out.println("DEBUG: Entered Market Scanning State.");
 		
-		synchronized(_context) {
-			_context.notify();
-		}
+		MarketMonarch._interactiveBrokersController.requestScannerSubscription("2", "20");
 	}
 
 	@Override
@@ -20,5 +20,13 @@ public class PreTradeMarketScanningState extends PreTradeState {
 
 	@Override
 	public void processAccountSummaryEnd(int reqId) 	{	/* intentionally left blank */ }
+
+	@Override
+	public void processDataEnd(int reqId) {
+		synchronized(_context) {
+			_context.notify();
+		}
+		
+	}
 
 }

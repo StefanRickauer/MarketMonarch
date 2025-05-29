@@ -94,4 +94,10 @@ public class PreTradeDataFetchingState extends PreTradeState {
 		}
 	}
 
+	@Override
+	public void processDataEnd(int reqId) {
+		System.out.println("PreTradeDataFetchingState");
+		
+	}
+
 }

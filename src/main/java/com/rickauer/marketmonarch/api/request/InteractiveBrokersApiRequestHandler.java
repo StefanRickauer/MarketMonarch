@@ -282,6 +282,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void scannerDataEnd(int reqId) {
+		MarketMonarch._preTradeContext.getState().processDataEnd(reqId);
 		synchronized(_scanResult._lock) {
 			_scanResult._lock.notify();
 		}

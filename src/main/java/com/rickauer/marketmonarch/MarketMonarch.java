@@ -117,6 +117,10 @@ public final class MarketMonarch {
 				_preTradeContext.wait();
 			}
 			
+			for (Thread t : Thread.getAllStackTraces().keySet()) {
+			    System.out.println(t.getName() + " - " + t.getState());
+			}
+			
 			System.out.println("END HERE");
 			System.exit(0);
 			
@@ -222,7 +226,7 @@ public final class MarketMonarch {
 		_marketMonarchLogger.info("Set up environment.");
 	}
 	
-	private static void scanMarket() {
+	public static void scanMarket() {
 	
 		_marketMonarchLogger.info("Setting up market scanner subscription and requesting scan results...");
 		

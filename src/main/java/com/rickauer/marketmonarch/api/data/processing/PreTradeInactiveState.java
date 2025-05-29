@@ -14,4 +14,10 @@ public class PreTradeInactiveState extends PreTradeState {
 
 	@Override
 	public void processAccountSummaryEnd(int reqId) 	{	/* intentionally left blank */ }
+
+	@Override
+	public void processDataEnd(int reqId) {
+		// TODO Auto-generated method stub
+		
+	}
 }
