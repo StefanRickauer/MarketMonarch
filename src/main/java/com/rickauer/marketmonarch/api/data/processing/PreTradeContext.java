@@ -14,12 +14,14 @@ public class PreTradeContext {
 
 	PreTradeState _state;
 	private InteractiveBrokersApiController _ibController;
+	private FmpRequestController _fmpController;
 	private List<AccountSummaryItem> _accountSummary;
 	private Map<String, Long> _allCompanyFloats;
 	private Map<Integer, Contract> _scanResult;
 	
-	public PreTradeContext(InteractiveBrokersApiController controller) {
-		_ibController = controller;
+	public PreTradeContext(InteractiveBrokersApiController ibController, FmpRequestController fmpController) {
+		_ibController = ibController;
+		_fmpController = fmpController;
 		_accountSummary = new ArrayList<>();
 		_allCompanyFloats = new HashMap<>();
 		_scanResult = new HashMap<>();
@@ -27,6 +29,10 @@ public class PreTradeContext {
 	
 	public InteractiveBrokersApiController getIbController() {
 		return _ibController;
+	}
+	
+	public FmpRequestController getFmpController() {
+		return _fmpController;
 	}
 	
 	public PreTradeState getState() {

@@ -38,7 +38,7 @@ public class PreTradeDataFetchingState extends PreTradeState {
 			companyFloats = FileSupplier.readFile(todaysBackupFileName);
 		} else {
 			try {
-				companyFloats = MarketMonarch._financialModellingPrepController.requestAllShareFloat();
+				companyFloats = _context.getFmpController().requestAllShareFloat();
 				if (companyFloats.length() < 1000000) {
 					_dataFetchingLogger.error("Received incomplete response.");
 					companyFloats = "";
