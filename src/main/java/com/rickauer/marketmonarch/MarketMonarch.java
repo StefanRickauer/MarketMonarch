@@ -72,8 +72,7 @@ public final class MarketMonarch {
 	private static AlphaVantageConnector _alphaVantage;
 	private static MailtrapServiceConnector _mailtrapService;
 	public static InteractiveBrokersApiController _interactiveBrokersController;
-	private static Object _sharedLock;
-//	public static ScannerResponse _responses;
+
 	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
 	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
 	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
@@ -81,8 +80,6 @@ public final class MarketMonarch {
 	public static TradeMonitorContext _tradingContext;
 
 	static {
-		_sharedLock = new Object();
-//		_responses = new ScannerResponse(_sharedLock);
 		_stocks = new HashMap<>();
 		_contractsToObserve = new ArrayList<>();
 		_stocksToTradeWith = new HashMap<>();
@@ -117,7 +114,6 @@ public final class MarketMonarch {
 				_preTradeContext.wait();
 			}
 			
-//			scanMarket();
 			
 			filterScanResultsByFloat();
 			requestHistoricalDataAndfilterScanResultsByProfitLoss();
@@ -217,23 +213,6 @@ public final class MarketMonarch {
 		}
 		
 		_marketMonarchLogger.info("Set up environment.");
-	}
-	
-	public static void scanMarket() {
-	
-		_marketMonarchLogger.info("Setting up market scanner subscription and requesting scan results...");
-		
-		_interactiveBrokersController.requestScannerSubscription("2", "20");
-
-		synchronized (_sharedLock) {
-			try {
-				_sharedLock.wait();
-			} catch (InterruptedException e) {
-				throw new RuntimeException("Error scanning market.", e);
-			}
-		}
-		_interactiveBrokersController.cancelScannerSubscription(_interactiveBrokersController.getRequestId());
-		_marketMonarchLogger.info("Received scan results.");
 	}
 	
 	private static void filterScanResultsByFloat() {

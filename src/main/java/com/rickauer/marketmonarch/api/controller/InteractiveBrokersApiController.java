@@ -89,23 +89,6 @@ public final class InteractiveBrokersApiController implements Verifyable {
 	public EClientSocket getSocket() {
 		return _requestHandler.getClientSocket();
 	}
-
-	public void requestScannerSubscription(String priceAbove, String priceBelow) {
-		
-		int requestId = getNextRequestId();
-
-		ScannerSubscription subscription = new ScannerSubscription();
-		subscription.instrument("STK");
-		subscription.locationCode("STK.US.MAJOR");
-		subscription.scanCode("TOP_PERC_GAIN");
-		
-		List<TagValue> filterTagValues = new LinkedList<>();
-		filterTagValues.add(new TagValue("priceAbove", priceAbove));
-		filterTagValues.add(new TagValue("priceBelow", priceBelow));
-		
-		_ibApiControllerLogger.info("Requesting market scanner subscription using request id: '" + requestId + "'...");
-		getSocket().reqScannerSubscription(requestId, subscription, null, filterTagValues);
-	}
 	
 	public void cancelScannerSubscription(int requestId) {
 		getSocket().cancelScannerSubscription(requestId);
