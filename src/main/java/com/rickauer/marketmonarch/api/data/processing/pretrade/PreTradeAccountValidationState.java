@@ -7,8 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ib.client.ContractDetails;
-import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 
 public class PreTradeAccountValidationState extends PreTradeState {
 
@@ -46,8 +46,8 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	}
 
 	private void validateAccount() {
-		if ( ( (long)Math.floor(_context.getTotalCash()) ) < MarketMonarch.MINIMUM_ACCOUNT_BALANCE) {
-			_tradeAccountValidationLogger.fatal("Account validation failed: Less than " + MarketMonarch.MINIMUM_ACCOUNT_BALANCE + " Euros in cash available. Exiting.");
+		if ( ( (long)Math.floor(_context.getTotalCash()) ) < TradingConstants.MINIMUM_ACCOUNT_BALANCE) {
+			_tradeAccountValidationLogger.fatal("Account validation failed: Less than " + TradingConstants.MINIMUM_ACCOUNT_BALANCE + " Euros in cash available. Exiting.");
 			System.exit(0);
 		} 
 	}

@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
-import com.rickauer.marketmonarch.MarketMonarch;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 
 public class PreTradeFilterByFloatState extends PreTradeState {
 
@@ -53,8 +53,8 @@ public class PreTradeFilterByFloatState extends PreTradeState {
 		}
 
 		_context.getScanResult().entrySet()
-				.removeIf(entry -> scanResultCompanyFloat.get(entry.getValue().symbol()) > MarketMonarch.MAX_NUMBER_OF_SHARES
-						|| scanResultCompanyFloat.get(entry.getValue().symbol()) < MarketMonarch.MIN_NUMBER_OF_SHARES);
+				.removeIf(entry -> scanResultCompanyFloat.get(entry.getValue().symbol()) > TradingConstants.MAX_NUMBER_OF_SHARES
+						|| scanResultCompanyFloat.get(entry.getValue().symbol()) < TradingConstants.MIN_NUMBER_OF_SHARES);
 
 		_filterByFloatLogger.info("Done filtering scan results by company share float. Removed "
 				+ (numberOfStocksBeforeFiltering - _context.getScanResult().size()) + " out of "

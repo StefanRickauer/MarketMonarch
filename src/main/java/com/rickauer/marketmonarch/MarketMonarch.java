@@ -30,6 +30,7 @@ import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeContext;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.db.ApiKeyDao;
 import com.rickauer.marketmonarch.db.FinancialDataDao;
 import com.rickauer.marketmonarch.reporting.LineChartCreator;
@@ -58,11 +59,6 @@ public final class MarketMonarch {
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 
 	public static final String COMPANY_FLOATS_BACKUP_FOLDER= FileSupplier.getBackupFolder() + "\\Company Floats\\";
-	
-	public static final int MAX_NUMBER_OF_SHARES = 20_000_000;
-	public static final int MIN_NUMBER_OF_SHARES = 5_000_000;
-	public static final int MINIMUM_ACCOUNT_BALANCE = 500;
-	public static final double TAKE_PROFIT_FACTOR = 1.05;				// number * TAKE_PROFIT = 5%
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyDao _apiAccess;
@@ -221,7 +217,7 @@ public final class MarketMonarch {
 		int numberOfStocksBeforeFiltering = _preTradeContext.getScanResult().size();
 		
 		for (Map.Entry<Integer, Contract> entry : _preTradeContext.getScanResult().entrySet()) {
-			_interactiveBrokersController.requestHistoricalDataUntilToday(entry.getValue(), "2 D", "5 mins");
+			_interactiveBrokersController.requestHistoricalDataUntilToday(entry.getValue(), TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, TradingConstants.BARSIZE_SETTING_FIVE_MINUTES);
 		}
 		
 		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
@@ -252,7 +248,7 @@ public final class MarketMonarch {
 		_stocksToTradeWith.clear(); 			// this method will iterate over all contracts that need to be observed. Hence, delete before use.
 		
 		for (Contract contract : _contractsToObserve) {
-			_interactiveBrokersController.requestHistoricalDataForAnalysis(contract, "15000 S", "5 secs");		
+			_interactiveBrokersController.requestHistoricalDataForAnalysis(contract, TradingConstants.LOOKBACK_PERIOD_FOUR_HOURS_TEN_MINUTES_IN_SECONDS, TradingConstants.BARSIZE_SETTING_FIVE_SECONDS);		
 		}
 		
 		_marketMonarchLogger.info("Done requesting historical chart data.");

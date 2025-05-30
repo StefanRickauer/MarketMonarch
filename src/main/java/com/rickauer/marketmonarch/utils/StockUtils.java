@@ -28,6 +28,7 @@ import org.ta4j.core.num.DecimalNum;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.enums.TradingTime;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.db.data.TradeDto;
 
 public class StockUtils {
@@ -123,7 +124,7 @@ public class StockUtils {
 	}
 
 	public static double calculateTakeProfit(double actualPrice) {
-		double takeProfitRaw = actualPrice * MarketMonarch.TAKE_PROFIT_FACTOR;
+		double takeProfitRaw = actualPrice * TradingConstants.TAKE_PROFIT_FACTOR;
 		double takeProfitRounded = Math.round(takeProfitRaw * 100.0) / 100.0;
 
 		return takeProfitRounded;

@@ -5,7 +5,7 @@ public enum TradingOrderType {
 	ALERT("ALERT", "Alert"),
 	FUNARI("FUNARI", "Funari"),
 	LIT("LII", "Limit If Touched"),
-	LMT("LMT", "Limit"),							// BUY
+	LMT("LMT", "Limit"),							// BUY, SELL (take profit order)
 	LMTTOB("LMTTOB", "Limit Or Better"),
 	LOC("LOC", "Limit On Close"),
 	LWOW("LWOW", "Limit With Or Withoug"),
@@ -33,7 +33,7 @@ public enum TradingOrderType {
 	SNAPMKT("SNAPMKT", "Snap To Market"),
 	SNAPREL("SNAPREL", "Snap To Primary"),
 	STP("STP", "Stop"),
-	STPLMT("STPLMT", "Stop Limit"),					// SELL
+	STPLMT("STPLMT", "Stop Limit"),					// SELL (stop loss order)
 	STPPROT("STPPROT", "Stop Protect"),
 	TRAIL("TRAIL", "Trailing Stop"),
 	TRAILLIT("TRAILLIT", "Trailing Limit If Touched"),
