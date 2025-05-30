@@ -59,8 +59,8 @@ public final class MarketMonarch {
 
 	public static final String COMPANY_FLOATS_BACKUP_FOLDER= FileSupplier.getBackupFolder() + "\\Company Floats\\";
 	
-	private static final int MAX_NUMBER_OF_SHARES = 20_000_000;
-	private static final int MIN_NUMBER_OF_SHARES = 5_000_000;
+	public static final int MAX_NUMBER_OF_SHARES = 20_000_000;
+	public static final int MIN_NUMBER_OF_SHARES = 5_000_000;
 	public static final int MINIMUM_ACCOUNT_BALANCE = 500;
 	public static final double TAKE_PROFIT_FACTOR = 1.05;				// number * TAKE_PROFIT = 5%
 	
@@ -114,8 +114,7 @@ public final class MarketMonarch {
 				_preTradeContext.wait();
 			}
 			
-			
-			filterScanResultsByFloat();
+				
 			requestHistoricalDataAndfilterScanResultsByProfitLoss();
 			addFloatToStock();
 			
@@ -213,37 +212,6 @@ public final class MarketMonarch {
 		}
 		
 		_marketMonarchLogger.info("Set up environment.");
-	}
-	
-	private static void filterScanResultsByFloat() {
-		
-		_marketMonarchLogger.info("Filtering scan results by company share float...");
-		
-		Map<String, Long> scanResultCompanyFloat = new HashMap<>();
-		
-		long floatShares = 0L;
-		int numberOfStocksBeforeFiltering = _preTradeContext.getScanResult().size();
-		int failedSearchesCount = 0;
-		
-		for (Map.Entry<Integer, Contract> entry : _preTradeContext.getScanResult().entrySet()) {
-			
-			String currentSymbol = entry.getValue().symbol();
-			
-			try {
-				floatShares = _preTradeContext.getAllCompanyFloats().get(currentSymbol.replace(" ", "-"));		// The symbol "GTN A" wasn't found but list contains "GTN-A".
-			} catch (NullPointerException e) {
-				floatShares = -1L;
-				_marketMonarchLogger.warn("Did not find company share float for symbol: '" + currentSymbol + "'.");
-				failedSearchesCount++;
-			}
-			
-			scanResultCompanyFloat.put(currentSymbol, floatShares); 
-		}
-		
-		_preTradeContext.getScanResult().entrySet()
-			.removeIf(entry -> scanResultCompanyFloat.get(entry.getValue().symbol()) > MAX_NUMBER_OF_SHARES || scanResultCompanyFloat.get(entry.getValue().symbol()) < MIN_NUMBER_OF_SHARES);
-		
-		_marketMonarchLogger.info("Done filtering scan results by company share float. Removed " + (numberOfStocksBeforeFiltering - _preTradeContext.getScanResult().size()) + " out of " + numberOfStocksBeforeFiltering + " entries. Failed searches in totoal: " + failedSearchesCount);
 	}
 	
 	private static void requestHistoricalDataAndfilterScanResultsByProfitLoss() {
