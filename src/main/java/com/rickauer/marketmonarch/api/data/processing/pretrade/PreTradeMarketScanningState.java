@@ -10,6 +10,7 @@ import com.ib.client.ContractDetails;
 import com.ib.client.ScannerSubscription;
 import com.ib.client.TagValue;
 import com.rickauer.marketmonarch.MarketMonarch;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 
 public class PreTradeMarketScanningState extends PreTradeState {
 
@@ -28,13 +29,13 @@ public class PreTradeMarketScanningState extends PreTradeState {
 		int requestId = _context.getIbController().getNextRequestId();
 
 		ScannerSubscription subscription = new ScannerSubscription();
-		subscription.instrument("STK");
-		subscription.locationCode("STK.US.MAJOR");
-		subscription.scanCode("TOP_PERC_GAIN");
+		subscription.instrument(TradingConstants.SCANNER_INSTRUMENT);
+		subscription.locationCode(TradingConstants.SCANNER_LOCATION_CODE);
+		subscription.scanCode(TradingConstants.SCANNER_SCAN_CODE);
 		
 		List<TagValue> filterTagValues = new LinkedList<>();
-		filterTagValues.add(new TagValue("priceAbove", "2"));
-		filterTagValues.add(new TagValue("priceBelow", "20"));
+		filterTagValues.add(new TagValue(TradingConstants.FILTER_TAG_PRICE_ABOVE, TradingConstants.FILTER_VALUE_PRICE_ABOVE));
+		filterTagValues.add(new TagValue(TradingConstants.FILTER_TAG_PRICE_BELOW, TradingConstants.FILTER_VALUE_PRICE_BELOW));
 		
 		_marketScanningLogger.info("Requesting market scanner subscription using request id: '" + requestId + "'...");
 		_context.getIbController().getSocket().reqScannerSubscription(requestId, subscription, null, filterTagValues);
