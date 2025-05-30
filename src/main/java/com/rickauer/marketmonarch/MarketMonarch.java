@@ -221,7 +221,7 @@ public final class MarketMonarch {
 		int numberOfStocksBeforeFiltering = _preTradeContext.getScanResult().size();
 		
 		for (Map.Entry<Integer, Contract> entry : _preTradeContext.getScanResult().entrySet()) {
-			_interactiveBrokersController.requestHistoricalDataUntilToday(entry.getValue(), "4 D", "5 mins");
+			_interactiveBrokersController.requestHistoricalDataUntilToday(entry.getValue(), "2 D", "5 mins");
 		}
 		
 		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
