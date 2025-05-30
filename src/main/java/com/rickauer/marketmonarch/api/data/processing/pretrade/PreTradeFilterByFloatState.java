@@ -60,10 +60,9 @@ public class PreTradeFilterByFloatState extends PreTradeState {
 				+ (numberOfStocksBeforeFiltering - _context.getScanResult().size()) + " out of "
 				+ numberOfStocksBeforeFiltering + " entries. Failed searches in totoal: " + failedSearchesCount);
 
-		synchronized (_context) {
-			_context.notify();
-		}
-
+		_filterByFloatLogger.info("Changing state...");
+		
+		_context.setState(new PreTradeRequestHistoricalDataState(_context));
 	}
 
 	@Override

@@ -21,6 +21,7 @@ public class PreTradeMarketScanningState extends PreTradeState {
 
 	@Override
 	public void onEnter() {
+		_marketScanningLogger.info("Entered Market Scanning State.");
 		_marketScanningLogger.info("Setting up market scanner subscription and requesting scan results...");
 //		MarketMonarch._interactiveBrokersController.requestScannerSubscription("2", "20");
 		
@@ -55,7 +56,7 @@ public class PreTradeMarketScanningState extends PreTradeState {
 	@Override
 	public void processDataEnd(int reqId) {
 		_context.getIbController().getSocket().cancelScannerSubscription(reqId);
-		_marketScanningLogger.info("Received scan results for request ID: '"  + reqId + "'. Changing state.");
+		_marketScanningLogger.info("Received scan results for request ID: '"  + reqId + "'. Changing state...");
 		_context.setState(new PreTradeFilterByFloatState(_context));
 	}
 

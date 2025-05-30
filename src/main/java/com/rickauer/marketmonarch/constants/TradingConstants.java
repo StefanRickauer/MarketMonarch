@@ -9,6 +9,9 @@ public class TradingConstants {
 	
 	public static final double TAKE_PROFIT_FACTOR = 1.05;				// number * TAKE_PROFIT = 5%
 	
+	public static final String ACCOUNT_SUMMARY_GROUP = "All";
+	public static final String ACCOUNT_SUMMARY_TAGS = "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue";
+	
 	public static final String LOOKBACK_PERIOD_TWO_DAYS = "2 D";
 	public static final String LOOKBACK_PERIOD_FOUR_HOURS_TEN_MINUTES_IN_SECONDS = "15000 S";
 

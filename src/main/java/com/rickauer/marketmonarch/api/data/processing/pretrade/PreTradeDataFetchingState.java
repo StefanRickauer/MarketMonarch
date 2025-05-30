@@ -24,6 +24,7 @@ public class PreTradeDataFetchingState extends PreTradeState {
 
 	@Override
 	public void onEnter() {
+		_dataFetchingLogger.info("Entered Data Fetching State.");
 		_dataFetchingLogger.info("Requesting all company free floats...");
 
 		String companyFloats = "";
@@ -70,7 +71,7 @@ public class PreTradeDataFetchingState extends PreTradeState {
 				);
 
 		validateCompanyFloats();
-		_dataFetchingLogger.info("Received all company free floats. Changing state.");
+		_dataFetchingLogger.info("Received all company free floats. Changing state...");
 		
 		_context.setState(new PreTradeMarketScanningState(_context));
 	}

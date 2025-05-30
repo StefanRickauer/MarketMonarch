@@ -21,7 +21,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	@Override
 	public void onEnter() {
 		_tradeAccountValidationLogger.info("Entered Account Validation State.");
-		_context.getIbController().getSocket().reqAccountSummary(_context.getIbController().getNextRequestId(), "All", "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue"); 			
+		_context.getIbController().getSocket().reqAccountSummary(_context.getIbController().getNextRequestId(), TradingConstants.ACCOUNT_SUMMARY_GROUP, TradingConstants.ACCOUNT_SUMMARY_TAGS); 			
 	}
 	
 	
@@ -40,7 +40,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 		_tradeAccountValidationLogger.info("Buying Power: " + _context.getBuyingPower());
 		
 		validateAccount();
-		_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state.");
+		_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state...");
 		
 		_context.setState(new PreTradeDataFetchingState(_context));
 	}
