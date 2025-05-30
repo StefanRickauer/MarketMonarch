@@ -25,4 +25,10 @@ public class TradingConstants {
 
 	public static final String BARSIZE_SETTING_FIVE_MINUTES = "5 mins";
 	public static final String BARSIZE_SETTING_FIVE_SECONDS = "5 secs";
+	
+	public static final String END_DATE_TIME_UNTIL_NOW = "";
+	public static final String WHAT_TO_SHOW = "TRADES";
+	public static final int USE_REGULAR_TRADING_HOUR_DATA = 1;
+	public static final int FORMAT_DATE = 1;		// Docs won't tell much either 
+	public static final boolean KEEP_UP_TO_DATE = false;
 }

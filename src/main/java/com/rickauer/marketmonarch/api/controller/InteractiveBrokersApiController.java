@@ -15,6 +15,7 @@ import com.rickauer.marketmonarch.api.data.CandleSeries;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
@@ -103,8 +104,8 @@ public final class InteractiveBrokersApiController implements Verifyable {
 			try {
 				requestId = getNextRequestId();
 				MarketMonarch._stocks.put(requestId, new StockMetrics(contract));
-				getSocket().reqHistoricalData(requestId, contract, "", lookbackPeriod, barSizeSetting, "TRADES", 1, 1,
-						false, null);
+				getSocket().reqHistoricalData(requestId, contract, TradingConstants.END_DATE_TIME_UNTIL_NOW, lookbackPeriod, barSizeSetting, TradingConstants.WHAT_TO_SHOW, TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, TradingConstants.FORMAT_DATE,
+						TradingConstants.KEEP_UP_TO_DATE, null);
 				MarketMonarch._stocks.wait();
 				_ibApiControllerLogger.info(MarketMonarch._stocks.get(requestId).getSymbol() + ": P&L = "
 						+ MarketMonarch._stocks.get(requestId).getProfitLossChange() + ", RVOL = "
@@ -123,8 +124,8 @@ public final class InteractiveBrokersApiController implements Verifyable {
 			try {
 				requestId = getNextRequestId();
 				MarketMonarch._stocksToTradeWith.put(requestId, new CandleSeries(contract));
-				getSocket().reqHistoricalData(requestId, contract, "", lookbackPeriod, barSizeSetting, "TRADES", 1, 1,
-						false, null);
+				getSocket().reqHistoricalData(requestId, contract, TradingConstants.END_DATE_TIME_UNTIL_NOW, lookbackPeriod, barSizeSetting, TradingConstants.WHAT_TO_SHOW, TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, TradingConstants.FORMAT_DATE,
+						TradingConstants.KEEP_UP_TO_DATE, null);
 				MarketMonarch._stocksToTradeWith.wait();
 				_ibApiControllerLogger.info("Received data for '" + MarketMonarch._stocksToTradeWith.get(requestId).getSymbol() + "' for analysis.");
 			} catch (InterruptedException e) {
