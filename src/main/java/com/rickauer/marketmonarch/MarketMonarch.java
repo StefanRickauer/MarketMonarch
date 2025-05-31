@@ -217,7 +217,23 @@ public final class MarketMonarch {
 		int numberOfStocksBeforeFiltering = _preTradeContext.getScanResult().size();
 		
 		for (Map.Entry<Integer, Contract> entry : _preTradeContext.getScanResult().entrySet()) {
-			_interactiveBrokersController.requestHistoricalDataUntilToday(entry.getValue(), TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, TradingConstants.BARSIZE_SETTING_FIVE_MINUTES);
+//			_interactiveBrokersController.requestHistoricalDataUntilToday(entry.getValue(), TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, TradingConstants.BARSIZE_SETTING_FIVE_MINUTES);
+			int requestId = 0;
+
+			synchronized (MarketMonarch._stocks) {
+				try {
+					requestId = _interactiveBrokersController.getNextRequestId();
+					MarketMonarch._stocks.put(requestId, new StockMetrics(entry.getValue()));
+					_interactiveBrokersController.getSocket().reqHistoricalData(requestId, entry.getValue(), TradingConstants.END_DATE_TIME_UNTIL_NOW, TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, TradingConstants.BARSIZE_SETTING_FIVE_MINUTES, TradingConstants.WHAT_TO_SHOW, TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, TradingConstants.FORMAT_DATE,
+							TradingConstants.KEEP_UP_TO_DATE, null);
+					MarketMonarch._stocks.wait();
+					_marketMonarchLogger.info(MarketMonarch._stocks.get(requestId).getSymbol() + ": P&L = "
+							+ MarketMonarch._stocks.get(requestId).getProfitLossChange() + ", RVOL = "
+							+ MarketMonarch._stocks.get(requestId).getRelativeVolume());
+				} catch (InterruptedException e) {
+					throw new RuntimeException("Error fetching data.", e);
+				}
+			}
 		}
 		
 		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
