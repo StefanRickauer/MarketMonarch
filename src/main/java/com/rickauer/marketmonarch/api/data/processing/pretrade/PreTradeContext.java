@@ -9,6 +9,7 @@ import com.ib.client.Contract;
 import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
+import com.rickauer.marketmonarch.api.data.StockMetrics;
 
 public class PreTradeContext {
 
@@ -18,6 +19,7 @@ public class PreTradeContext {
 	private List<AccountSummaryItem> _accountSummary;
 	private Map<String, Long> _allCompanyFloats;
 	private Map<Integer, Contract> _scanResult;
+	private Map<Integer, StockMetrics> _historicalData;		// main: _stocks
 	
 	public PreTradeContext(InteractiveBrokersApiController ibController, FmpRequestController fmpController) {
 		_ibController = ibController;
@@ -25,6 +27,7 @@ public class PreTradeContext {
 		_accountSummary = new ArrayList<>();
 		_allCompanyFloats = new HashMap<>();
 		_scanResult = new HashMap<>();
+		_historicalData = new HashMap<>();
 	}
 	
 	public InteractiveBrokersApiController getIbController() {
@@ -103,5 +106,9 @@ public class PreTradeContext {
 	
 	public Map<Integer, Contract> getScanResult() {
 		return _scanResult;
+	}
+	
+	public Map<Integer, StockMetrics> getHistoricalData() {
+		return _historicalData;
 	}
 }

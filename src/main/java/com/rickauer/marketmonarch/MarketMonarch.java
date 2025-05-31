@@ -69,14 +69,14 @@ public final class MarketMonarch {
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _interactiveBrokersController;
 
-	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
+//	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
 	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
 	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
 	public static PreTradeContext _preTradeContext;
 	public static TradeMonitorContext _tradingContext;
 
 	static {
-		_stocks = new HashMap<>();
+//		_stocks = new HashMap<>();
 		_contractsToObserve = new ArrayList<>();
 		_stocksToTradeWith = new HashMap<>();
 
@@ -115,7 +115,7 @@ public final class MarketMonarch {
 			addFloatToStock();
 			
 			// DEBUG ONLY: Remove before going live =======================================
-			for (StockMetrics metric : _stocks.values()) {
+			for (StockMetrics metric : _preTradeContext.getHistoricalData().values()) {
 				_marketMonarchLogger.debug("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
 				+ ", Company Share Float: " + _preTradeContext.getAllCompanyFloats().get(metric.getSymbol()));
 			}
@@ -220,33 +220,33 @@ public final class MarketMonarch {
 //			_interactiveBrokersController.requestHistoricalDataUntilToday(entry.getValue(), TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, TradingConstants.BARSIZE_SETTING_FIVE_MINUTES);
 			int requestId = 0;
 
-			synchronized (MarketMonarch._stocks) {
+			synchronized (_preTradeContext.getHistoricalData()) {
 				try {
 					requestId = _interactiveBrokersController.getNextRequestId();
-					MarketMonarch._stocks.put(requestId, new StockMetrics(entry.getValue()));
+					_preTradeContext.getHistoricalData().put(requestId, new StockMetrics(entry.getValue()));
 					_interactiveBrokersController.getSocket().reqHistoricalData(requestId, entry.getValue(), TradingConstants.END_DATE_TIME_UNTIL_NOW, TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, TradingConstants.BARSIZE_SETTING_FIVE_MINUTES, TradingConstants.WHAT_TO_SHOW, TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, TradingConstants.FORMAT_DATE,
 							TradingConstants.KEEP_UP_TO_DATE, null);
-					MarketMonarch._stocks.wait();
-					_marketMonarchLogger.info(MarketMonarch._stocks.get(requestId).getSymbol() + ": P&L = "
-							+ MarketMonarch._stocks.get(requestId).getProfitLossChange() + ", RVOL = "
-							+ MarketMonarch._stocks.get(requestId).getRelativeVolume());
+					_preTradeContext.getHistoricalData().wait();
+					_marketMonarchLogger.info(_preTradeContext.getHistoricalData().get(requestId).getSymbol() + ": P&L = "
+							+ _preTradeContext.getHistoricalData().get(requestId).getProfitLossChange() + ", RVOL = "
+							+ _preTradeContext.getHistoricalData().get(requestId).getRelativeVolume());
 				} catch (InterruptedException e) {
 					throw new RuntimeException("Error fetching data.", e);
 				}
 			}
 		}
 		
-		_stocks.entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
+		_preTradeContext.getHistoricalData().entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
 		
-		for (Map.Entry<Integer, StockMetrics> filteredResult : _stocks.entrySet()) {
+		for (Map.Entry<Integer, StockMetrics> filteredResult : _preTradeContext.getHistoricalData().entrySet()) {
 			_contractsToObserve.add(filteredResult.getValue().getContract());
 		}
 		
-		_marketMonarchLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed " + (numberOfStocksBeforeFiltering - _stocks.size()) + " entries.");
+		_marketMonarchLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed " + (numberOfStocksBeforeFiltering - _preTradeContext.getHistoricalData().size()) + " entries.");
 	}
 	
 	private static void addFloatToStock() {
-		for (Map.Entry<Integer, StockMetrics> entry : _stocks.entrySet()) {
+		for (Map.Entry<Integer, StockMetrics> entry : _preTradeContext.getHistoricalData().entrySet()) {
 			
 			String symbol = entry.getValue().getSymbol().replace(" ", "-");			// <====== NICHT VERGESSEN!!!
 			Long floatForSymbol = _preTradeContext.getAllCompanyFloats().get(symbol);
