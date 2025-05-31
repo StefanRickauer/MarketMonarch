@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.ib.client.Bar;
 import com.ib.client.ContractDetails;
 import com.ib.client.ScannerSubscription;
 import com.ib.client.TagValue;
@@ -44,10 +45,14 @@ public class PreTradeMarketScanningState extends PreTradeState {
 	}
 
 	@Override
-	public void processAccountSummary(String logMessage, int reqId, String account, String tag, String value, String currency) 	{	/* intentionally left blank */ }
+	public void processAccountSummary(String logMessage, int reqId, String account, String tag, String value, String currency) 	{	
+		// intentionally left blank 
+	}
 
 	@Override
-	public void processAccountSummaryEnd(int reqId) 	{	/* intentionally left blank */ }
+	public void processAccountSummaryEnd(int reqId) 	{	
+		// intentionally left blank 
+	}
 
 	@Override
 	public void processScannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {
@@ -59,6 +64,16 @@ public class PreTradeMarketScanningState extends PreTradeState {
 		_context.getIbController().getSocket().cancelScannerSubscription(reqId);
 		_marketScanningLogger.info("Received scan results for request ID: '"  + reqId + "'. Changing state...");
 		_context.setState(new PreTradeFilterByFloatState(_context));
+	}
+
+	@Override
+	public void processHistoricalData(int reqId, Bar bar) {
+		// intentionally left blank
+	}
+
+	@Override
+	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {
+		// intentionally left blank
 	}
 
 

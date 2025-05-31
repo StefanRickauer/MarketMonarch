@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.ib.client.Bar;
 import com.ib.client.ContractDetails;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.constants.TradingConstants;
@@ -55,13 +56,22 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	@Override
 	public void processScannerData(int reqId, int rank, ContractDetails contractDetails, String distance,
 			String benchmark, String projection, String legsStr) {
-		// TODO Auto-generated method stub
-		
+		// intentionally left blank
 	}
 	
 	@Override
 	public void processDataEnd(int reqId) {
-		// TODO Auto-generated method stub
+		// intentionally left blank
+	}
+
+	@Override
+	public void processHistoricalData(int reqId, Bar bar) {
+		// intentionally left blank
+	}
+
+	@Override
+	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {
+		// intentionally left blank
 	}
 
 }

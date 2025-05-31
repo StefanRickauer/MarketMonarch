@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.ib.client.Bar;
 import com.ib.client.ContractDetails;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.controller.FmpRequestController;
@@ -79,14 +80,12 @@ public class PreTradeDataFetchingState extends PreTradeState {
 	@Override
 	public void processAccountSummary(String logMessage, int reqId, String account, String tag, String value,
 			String currency) {
-		// TODO Auto-generated method stub
-
+		// intentionally left blank
 	}
 
 	@Override
 	public void processAccountSummaryEnd(int reqId) {
-		// TODO Auto-generated method stub
-
+		// intentionally left blank
 	}
 	
 	private void validateCompanyFloats() {
@@ -99,14 +98,22 @@ public class PreTradeDataFetchingState extends PreTradeState {
 	@Override
 	public void processScannerData(int reqId, int rank, ContractDetails contractDetails, String distance,
 			String benchmark, String projection, String legsStr) {
-		// TODO Auto-generated method stub
-		
+		// intentionally left blank
 	}
 	
 	@Override
 	public void processDataEnd(int reqId) {
-		// TODO Auto-generated method stub
-		
+		// intentionally left blank
+	}
+
+	@Override
+	public void processHistoricalData(int reqId, Bar bar) {
+		// intentionally left blank
+	}
+
+	@Override
+	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {
+		// intentionally left blank
 	}
 
 

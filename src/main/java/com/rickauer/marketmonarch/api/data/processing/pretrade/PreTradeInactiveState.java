@@ -1,5 +1,6 @@
 package com.rickauer.marketmonarch.api.data.processing.pretrade;
 
+import com.ib.client.Bar;
 import com.ib.client.ContractDetails;
 
 public class PreTradeInactiveState extends PreTradeState {
@@ -22,4 +23,10 @@ public class PreTradeInactiveState extends PreTradeState {
 
 	@Override
 	public void processScannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {	/* intentionally left blank */ }
+
+	@Override
+	public void processHistoricalData(int reqId, Bar bar) {	/* intentionally left blank */ }
+
+	@Override
+	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {	/* intentionally left blank */ }
 }
