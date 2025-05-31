@@ -27,6 +27,7 @@ import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.data.processing.TradeMonitorContext;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeAccountValidationState;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeContext;
+import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeRequestHistoricalDataState;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
@@ -69,14 +70,12 @@ public final class MarketMonarch {
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _interactiveBrokersController;
 
-//	public static Map<Integer, StockMetrics> _stocks;					// all Stocks
-	private static List<Contract> _contractsToObserve;					// contracts to observe with live data
+	public static List<Contract> _contractsToObserve;					// contracts to observe with live data
 	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
 	public static PreTradeContext _preTradeContext;
 	public static TradeMonitorContext _tradingContext;
 
 	static {
-//		_stocks = new HashMap<>();
 		_contractsToObserve = new ArrayList<>();
 		_stocksToTradeWith = new HashMap<>();
 
@@ -110,8 +109,8 @@ public final class MarketMonarch {
 				_preTradeContext.wait();
 			}
 			
-				
-			requestHistoricalDataAndfilterScanResultsByProfitLoss();
+			_preTradeContext.setState(new PreTradeRequestHistoricalDataState(_preTradeContext));	
+			
 			addFloatToStock();
 			
 			// DEBUG ONLY: Remove before going live =======================================
@@ -208,41 +207,6 @@ public final class MarketMonarch {
 		}
 		
 		_marketMonarchLogger.info("Set up environment.");
-	}
-	
-	private static void requestHistoricalDataAndfilterScanResultsByProfitLoss() {
-		
-		_marketMonarchLogger.info("Filtering stocks by profit and loss (P&L) and relative trading volume...");
-		
-		int numberOfStocksBeforeFiltering = _preTradeContext.getScanResult().size();
-		
-		for (Map.Entry<Integer, Contract> entry : _preTradeContext.getScanResult().entrySet()) {
-//			_interactiveBrokersController.requestHistoricalDataUntilToday(entry.getValue(), TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, TradingConstants.BARSIZE_SETTING_FIVE_MINUTES);
-			int requestId = 0;
-
-			synchronized (_preTradeContext.getHistoricalData()) {
-				try {
-					requestId = _interactiveBrokersController.getNextRequestId();
-					_preTradeContext.getHistoricalData().put(requestId, new StockMetrics(entry.getValue()));
-					_interactiveBrokersController.getSocket().reqHistoricalData(requestId, entry.getValue(), TradingConstants.END_DATE_TIME_UNTIL_NOW, TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, TradingConstants.BARSIZE_SETTING_FIVE_MINUTES, TradingConstants.WHAT_TO_SHOW, TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, TradingConstants.FORMAT_DATE,
-							TradingConstants.KEEP_UP_TO_DATE, null);
-					_preTradeContext.getHistoricalData().wait();
-					_marketMonarchLogger.info(_preTradeContext.getHistoricalData().get(requestId).getSymbol() + ": P&L = "
-							+ _preTradeContext.getHistoricalData().get(requestId).getProfitLossChange() + ", RVOL = "
-							+ _preTradeContext.getHistoricalData().get(requestId).getRelativeVolume());
-				} catch (InterruptedException e) {
-					throw new RuntimeException("Error fetching data.", e);
-				}
-			}
-		}
-		
-		_preTradeContext.getHistoricalData().entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
-		
-		for (Map.Entry<Integer, StockMetrics> filteredResult : _preTradeContext.getHistoricalData().entrySet()) {
-			_contractsToObserve.add(filteredResult.getValue().getContract());
-		}
-		
-		_marketMonarchLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed " + (numberOfStocksBeforeFiltering - _preTradeContext.getHistoricalData().size()) + " entries.");
 	}
 	
 	private static void addFloatToStock() {

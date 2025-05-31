@@ -63,7 +63,17 @@ public class PreTradeFilterByFloatState extends PreTradeState {
 
 		_filterByFloatLogger.info("Changing state...");
 		
-		_context.setState(new PreTradeRequestHistoricalDataState(_context));
+		;
+//		_context.setState(new PreTradeRequestHistoricalDataState(_context));
+		
+		
+		
+		synchronized (_context) {
+			_context.notify();
+		}
+		
+		
+		
 	}
 
 	@Override
