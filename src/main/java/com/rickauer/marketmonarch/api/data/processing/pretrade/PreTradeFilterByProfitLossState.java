@@ -37,6 +37,7 @@ public class PreTradeFilterByProfitLossState extends PreTradeState {
 		_filterByProfitLossLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed "
 				+ (numberOfStocksBeforeFiltering - _context.getHistoricalData().size()) + " entries.");
 
+		_context.setState(new PreTradeInactiveState(_context));
 	}
 
 	@Override
