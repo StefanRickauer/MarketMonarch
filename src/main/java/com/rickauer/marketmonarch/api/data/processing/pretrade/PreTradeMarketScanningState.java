@@ -42,13 +42,20 @@ public class PreTradeMarketScanningState extends PreTradeState {
 		synchronized (_context.getHistoricalData()) {
 			try {
 				_context.getIbController().getSocket().reqScannerSubscription(requestId, subscription, null, filterTagValues);
-				_context.getHistoricalData().wait();
+				_context.getHistoricalData().wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
 			} catch (InterruptedException e) {
 				throw new RuntimeException("Error fetching historical data.");
 			}
 		}
 		
-		_context.setState(new PreTradeFilterByFloatState(_context));
+		if (_hasReceivedApiResonse == true) {
+			_marketScanningLogger.info("Received scan results for request ID: '"  + requestId + "'. Changing state...");
+			_context.setState(new PreTradeFilterByFloatState(_context));
+		} else {
+			_context.getIbController().getSocket().cancelScannerSubscription(requestId);
+			_marketScanningLogger.warn("Timeout reached. Did not receive API response. Repeating state.");
+			_context.setState(new PreTradeMarketScanningState(_context));
+		}
 	}
 
 	@Override
@@ -70,7 +77,7 @@ public class PreTradeMarketScanningState extends PreTradeState {
 	public void processDataEnd(int reqId) {
 		synchronized (_context.getHistoricalData()) {
 			_context.getIbController().getSocket().cancelScannerSubscription(reqId);
-			_marketScanningLogger.info("Received scan results for request ID: '"  + reqId + "'. Changing state...");
+			_hasReceivedApiResonse = true;
 			_context.getHistoricalData().notify();
 		}
 	}

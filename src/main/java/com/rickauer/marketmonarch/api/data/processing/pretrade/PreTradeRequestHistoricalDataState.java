@@ -1,5 +1,7 @@
 package com.rickauer.marketmonarch.api.data.processing.pretrade;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,51 +18,61 @@ import com.rickauer.marketmonarch.constants.TradingConstants;
 public class PreTradeRequestHistoricalDataState extends PreTradeState {
 
 	private static Logger _reqHistDataLogger = LogManager.getLogger(PreTradeRequestHistoricalDataState.class.getName());
+	private List<String> _incompleteRequests;
 	
 	public PreTradeRequestHistoricalDataState(PreTradeContext context) {
 		super(context);
-		// TODO Auto-generated constructor stub
+		_incompleteRequests = new ArrayList<>();
 	}
 
 	@Override
-	public void onEnter() {
-		
+	public void onEnter() {	
 		_reqHistDataLogger.info("Entered Request Historical Data State (pre trade).");
 		
-		_reqHistDataLogger.info("Filtering stocks by profit and loss (P&L) and relative trading volume...");
-		
-		int numberOfStocksBeforeFiltering = _context.getScanResult().size();
-		
 		for (Map.Entry<Integer, Contract> entry : _context.getScanResult().entrySet()) {
-
+			
 			int requestId = 0;
-
+			
 			synchronized (_context.getHistoricalData()) {
 				try {
 					requestId = _context.getIbController().getNextRequestId();
-					_context.getHistoricalData().put(requestId, new StockMetrics(entry.getValue()));
+					_context.getHistoricalData().put(requestId, new StockMetrics(entry.getValue()));				
+					_context.getIbController().getSocket().reqHistoricalData(
+							requestId, 
+							entry.getValue(), 
+							TradingConstants.END_DATE_TIME_UNTIL_NOW, 
+							TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, 
+							TradingConstants.BARSIZE_SETTING_FIVE_MINUTES, 
+							TradingConstants.WHAT_TO_SHOW, 
+							TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, 
+							TradingConstants.FORMAT_DATE,
+							TradingConstants.KEEP_UP_TO_DATE, 
+							null
+							);
+					_context.getHistoricalData().wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
 					
-					_context.getIbController().getSocket().reqHistoricalData(requestId, entry.getValue(), TradingConstants.END_DATE_TIME_UNTIL_NOW, TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, TradingConstants.BARSIZE_SETTING_FIVE_MINUTES, TradingConstants.WHAT_TO_SHOW, TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, TradingConstants.FORMAT_DATE,
-							TradingConstants.KEEP_UP_TO_DATE, null);
-					_context.getHistoricalData().wait();
-					_reqHistDataLogger.info(_context.getHistoricalData().get(requestId).getSymbol() + ": P&L = "
-							+ _context.getHistoricalData().get(requestId).getProfitLossChange() + ", RVOL = "
-							+ _context.getHistoricalData().get(requestId).getRelativeVolume());
+					if (_hasReceivedApiResonse == true) {
+						_reqHistDataLogger.info(_context.getHistoricalData().get(requestId).getSymbol() + ": P&L = " + _context.getHistoricalData().get(requestId).getProfitLossChange());
+						_hasReceivedApiResonse = false;
+					} else {
+						_incompleteRequests.add(_context.getHistoricalData().get(requestId).getSymbol());
+					}
+					
 				} catch (InterruptedException e) {
 					throw new RuntimeException("Error fetching data.", e);
 				}
 			}
 		}
-		
-		_context.getHistoricalData().entrySet().removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
-		
-		for (Map.Entry<Integer, StockMetrics> filteredResult : _context.getHistoricalData().entrySet()) {
-			MarketMonarch._contractsToObserve.add(filteredResult.getValue().getContract());
+		if (_incompleteRequests.isEmpty()) {
+			_reqHistDataLogger.info("Received historical data for all requested symbols. Changing state...");
+		} else {
+			_reqHistDataLogger.info("Did not receive historical data for all requested symbols. Missing symbols:");
+			for (String symbol : _incompleteRequests) {
+				_reqHistDataLogger.info("\t\t" + symbol);
+			}
+			_reqHistDataLogger.info("Changing state...");
 		}
-		
-		_reqHistDataLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed " + (numberOfStocksBeforeFiltering - _context.getHistoricalData().size()) + " entries.");
-		
-		
+		_context.setState(new PreTradeFilterByProfitLossState(_context));
 	}
 
 	@Override
@@ -99,7 +111,7 @@ public class PreTradeRequestHistoricalDataState extends PreTradeState {
 
 			synchronized(_context.getHistoricalData()) {
 				_context.getHistoricalData().get(reqId).calculateProfitLossChange();
-				_context.getHistoricalData().get(reqId).calculateRelativeTradingVolume();
+				_hasReceivedApiResonse = true;
 				_context.getHistoricalData().notify();			
 			}
 		}
