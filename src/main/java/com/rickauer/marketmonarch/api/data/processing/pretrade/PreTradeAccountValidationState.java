@@ -21,6 +21,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 
 	@Override
 	public void onEnter() {
+		_tradeAccountValidationLogger.info("Started pre-trading phase.");
 		_tradeAccountValidationLogger.info("Entered Account Validation State.");
 
 		int requestId = _context.getIbController().getNextRequestId();

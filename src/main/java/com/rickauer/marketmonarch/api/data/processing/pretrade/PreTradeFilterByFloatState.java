@@ -22,8 +22,7 @@ public class PreTradeFilterByFloatState extends PreTradeState {
 	@Override
 	public void onEnter() {
 
-		System.out.println("Entered Filter By Float State.");
-
+		_filterByFloatLogger.info("Entered Filter By Float State.");
 		_filterByFloatLogger.info("Filtering scan results by company share float...");
 
 		Map<String, Long> scanResultCompanyFloat = new HashMap<>();
