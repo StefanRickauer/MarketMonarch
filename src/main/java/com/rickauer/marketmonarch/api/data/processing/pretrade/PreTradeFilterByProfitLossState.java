@@ -33,7 +33,20 @@ public class PreTradeFilterByProfitLossState extends PreTradeState {
 		_filterByProfitLossLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed "
 				+ (numberOfStocksBeforeFiltering - _context.getHistoricalData().size()) + " entries. Changing state.");
 
-		_context.setState(new PreTradeInactiveState(_context));
+		if (_context.getHistoricalData().isEmpty()) {
+			_filterByProfitLossLogger.info("No eligible stocks remaining. Restarting pre-trading phase in 15 minutes.");
+			
+			try {
+				Thread.sleep(TradingConstants.FIFTEEN_MINUTES_TIMEOUT_MS);
+			} catch (InterruptedException e) {
+				throw new RuntimeException("Error during wait.");
+			}
+			
+			_context.setState(new PreTradeAccountValidationState(_context));
+		} else {
+			_filterByProfitLossLogger.info("Number of elibible stocks: " + _context.getHistoricalData().size() + ". Pre-trading phase finished.");
+			_context.setState(new PreTradeInactiveState(_context));
+		}
 	}
 
 	@Override
