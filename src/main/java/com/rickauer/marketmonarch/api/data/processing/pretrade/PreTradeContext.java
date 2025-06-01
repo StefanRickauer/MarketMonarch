@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.ib.client.Contract;
 import com.rickauer.marketmonarch.api.controller.FmpRequestController;
@@ -26,7 +27,7 @@ public class PreTradeContext {
 		_fmpController = fmpController;
 		_accountSummary = new ArrayList<>();
 		_allCompanyFloats = new HashMap<>();
-		_scanResult = new HashMap<>();
+		_scanResult = new TreeMap<>();
 		_historicalData = new HashMap<>();
 	}
 	
