@@ -30,14 +30,10 @@ public class PreTradeFilterByProfitLossState extends PreTradeState {
 		_context.getHistoricalData().entrySet()
 				.removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
 
-		for (Map.Entry<Integer, StockMetrics> filteredResult : _context.getHistoricalData().entrySet()) {
-			MarketMonarch._contractsToObserve.add(filteredResult.getValue().getContract());
-		}
-
 		_filterByProfitLossLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed "
 				+ (numberOfStocksBeforeFiltering - _context.getHistoricalData().size()) + " entries.");
 
-		_context.setState(new PreTradeInactiveState(_context));
+		_context.setState(new PreTradeGenerateCandiatesToObserveState(_context));
 	}
 
 	@Override

@@ -471,8 +471,6 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	
 	@Override
 	public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
-		
-		
 		MarketMonarch._preTradeContext.getState().processHistoricalDataEnd(reqId, startDateStr, endDateStr);
 		
 		if (MarketMonarch._stocksToTradeWith.get(reqId) != null) {
@@ -480,8 +478,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 			
 			synchronized(MarketMonarch._stocksToTradeWith) {
 				MarketMonarch._stocksToTradeWith.notify();
-		}
-		
+			}
 		}
 	}
 

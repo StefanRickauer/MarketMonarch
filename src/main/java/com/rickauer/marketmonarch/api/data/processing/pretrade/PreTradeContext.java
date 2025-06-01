@@ -19,7 +19,7 @@ public class PreTradeContext {
 	private List<AccountSummaryItem> _accountSummary;
 	private Map<String, Long> _allCompanyFloats;
 	private Map<Integer, Contract> _scanResult;
-	private Map<Integer, StockMetrics> _historicalData;		// main: _stocks
+	private Map<Integer, StockMetrics> _historicalData;		
 	
 	public PreTradeContext(InteractiveBrokersApiController ibController, FmpRequestController fmpController) {
 		_ibController = ibController;
