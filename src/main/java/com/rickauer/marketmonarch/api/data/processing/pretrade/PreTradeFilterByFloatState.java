@@ -37,13 +37,8 @@ public class PreTradeFilterByFloatState extends PreTradeState {
 			String currentSymbol = entry.getValue().symbol();
 
 			try {
-				floatShares = _context.getAllCompanyFloats().get(currentSymbol.replace(" ", "-")); // The symbol
-																											// "GTN A"
-																											// wasn't
-																											// found but
-																											// list
-																											// contains
-																											// "GTN-A".
+				// The symbol "GTN A" wasn't found but list contains "GTN-A", hence, the replace().
+				floatShares = _context.getAllCompanyFloats().get(currentSymbol.replace(" ", "-")); 
 			} catch (NullPointerException e) {
 				floatShares = -1L;
 				_filterByFloatLogger.warn("Did not find company share float for symbol: '" + currentSymbol + "'.");
@@ -62,18 +57,7 @@ public class PreTradeFilterByFloatState extends PreTradeState {
 				+ numberOfStocksBeforeFiltering + " entries. Failed searches in totoal: " + failedSearchesCount);
 
 		_filterByFloatLogger.info("Changing state...");
-		
-		;
-//		_context.setState(new PreTradeRequestHistoricalDataState(_context));
-		
-		
-		
-		synchronized (_context) {
-			_context.notify();
-		}
-		
-		
-		
+		_context.setState(new PreTradeRequestHistoricalDataState(_context));
 	}
 
 	@Override

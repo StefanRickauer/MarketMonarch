@@ -60,9 +60,6 @@ public class PreTradeRequestHistoricalDataState extends PreTradeState {
 		
 		_reqHistDataLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed " + (numberOfStocksBeforeFiltering - _context.getHistoricalData().size()) + " entries.");
 		
-		synchronized (_context) {
-			_context.notify();
-		}
 		
 	}
 

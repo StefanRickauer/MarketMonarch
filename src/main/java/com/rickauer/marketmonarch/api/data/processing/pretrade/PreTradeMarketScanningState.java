@@ -25,7 +25,6 @@ public class PreTradeMarketScanningState extends PreTradeState {
 	public void onEnter() {
 		_marketScanningLogger.info("Entered Market Scanning State.");
 		_marketScanningLogger.info("Setting up market scanner subscription and requesting scan results...");
-//		MarketMonarch._interactiveBrokersController.requestScannerSubscription("2", "20");
 		
 		int requestId = _context.getIbController().getNextRequestId();
 
@@ -39,9 +38,17 @@ public class PreTradeMarketScanningState extends PreTradeState {
 		filterTagValues.add(new TagValue(TradingConstants.FILTER_TAG_PRICE_BELOW, TradingConstants.FILTER_VALUE_PRICE_BELOW));
 		
 		_marketScanningLogger.info("Requesting market scanner subscription using request id: '" + requestId + "'...");
-		_context.getIbController().getSocket().reqScannerSubscription(requestId, subscription, null, filterTagValues);
 		
+		synchronized (_context.getHistoricalData()) {
+			try {
+				_context.getIbController().getSocket().reqScannerSubscription(requestId, subscription, null, filterTagValues);
+				_context.getHistoricalData().wait();
+			} catch (InterruptedException e) {
+				throw new RuntimeException("Error fetching historical data.");
+			}
+		}
 		
+		_context.setState(new PreTradeFilterByFloatState(_context));
 	}
 
 	@Override
@@ -61,9 +68,11 @@ public class PreTradeMarketScanningState extends PreTradeState {
 
 	@Override
 	public void processDataEnd(int reqId) {
-		_context.getIbController().getSocket().cancelScannerSubscription(reqId);
-		_marketScanningLogger.info("Received scan results for request ID: '"  + reqId + "'. Changing state...");
-		_context.setState(new PreTradeFilterByFloatState(_context));
+		synchronized (_context.getHistoricalData()) {
+			_context.getIbController().getSocket().cancelScannerSubscription(reqId);
+			_marketScanningLogger.info("Received scan results for request ID: '"  + reqId + "'. Changing state...");
+			_context.getHistoricalData().notify();
+		}
 	}
 
 	@Override
@@ -75,6 +84,4 @@ public class PreTradeMarketScanningState extends PreTradeState {
 	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {
 		// intentionally left blank
 	}
-
-
 }

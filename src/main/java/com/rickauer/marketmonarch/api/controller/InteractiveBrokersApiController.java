@@ -96,26 +96,6 @@ public final class InteractiveBrokersApiController implements Verifyable {
 		_ibApiControllerLogger.info("Canceled market subscription for request id : " + requestId + "'.");
 	}
 
-	public void requestHistoricalDataUntilToday(Contract contract, String lookbackPeriod, String barSizeSetting) {
-
-		int requestId = 0;
-
-		synchronized (MarketMonarch._preTradeContext.getHistoricalData()) {
-			try {
-				requestId = getNextRequestId();
-				MarketMonarch._preTradeContext.getHistoricalData().put(requestId, new StockMetrics(contract));
-				getSocket().reqHistoricalData(requestId, contract, TradingConstants.END_DATE_TIME_UNTIL_NOW, lookbackPeriod, barSizeSetting, TradingConstants.WHAT_TO_SHOW, TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, TradingConstants.FORMAT_DATE,
-						TradingConstants.KEEP_UP_TO_DATE, null);
-				MarketMonarch._preTradeContext.getHistoricalData().wait();
-				_ibApiControllerLogger.info(MarketMonarch._preTradeContext.getHistoricalData().get(requestId).getSymbol() + ": P&L = "
-						+ MarketMonarch._preTradeContext.getHistoricalData().get(requestId).getProfitLossChange() + ", RVOL = "
-						+ MarketMonarch._preTradeContext.getHistoricalData().get(requestId).getRelativeVolume());
-			} catch (InterruptedException e) {
-				throw new RuntimeException("Error fetching data.", e);
-			}
-		}
-	}
-
 	; // Refaktorisieren
 	public void requestHistoricalDataForAnalysis(Contract contract, String lookbackPeriod, String barSizeSetting) {
 		int requestId = 0;

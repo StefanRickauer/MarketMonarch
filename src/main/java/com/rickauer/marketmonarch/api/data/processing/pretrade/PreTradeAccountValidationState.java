@@ -22,17 +22,15 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	@Override
 	public void onEnter() {
 		_tradeAccountValidationLogger.info("Entered Account Validation State.");
-		_context.getIbController().getSocket().reqAccountSummary(_context.getIbController().getNextRequestId(), TradingConstants.ACCOUNT_SUMMARY_GROUP, TradingConstants.ACCOUNT_SUMMARY_TAGS); 			
-	}
-	
-	
-	public void processAccountSummary(String logMessage, int reqId, String account, String tag, String value, String currency) {
-		_tradeAccountValidationLogger.info(logMessage);
-		_context.getAccountDetails().add(new AccountSummaryItem(reqId, account, tag, value, currency));
-	}
-
-	public void processAccountSummaryEnd(int reqId) {
-		_context.getIbController().getSocket().cancelAccountSummary(reqId);
+		
+		synchronized (_context.getAccountDetails()) {
+			try {
+				_context.getIbController().getSocket().reqAccountSummary(_context.getIbController().getNextRequestId(), TradingConstants.ACCOUNT_SUMMARY_GROUP, TradingConstants.ACCOUNT_SUMMARY_TAGS); 			
+				_context.getAccountDetails().wait();
+			} catch (InterruptedException e) {
+				throw new RuntimeException("Error fetching account summary.");
+			}
+		}
 		
 		_tradeAccountValidationLogger.info("Accured Cash (unrealized): " + _context.getGrossPosition());
 		_tradeAccountValidationLogger.info("Total Market Exposure: " + _context.getGrossPosition());
@@ -42,8 +40,20 @@ public class PreTradeAccountValidationState extends PreTradeState {
 		
 		validateAccount();
 		_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state...");
-		
 		_context.setState(new PreTradeDataFetchingState(_context));
+	}
+	
+	
+	public void processAccountSummary(String logMessage, int reqId, String account, String tag, String value, String currency) {
+		_tradeAccountValidationLogger.info(logMessage);
+		_context.getAccountDetails().add(new AccountSummaryItem(reqId, account, tag, value, currency));
+	}
+
+	public void processAccountSummaryEnd(int reqId) {
+		synchronized (_context.getAccountDetails()) {
+			_context.getIbController().getSocket().cancelAccountSummary(reqId);
+			_context.getAccountDetails().notify();
+		}
 	}
 
 	private void validateAccount() {

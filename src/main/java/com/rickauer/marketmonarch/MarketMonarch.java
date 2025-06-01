@@ -103,13 +103,7 @@ public final class MarketMonarch {
 			ensureOperationalReadiness();
 			setUpWorkingEnvironment();
 			
-			_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));			
-
-			synchronized(_preTradeContext) {
-				_preTradeContext.wait();
-			}
-			
-			_preTradeContext.setState(new PreTradeRequestHistoricalDataState(_preTradeContext));	
+			_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));				
 			
 			addFloatToStock();
 			
