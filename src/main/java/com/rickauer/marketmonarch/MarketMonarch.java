@@ -103,7 +103,6 @@ public final class MarketMonarch {
 			
 			_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));				
 			
-			addFloatToStock();
 			
 			// DEBUG ONLY: Remove before going live =======================================
 			for (StockMetrics metric : _preTradeContext.getHistoricalData().values()) {
@@ -199,18 +198,6 @@ public final class MarketMonarch {
 		}
 		
 		_marketMonarchLogger.info("Set up environment.");
-	}
-	
-	private static void addFloatToStock() {
-		for (Map.Entry<Integer, StockMetrics> entry : _preTradeContext.getHistoricalData().entrySet()) {
-			
-			String symbol = entry.getValue().getSymbol().replace(" ", "-");			// <====== NICHT VERGESSEN!!!
-			Long floatForSymbol = _preTradeContext.getAllCompanyFloats().get(symbol);
-			entry.getValue().setCompanyShareFloat(floatForSymbol);
-			
-			// replace before getting value
-//			entry.getValue().setCompanyShareFloat(_allCompanyFloats.get(entry.getValue().getSymbol()));
-		}
 	}
 	
 	public static void requestHistoricalDataForPotentialBuy() {
