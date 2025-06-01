@@ -9,11 +9,11 @@ import com.ib.client.Bar;
 import com.ib.client.ContractDetails;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 
 public class PreTradeFilterByProfitLossState extends PreTradeState {
 
-	private static Logger _filterByProfitLossLogger = LogManager
-			.getLogger(PreTradeFilterByProfitLossState.class.getName());
+	private static Logger _filterByProfitLossLogger = LogManager.getLogger(PreTradeFilterByProfitLossState.class.getName());
 
 	public PreTradeFilterByProfitLossState(PreTradeContext context) {
 		super(context);
@@ -28,12 +28,12 @@ public class PreTradeFilterByProfitLossState extends PreTradeState {
 		int numberOfStocksBeforeFiltering = _context.getScanResult().size();
 		
 		_context.getHistoricalData().entrySet()
-				.removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < 10);
+				.removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < TradingConstants.MINIMUM_PROFIT_LOSS_IN_PERCENT);
 
 		_filterByProfitLossLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed "
-				+ (numberOfStocksBeforeFiltering - _context.getHistoricalData().size()) + " entries.");
+				+ (numberOfStocksBeforeFiltering - _context.getHistoricalData().size()) + " entries. Changing state.");
 
-		_context.setState(new PreTradeGenerateCandiatesToObserveState(_context));
+		_context.setState(new PreTradeInactiveState(_context));
 	}
 
 	@Override

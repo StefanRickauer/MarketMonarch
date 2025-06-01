@@ -8,6 +8,7 @@ public class TradingConstants {
 	public static final int MAX_NUMBER_OF_SHARES = 20_000_000;
 	
 	public static final int MINIMUM_ACCOUNT_BALANCE = 500;
+	public static final int MINIMUM_PROFIT_LOSS_IN_PERCENT = 10;
 	
 	public static final double TAKE_PROFIT_FACTOR = 1.05;				// number * TAKE_PROFIT = 5%
 	

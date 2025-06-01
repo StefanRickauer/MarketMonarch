@@ -70,13 +70,11 @@ public final class MarketMonarch {
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _interactiveBrokersController;
 
-	public static List<Contract> _contractsToObserve;					// contracts to observe with live data
 	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
 	public static PreTradeContext _preTradeContext;
 	public static TradeMonitorContext _tradingContext;
 
 	static {
-		_contractsToObserve = new ArrayList<>();
 		_stocksToTradeWith = new HashMap<>();
 
 		_interactiveBrokersController = new InteractiveBrokersApiController();
@@ -221,8 +219,11 @@ public final class MarketMonarch {
 		
 		_stocksToTradeWith.clear(); 			// this method will iterate over all contracts that need to be observed. Hence, delete before use.
 		
-		for (Contract contract : _contractsToObserve) {
-			_interactiveBrokersController.requestHistoricalDataForAnalysis(contract, TradingConstants.LOOKBACK_PERIOD_FOUR_HOURS_TEN_MINUTES_IN_SECONDS, TradingConstants.BARSIZE_SETTING_FIVE_SECONDS);		
+		for (Map.Entry<Integer, StockMetrics> filteredResult : _preTradeContext.getHistoricalData().entrySet()) {
+			_interactiveBrokersController.requestHistoricalDataForAnalysis(
+					filteredResult.getValue().getContract(), 
+					TradingConstants.LOOKBACK_PERIOD_FOUR_HOURS_TEN_MINUTES_IN_SECONDS, 
+					TradingConstants.BARSIZE_SETTING_FIVE_SECONDS);
 		}
 		
 		_marketMonarchLogger.info("Done requesting historical chart data.");
