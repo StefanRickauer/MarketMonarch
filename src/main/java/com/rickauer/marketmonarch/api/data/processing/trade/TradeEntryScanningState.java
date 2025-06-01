@@ -1,10 +1,10 @@
-package com.rickauer.marketmonarch.api.data.processing;
+package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import com.ib.client.Decimal;
 
-public class TradeBuyProcessingState extends TradeMonitorState {
+public class TradeEntryScanningState extends TradeMonitorState {
 
-	TradeBuyProcessingState(TradeMonitorContext context) {
+	TradeEntryScanningState(TradeMonitorContext context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 	}
@@ -29,7 +29,9 @@ public class TradeBuyProcessingState extends TradeMonitorState {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		// Cancel all subscriptions
+		// reset all attributes in context class
+		// reset all attributes in class
 		
 	}
 

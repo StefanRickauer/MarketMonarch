@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.api.data.processing;
+package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import com.ib.client.Decimal;
 

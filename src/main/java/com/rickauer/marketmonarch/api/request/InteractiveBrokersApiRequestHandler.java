@@ -42,7 +42,7 @@ import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.CandleStick;
-import com.rickauer.marketmonarch.api.data.processing.TradeMonitorContext;
+import com.rickauer.marketmonarch.api.data.processing.trade.TradeMonitorContext;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 
 public final class InteractiveBrokersApiRequestHandler implements EWrapper {

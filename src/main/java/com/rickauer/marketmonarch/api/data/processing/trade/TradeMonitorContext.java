@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.api.data.processing;
+package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import com.ib.client.Contract;
 import com.ib.client.Decimal;
@@ -14,9 +14,7 @@ public class TradeMonitorContext {
 	double _takeProfitLimit;
 	long _quantity;
 	
-	; // Must be MarketMonarchs Controller!
 	public TradeMonitorContext(InteractiveBrokersApiController controller) {
-		_state = new TradeInactiveState(this);
 		_controller = controller;
 	}
 	

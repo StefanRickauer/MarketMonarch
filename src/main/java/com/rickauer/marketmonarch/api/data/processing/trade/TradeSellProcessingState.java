@@ -1,4 +1,4 @@
-package com.rickauer.marketmonarch.api.data.processing;
+package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
