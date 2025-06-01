@@ -22,25 +22,33 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	@Override
 	public void onEnter() {
 		_tradeAccountValidationLogger.info("Entered Account Validation State.");
+
+		int requestId = _context.getIbController().getNextRequestId();
 		
 		synchronized (_context.getAccountDetails()) {
 			try {
-				_context.getIbController().getSocket().reqAccountSummary(_context.getIbController().getNextRequestId(), TradingConstants.ACCOUNT_SUMMARY_GROUP, TradingConstants.ACCOUNT_SUMMARY_TAGS); 			
-				_context.getAccountDetails().wait();
+				_context.getIbController().getSocket().reqAccountSummary(requestId, TradingConstants.ACCOUNT_SUMMARY_GROUP, TradingConstants.ACCOUNT_SUMMARY_TAGS); 			
+				_context.getAccountDetails().wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
 			} catch (InterruptedException e) {
 				throw new RuntimeException("Error fetching account summary.");
 			}
 		}
 		
-		_tradeAccountValidationLogger.info("Accured Cash (unrealized): " + _context.getGrossPosition());
-		_tradeAccountValidationLogger.info("Total Market Exposure: " + _context.getGrossPosition());
-		_tradeAccountValidationLogger.info("Net Liquidation: " + _context.getNetLiquidation());
-		_tradeAccountValidationLogger.info("Total Cash: " + _context.getTotalCash());
-		_tradeAccountValidationLogger.info("Buying Power: " + _context.getBuyingPower());
-		
-		validateAccount();
-		_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state...");
-		_context.setState(new PreTradeDataFetchingState(_context));
+		if (_hasReceivedApiResonse == true) {
+			_tradeAccountValidationLogger.info("Accured Cash (unrealized): " + _context.getGrossPosition());
+			_tradeAccountValidationLogger.info("Total Market Exposure: " + _context.getGrossPosition());
+			_tradeAccountValidationLogger.info("Net Liquidation: " + _context.getNetLiquidation());
+			_tradeAccountValidationLogger.info("Total Cash: " + _context.getTotalCash());
+			_tradeAccountValidationLogger.info("Buying Power: " + _context.getBuyingPower());
+			
+			validateAccount();
+			_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state...");
+			_context.setState(new PreTradeDataFetchingState(_context));
+		} else {			
+			_context.getIbController().getSocket().cancelAccountSummary(requestId);
+			_tradeAccountValidationLogger.warn("Timeout reached. Did not receive API response. Repeating state.");
+			_context.setState(new PreTradeAccountValidationState(_context));
+		}
 	}
 	
 	
@@ -52,6 +60,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	public void processAccountSummaryEnd(int reqId) {
 		synchronized (_context.getAccountDetails()) {
 			_context.getIbController().getSocket().cancelAccountSummary(reqId);
+			_hasReceivedApiResonse = true;
 			_context.getAccountDetails().notify();
 		}
 	}
@@ -83,5 +92,4 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {
 		// intentionally left blank
 	}
-
 }

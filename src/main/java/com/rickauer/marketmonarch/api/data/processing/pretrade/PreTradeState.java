@@ -6,9 +6,11 @@ import com.ib.client.ContractDetails;
 public abstract class PreTradeState {
 
 	PreTradeContext _context;
+	boolean _hasReceivedApiResonse;
 	
 	public PreTradeState(PreTradeContext context) {
 		_context = context;
+		_hasReceivedApiResonse = false;
 	}
 	
 	public abstract void onEnter();
