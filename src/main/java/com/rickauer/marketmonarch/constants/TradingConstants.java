@@ -11,6 +11,8 @@ public class TradingConstants {
 	public static final int MINIMUM_ACCOUNT_BALANCE = 500;
 	public static final int MINIMUM_PROFIT_LOSS_IN_PERCENT = 10;
 	
+	public static final int MAXIMUM_NUMBER_OF_SCAN_RESULTS = 4;
+	
 	public static final double TAKE_PROFIT_FACTOR = 1.05;				// number * TAKE_PROFIT = 5%
 	
 	public static final String ACCOUNT_SUMMARY_GROUP = "All";
