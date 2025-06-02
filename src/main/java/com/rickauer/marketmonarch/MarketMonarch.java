@@ -205,10 +205,10 @@ public final class MarketMonarch {
 		_marketMonarchLogger.info("Requesting historical chart data to prepare for live entry signal detection...");
 		
 		_stocksToTradeWith.clear(); 			// this method will iterate over all contracts that need to be observed. Hence, delete before use.
-		
-		for (Map.Entry<Integer, StockMetrics> filteredResult : _preTradeContext.getHistoricalData().entrySet()) {
+
+		for (Map.Entry<Integer, Contract> filteredResult : _preTradeContext.getScanResult().entrySet()) {
 			_interactiveBrokersController.requestHistoricalDataForAnalysis(
-					filteredResult.getValue().getContract(), 
+					filteredResult.getValue(), 
 					TradingConstants.LOOKBACK_PERIOD_FOUR_HOURS_TEN_MINUTES_IN_SECONDS, 
 					TradingConstants.BARSIZE_SETTING_FIVE_SECONDS);
 		}
