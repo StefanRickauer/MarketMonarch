@@ -115,7 +115,11 @@ public class StockMetrics {
 		if (todaysDate.getDayOfMonth() == 1) {
 			// subtract one month, get the last day of last month, subtract the subtrahend and add one day because getting the previous day already subtracts one day
 			lastTradingDay = todaysDate.minusMonths(1).dayOfMonth().withMaximumValue().getDayOfMonth() - subtrahend + 1; 
-		} else {
+		} else if (todaysDate.getDayOfMonth() == 2 && todaysDate.getDayOfWeek() == 1) {
+			// will be the case if it is the 2nd and also Monday
+			lastTradingDay = todaysDate.minusMonths(1).dayOfMonth().withMaximumValue().getDayOfMonth() - subtrahend + 2;
+		}
+		else {
 			lastTradingDay = todaysDate.getDayOfMonth() - subtrahend;
 		}
 		
