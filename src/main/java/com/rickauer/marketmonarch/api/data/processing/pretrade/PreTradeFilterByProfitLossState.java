@@ -39,7 +39,7 @@ public class PreTradeFilterByProfitLossState extends PreTradeState {
 		_filterByProfitLossLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed "
 				+ (numberOfStocksBeforeFiltering - _context.getHistoricalData().size()) + " entries. Changing state.");
 
-		if (_context.getHistoricalData().isEmpty()) {
+		if (_context.getScanResult().isEmpty()) {
 			_filterByProfitLossLogger.info("No eligible stocks remaining. Restarting pre-trading phase in 5 minutes.");
 			
 			try {
