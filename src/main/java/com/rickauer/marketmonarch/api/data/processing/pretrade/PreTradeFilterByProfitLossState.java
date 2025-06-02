@@ -49,8 +49,12 @@ public class PreTradeFilterByProfitLossState extends PreTradeState {
 			}
 			
 			_context.setState(new PreTradeAccountValidationState(_context));
+		} else if (_context.getScanResult().size() > TradingConstants.MAXIMUM_NUMBER_OF_SCAN_RESULTS) {
+			_filterByProfitLossLogger.info("Number of elibible stocks (" + _context.getScanResult().size() + ") exceeds maximum number of premitted results. Reducing results to: " 
+					+ TradingConstants.MAXIMUM_NUMBER_OF_SCAN_RESULTS + ". Changing state.");
+			_context.setState(new PreTradeReduceToNState(_context));
 		} else {
-			_filterByProfitLossLogger.info("Number of elibible stocks: " + _context.getHistoricalData().size() + ". Pre-trading phase finished.");
+			_filterByProfitLossLogger.info("Number of elibible stocks: " + _context.getScanResult().size() + ". Pre-trading phase finished.");
 			_context.setState(new PreTradeInactiveState(_context));
 		}
 	}
