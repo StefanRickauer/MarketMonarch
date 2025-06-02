@@ -109,6 +109,10 @@ public class PreTradeContext {
 		return _scanResult;
 	}
 	
+	public void setScanResult(Map<Integer, Contract> newResult) {
+		_scanResult = new TreeMap<>(newResult);
+	}
+	
 	public Map<Integer, StockMetrics> getHistoricalData() {
 		return _historicalData;
 	}
