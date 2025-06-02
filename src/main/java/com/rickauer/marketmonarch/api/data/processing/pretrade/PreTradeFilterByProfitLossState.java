@@ -1,11 +1,13 @@
 package com.rickauer.marketmonarch.api.data.processing.pretrade;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ib.client.Bar;
+import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
@@ -29,15 +31,19 @@ public class PreTradeFilterByProfitLossState extends PreTradeState {
 		
 		_context.getHistoricalData().entrySet()
 				.removeIf(entry -> Math.floor(entry.getValue().getProfitLossChange()) < TradingConstants.MINIMUM_PROFIT_LOSS_IN_PERCENT);
-
+		
+		_context.getScanResult().entrySet()
+				.removeIf(entry -> _context.getHistoricalData().values().stream()
+						.noneMatch(candle -> candle.getContract().symbol().equals(entry.getValue().symbol())));
+		
 		_filterByProfitLossLogger.info("Done filtering stocks by profit and loss (P&L) and relative trading volume. Removed "
 				+ (numberOfStocksBeforeFiltering - _context.getHistoricalData().size()) + " entries. Changing state.");
 
 		if (_context.getHistoricalData().isEmpty()) {
-			_filterByProfitLossLogger.info("No eligible stocks remaining. Restarting pre-trading phase in 15 minutes.");
+			_filterByProfitLossLogger.info("No eligible stocks remaining. Restarting pre-trading phase in 5 minutes.");
 			
 			try {
-				Thread.sleep(TradingConstants.FIFTEEN_MINUTES_TIMEOUT_MS);
+				Thread.sleep(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
 			} catch (InterruptedException e) {
 				throw new RuntimeException("Error during wait.");
 			}
