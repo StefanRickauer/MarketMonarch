@@ -66,7 +66,7 @@ public class PreTradeRequestHistoricalDataState extends PreTradeState {
 		if (_incompleteRequests.isEmpty()) {
 			_reqHistDataLogger.info("Received historical data for all requested symbols. Changing state...");
 		} else {
-			_reqHistDataLogger.info("Did not receive historical data for all requested symbols. Missing symbols:");
+			_reqHistDataLogger.warn("Did not receive historical data for all requested symbols. Missing symbols:");
 			for (String symbol : _incompleteRequests) {
 				_reqHistDataLogger.info("\t\t" + symbol);
 			}

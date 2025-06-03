@@ -151,7 +151,7 @@ public final class MarketMonarch {
 			
 			
 			// DEBUG ONLY: Remove before going live =======================================
-			System.out.println("IMPORTATN NOTICE: Order is not based on greatest profit loss first, which must be changed.");
+			System.out.println("IMPORTATN NOTICE: Order is based on greatest profit loss.");
 			for (CandleSeries entry : _stocksToTradeWith.values()) {
 				System.out.println("======>  " + entry.getSymbol());
 			}

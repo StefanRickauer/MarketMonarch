@@ -53,7 +53,8 @@ public class PreTradeMarketScanningState extends PreTradeState {
 			_context.setState(new PreTradeFilterByFloatState(_context));
 		} else {
 			_context.getIbController().getSocket().cancelScannerSubscription(requestId);
-			_marketScanningLogger.warn("Timeout reached. Did not receive API response. Repeating state.");
+			_marketScanningLogger.warn("Timeout reached. Did not receive API response. Resetting scan results and repeating state.");
+			_context.getScanResult().clear();
 			_context.setState(new PreTradeMarketScanningState(_context));
 		}
 	}
