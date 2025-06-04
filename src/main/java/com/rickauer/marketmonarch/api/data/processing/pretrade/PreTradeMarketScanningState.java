@@ -48,7 +48,7 @@ public class PreTradeMarketScanningState extends PreTradeState {
 			}
 		}
 		
-		if (_hasReceivedApiResonse == true) {
+		if (_hasReceivedApiResponse == true) {
 			_marketScanningLogger.info("Received scan results for request ID: '"  + requestId + "'. Changing state...");
 			_context.setState(new PreTradeFilterByFloatState(_context));
 		} else {
@@ -78,7 +78,7 @@ public class PreTradeMarketScanningState extends PreTradeState {
 	public void processDataEnd(int reqId) {
 		synchronized (_context.getHistoricalData()) {
 			_context.getIbController().getSocket().cancelScannerSubscription(reqId);
-			_hasReceivedApiResonse = true;
+			_hasReceivedApiResponse = true;
 			_context.getHistoricalData().notify();
 		}
 	}

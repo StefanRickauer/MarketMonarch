@@ -1,5 +1,8 @@
 package com.rickauer.marketmonarch.api.data.processing.trade;
 
+import java.time.ZonedDateTime;
+
+import com.ib.client.Bar;
 import com.ib.client.Decimal;
 
 public class TradeBuyProcessingState extends TradeMonitorState {
@@ -16,21 +19,21 @@ public class TradeBuyProcessingState extends TradeMonitorState {
 	}
 
 	@Override
-	public void processTradingData() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
+	public void processHistoricalData(int reqId, ZonedDateTime time, double open, double high, double low, double close,
+			double volume) {
+		// intentionally left blank 
 	}
+	
+	@Override
+	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {
+		// intentionally left blank 
+	}
+
 
 }

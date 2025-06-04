@@ -1,5 +1,6 @@
 package com.rickauer.marketmonarch.api.request;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.processing.trade.TradeMonitorContext;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
+import com.rickauer.marketmonarch.utils.StockUtils;
 
 public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
@@ -256,8 +258,9 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	@Override
 	public void historicalData(int reqId, Bar bar) {
 		
-		MarketMonarch._preTradeContext.getState().processHistoricalData(reqId, bar);
-
+		MarketMonarch._preTradeContext.getState().processHistoricalData(reqId, bar);																														
+		MarketMonarch._tradingContext.getState().processHistoricalData(reqId, StockUtils.stringToZonedDateTime(bar.time()), bar.open(), bar.high(), bar.low(), bar.close(), Double.parseDouble(bar.volume().toString()));
+		
 		if (MarketMonarch._stocksToTradeWith.get(reqId) != null) {
 			MarketMonarch._stocksToTradeWith.get(reqId).addCandleStick(new CandleStick(bar.time(), bar.open(), bar.close(), bar.high(), bar.low(), bar.volume()));
 		}
@@ -472,6 +475,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	@Override
 	public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
 		MarketMonarch._preTradeContext.getState().processHistoricalDataEnd(reqId, startDateStr, endDateStr);
+		MarketMonarch._tradingContext.getState().processHistoricalDataEnd(reqId, startDateStr, endDateStr);
 		
 		if (MarketMonarch._stocksToTradeWith.get(reqId) != null) {
 			_ibRequestHandlerLogger.info("Gathered historical data for Symbol: '" + MarketMonarch._stocksToTradeWith.get(reqId).getSymbol() + "', Request-ID: " + reqId + ".");

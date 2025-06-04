@@ -95,24 +95,6 @@ public final class InteractiveBrokersApiController implements Verifyable {
 		getSocket().cancelScannerSubscription(requestId);
 		_ibApiControllerLogger.info("Canceled market subscription for request id : " + requestId + "'.");
 	}
-
-	; // Refaktorisieren
-	public void requestHistoricalDataForAnalysis(Contract contract, String lookbackPeriod, String barSizeSetting) {
-		int requestId = 0;
-
-		synchronized (MarketMonarch._stocksToTradeWith) {
-			try {
-				requestId = getNextRequestId();
-				MarketMonarch._stocksToTradeWith.put(requestId, new CandleSeries(contract));
-				getSocket().reqHistoricalData(requestId, contract, TradingConstants.END_DATE_TIME_UNTIL_NOW, lookbackPeriod, barSizeSetting, TradingConstants.WHAT_TO_SHOW, TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, TradingConstants.FORMAT_DATE,
-						TradingConstants.KEEP_UP_TO_DATE, null);
-				MarketMonarch._stocksToTradeWith.wait();
-				_ibApiControllerLogger.info("Received data for '" + MarketMonarch._stocksToTradeWith.get(requestId).getSymbol() + "' for analysis.");
-			} catch (InterruptedException e) {
-				throw new RuntimeException("Error fetching data.", e);
-			}
-		}
-	}
 	
 	public void placeOrder(int id, Contract contract, Order order) {
 		getSocket().placeOrder(id, contract, order);

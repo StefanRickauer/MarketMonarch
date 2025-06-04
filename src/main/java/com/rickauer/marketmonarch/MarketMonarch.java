@@ -8,6 +8,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.ta4j.core.BarSeries;
 
 import com.ib.client.Contract;
 import com.ib.client.ScannerSubscription;
@@ -27,6 +28,8 @@ import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeAccountValidationState;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeContext;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeRequestHistoricalDataState;
+import com.rickauer.marketmonarch.api.data.processing.trade.TradeEntryScanningState;
+import com.rickauer.marketmonarch.api.data.processing.trade.TradeInactiveState;
 import com.rickauer.marketmonarch.api.data.processing.trade.TradeMonitorContext;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
@@ -101,6 +104,7 @@ public final class MarketMonarch {
 			ensureOperationalReadiness();
 			setUpWorkingEnvironment();
 			
+			_tradingContext.setState(new TradeInactiveState(_tradingContext));
 			_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));				
 			
 			
@@ -119,7 +123,8 @@ public final class MarketMonarch {
 			// for each remaining search result
 			//		- request 5 sec candles of the past 3 days
 			
-			requestHistoricalDataForPotentialBuy();
+			_tradingContext.setState(new TradeEntryScanningState(_tradingContext));
+
 			
 			//		- convert these candles to barseries
 			//		- request live data for symbol
@@ -152,8 +157,8 @@ public final class MarketMonarch {
 			
 			// DEBUG ONLY: Remove before going live =======================================
 			System.out.println("IMPORTATN NOTICE: Order is based on greatest profit loss.");
-			for (CandleSeries entry : _stocksToTradeWith.values()) {
-				System.out.println("======>  " + entry.getSymbol());
+			for (Map.Entry<Integer, BarSeries> entry : _tradingContext.getHistoricalData().entrySet()) {
+				System.out.println(entry.getValue().getName());
 			}
 			// DEBUG ONLY END =============================================================
 			
@@ -198,21 +203,5 @@ public final class MarketMonarch {
 		}
 		
 		_marketMonarchLogger.info("Set up environment.");
-	}
-	
-	public static void requestHistoricalDataForPotentialBuy() {
-		
-		_marketMonarchLogger.info("Requesting historical chart data to prepare for live entry signal detection...");
-		
-		_stocksToTradeWith.clear(); 			// this method will iterate over all contracts that need to be observed. Hence, delete before use.
-
-		for (Map.Entry<Integer, Contract> filteredResult : _preTradeContext.getScanResult().entrySet()) {
-			_interactiveBrokersController.requestHistoricalDataForAnalysis(
-					filteredResult.getValue(), 
-					TradingConstants.LOOKBACK_PERIOD_FOUR_HOURS_TEN_MINUTES_IN_SECONDS, 
-					TradingConstants.BARSIZE_SETTING_FIVE_SECONDS);
-		}
-		
-		_marketMonarchLogger.info("Done requesting historical chart data.");
 	}
 }

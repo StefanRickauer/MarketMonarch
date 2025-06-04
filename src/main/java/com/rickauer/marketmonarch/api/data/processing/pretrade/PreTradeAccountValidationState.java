@@ -35,7 +35,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 			}
 		}
 		
-		if (_hasReceivedApiResonse == true) {
+		if (_hasReceivedApiResponse == true) {
 			_tradeAccountValidationLogger.info("Accured Cash (unrealized): " + _context.getGrossPosition());
 			_tradeAccountValidationLogger.info("Total Market Exposure: " + _context.getGrossPosition());
 			_tradeAccountValidationLogger.info("Net Liquidation: " + _context.getNetLiquidation());
@@ -61,7 +61,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 	public void processAccountSummaryEnd(int reqId) {
 		synchronized (_context.getAccountDetails()) {
 			_context.getIbController().getSocket().cancelAccountSummary(reqId);
-			_hasReceivedApiResonse = true;
+			_hasReceivedApiResponse = true;
 			_context.getAccountDetails().notify();
 		}
 	}

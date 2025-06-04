@@ -51,9 +51,9 @@ public class PreTradeRequestHistoricalDataState extends PreTradeState {
 							);
 					_context.getHistoricalData().wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
 					
-					if (_hasReceivedApiResonse == true) {
+					if (_hasReceivedApiResponse == true) {
 						_reqHistDataLogger.info(_context.getHistoricalData().get(requestId).getSymbol() + ": P&L = " + _context.getHistoricalData().get(requestId).getProfitLossChange());
-						_hasReceivedApiResonse = false;
+						_hasReceivedApiResponse = false;
 					} else {
 						_incompleteRequests.add(_context.getHistoricalData().get(requestId).getSymbol());
 					}
@@ -111,7 +111,7 @@ public class PreTradeRequestHistoricalDataState extends PreTradeState {
 
 			synchronized(_context.getHistoricalData()) {
 				_context.getHistoricalData().get(reqId).calculateProfitLossChange();
-				_hasReceivedApiResonse = true;
+				_hasReceivedApiResponse = true;
 				_context.getHistoricalData().notify();			
 			}
 		}

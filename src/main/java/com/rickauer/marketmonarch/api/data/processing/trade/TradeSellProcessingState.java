@@ -1,8 +1,11 @@
 package com.rickauer.marketmonarch.api.data.processing.trade;
 
+import java.time.ZonedDateTime;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.ib.client.Bar;
 import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderType;
@@ -62,12 +65,6 @@ public class TradeSellProcessingState extends TradeMonitorState {
 	}
 
 	@Override
-	public void processTradingData() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
 		_tradeStateLogger.info(msg);
 		
@@ -78,9 +75,12 @@ public class TradeSellProcessingState extends TradeMonitorState {
 	}
 
 	@Override
-	public void dispose() {
-		// If sell-orders are placed it makes no sense to dispose the scan trade session
-		
+	public void processHistoricalData(int reqId, ZonedDateTime time, double open, double high, double low, double close, double volume) {
+		// intentionally left blank 		
 	}
 
+	@Override
+	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {
+		// intentionally left blank 
+	}
 }

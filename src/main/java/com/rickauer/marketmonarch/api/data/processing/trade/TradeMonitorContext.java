@@ -1,13 +1,20 @@
 package com.rickauer.marketmonarch.api.data.processing.trade;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.ta4j.core.BarSeries;
+
 import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
+import com.rickauer.marketmonarch.api.data.StockMetrics;
 
 public class TradeMonitorContext {
-	; // context class: https://www.youtube.com/watch?v=abX4xzaAsoc , 2:52
+	
 	TradeMonitorState _state;
 	private final InteractiveBrokersApiController _controller;
+	private Map<Integer, BarSeries> _historicalData;	
 	Contract _tradedContract;
 	double _stopLossLimit;
 	double _stopLossAuxPrice;
@@ -16,6 +23,7 @@ public class TradeMonitorContext {
 	
 	public TradeMonitorContext(InteractiveBrokersApiController controller) {
 		_controller = controller;
+		_historicalData = new HashMap<>();
 	}
 	
 	public InteractiveBrokersApiController getController() {
@@ -29,6 +37,10 @@ public class TradeMonitorContext {
 	public void setState(TradeMonitorState newState) {
 		_state = newState;
 		newState.onEnter();
+	}
+	
+	public Map<Integer, BarSeries> getHistoricalData() {
+		return _historicalData;
 	}
 	
 	public Contract getContract() {

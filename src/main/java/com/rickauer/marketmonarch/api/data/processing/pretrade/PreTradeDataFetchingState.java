@@ -20,7 +20,6 @@ public class PreTradeDataFetchingState extends PreTradeState {
 	
 	public PreTradeDataFetchingState(PreTradeContext context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

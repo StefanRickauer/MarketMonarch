@@ -73,42 +73,42 @@
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.TradeSellProcessingState" level="trace"
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeAccountValidationState" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.PreTradeAccountValidationState" level="trace"
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeDataFetchingState" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.PreTradeDataFetchingState" level="trace"
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeMarketScanningState" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.PreTradeMarketScanningState" level="trace"
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeFilterByFloatState" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.PreTradeFilterByFloatState" level="trace"
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeRequestHistoricalDataState" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.PreTradeRequestHistoricalDataState" level="trace"
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeFilterByProfitLossState" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.PreTradeFilterByProfitLossState" level="trace"
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeReduceToNState" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.PreTradeGenerateCandiatesToObserveState" level="trace"
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.TradeEntryScanningState" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
