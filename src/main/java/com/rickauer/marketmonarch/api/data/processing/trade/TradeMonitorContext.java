@@ -9,12 +9,15 @@ import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
+import com.rickauer.marketmonarch.api.data.processing.StockAnalysisManager;
+import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
 
 public class TradeMonitorContext {
 	
 	TradeMonitorState _state;
 	private final InteractiveBrokersApiController _controller;
-	private Map<Integer, BarSeries> _historicalData;	
+	private StockAnalysisManager _analysisManager;
+//	private Map<Integer, BarSeries> _historicalData;	
 	Contract _tradedContract;
 	double _stopLossLimit;
 	double _stopLossAuxPrice;
@@ -23,7 +26,8 @@ public class TradeMonitorContext {
 	
 	public TradeMonitorContext(InteractiveBrokersApiController controller) {
 		_controller = controller;
-		_historicalData = new HashMap<>();
+;//		_historicalData = new HashMap<>();;
+		_analysisManager = new StockAnalysisManager();
 	}
 	
 	public InteractiveBrokersApiController getController() {
@@ -39,9 +43,17 @@ public class TradeMonitorContext {
 		newState.onEnter();
 	}
 	
-	public Map<Integer, BarSeries> getHistoricalData() {
-		return _historicalData;
+	public StockAnalysisManager getStockAnalysisManager() {
+		return _analysisManager;
 	}
+	
+	public Map<String, StrategyExecutor> getHistoricalData() {
+		return _analysisManager.getExecutors();
+	}
+	
+//	public Map<Integer, BarSeries> getHistoricalData() {
+//		return _historicalData;
+//	}
 	
 	public Contract getContract() {
 		return _tradedContract;

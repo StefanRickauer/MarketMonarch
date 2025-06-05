@@ -25,6 +25,7 @@ import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.CandleSeries;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
+import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeAccountValidationState;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeContext;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeRequestHistoricalDataState;
@@ -157,8 +158,10 @@ public final class MarketMonarch {
 			
 			// DEBUG ONLY: Remove before going live =======================================
 			System.out.println("IMPORTATN NOTICE: Order is based on greatest profit loss.");
-			for (Map.Entry<Integer, BarSeries> entry : _tradingContext.getHistoricalData().entrySet()) {
-				System.out.println(entry.getValue().getName());
+			for (Map.Entry<String, StrategyExecutor> entry : _tradingContext.getStockAnalysisManager().getExecutors().entrySet()) {
+				System.out.println(entry.getValue().getSymbol());
+//				System.out.println(entry.getKey());
+				
 			}
 			// DEBUG ONLY END =============================================================
 			

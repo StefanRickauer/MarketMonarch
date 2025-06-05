@@ -34,6 +34,7 @@ public class StrategyExecutor {
 	double _entryPrice;
 	
 	public StrategyExecutor(String symbol) {
+		_symbol = symbol;
 		_series = new BaseBarSeriesBuilder()
 				.withName(symbol)
 				.withNumTypeOf(DecimalNum::valueOf)
@@ -94,6 +95,15 @@ public class StrategyExecutor {
 			_entryPrice = close.doubleValue();
 		}
 	}
+	
+	public String getSymbol() {
+		return _symbol;
+	}
+	
+	public BarSeries getSeries() {
+		return _series;
+	}
+	
 	; // call from outside. Define Map and maybe use Enum for keys
 	public Map<String, Double> isEntry(BarSeries series) {
 		Map<String, Double> entryExitPrices = new HashMap<>();

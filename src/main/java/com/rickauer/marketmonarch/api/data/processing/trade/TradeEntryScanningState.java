@@ -20,6 +20,7 @@ import com.ib.client.Decimal;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
+import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
 public class TradeEntryScanningState extends TradeMonitorState {
@@ -49,9 +50,11 @@ public class TradeEntryScanningState extends TradeMonitorState {
 				try {
 					String symbol = watchlistKeys.get(i);
 					requestId = _context.getController().getNextRequestId();
-					BarSeries series = new BaseBarSeriesBuilder().withName(symbol)
-							.withNumTypeOf(DecimalNum::valueOf).build();
-					_context.getHistoricalData().put(requestId, series);
+//					BarSeries series = new BaseBarSeriesBuilder().withName(symbol)
+//							.withNumTypeOf(DecimalNum::valueOf).build();
+					_context.getStockAnalysisManager().getSymbolLookupTable().put(requestId, symbol);
+					_context.getStockAnalysisManager().getExecutors().put(symbol, new StrategyExecutor(symbol));
+//					_context.getHistoricalData().put(requestId, series);
 					_context.getController().getSocket().reqHistoricalData(
 							requestId, 
 							_stockWatchlist.get(symbol),
@@ -115,7 +118,8 @@ public class TradeEntryScanningState extends TradeMonitorState {
 	@Override
 	public void processHistoricalData(int reqId, ZonedDateTime time, double open, double high, double low, double close,
 			double volume) {
-		if (_context.getHistoricalData().get(reqId) != null) {
+		String symbol = _context.getStockAnalysisManager().getSymbolById(reqId);
+		if (_context.getStockAnalysisManager().getExecutorBySymbol(symbol) != null) {
 			Bar baseBar = new BaseBar(
 					Duration.ofMillis(5), 
 					time, 
@@ -125,20 +129,43 @@ public class TradeEntryScanningState extends TradeMonitorState {
 					DecimalNum.valueOf(close), 
 					DecimalNum.valueOf(volume),
 					DecimalNum.valueOf(0));
-			_context.getHistoricalData().get(reqId).addBar(baseBar);
+			_context.getStockAnalysisManager().handleHistoricalBar(reqId, baseBar);
 		}
+		
+//		if (_context.getHistoricalData().get(reqId) != null) {
+//			Bar baseBar = new BaseBar(
+//					Duration.ofMillis(5), 
+//					time, 
+//					DecimalNum.valueOf(open), 
+//					DecimalNum.valueOf(high),
+//					DecimalNum.valueOf(low), 
+//					DecimalNum.valueOf(close), 
+//					DecimalNum.valueOf(volume),
+//					DecimalNum.valueOf(0));
+//			_context.getHistoricalData().get(reqId).addBar(baseBar);
+//		}
 
 	}
 
 	@Override
 	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {
 		System.out.println("==");
-		if (_context.getHistoricalData().get(reqId) != null) {
-
+		String symbol = _context.getStockAnalysisManager().getSymbolById(reqId);
+		
+		if (_context.getStockAnalysisManager().getExecutorBySymbol(symbol) != null) {
+			
 			synchronized (_lock) {
 				_hasReceivedApiResponse = true;
 				_lock.notify();
 			}
 		}
+		
+//		if (_context.getHistoricalData().get(reqId) != null) {
+//
+//			synchronized (_lock) {
+//				_hasReceivedApiResponse = true;
+//				_lock.notify();
+//			}
+//		}
 	}
 }

@@ -17,12 +17,16 @@ public class StockAnalysisManager {
 	private Map<String, StrategyExecutor> _executors;
 	
 	public StockAnalysisManager() {
-		_executors = new HashMap<>();
 		_symbolLookupTable = new HashMap<>();
+		_executors = new HashMap<>();
 	}
 	
 	public Map<String, StrategyExecutor> getExecutors() {
 		return _executors;
+	}
+	
+	public StrategyExecutor getExecutorBySymbol(String symbol) {
+		return _executors.get(symbol);
 	}
 	
 	public Map<Integer, String> getSymbolLookupTable() {
