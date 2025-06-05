@@ -28,11 +28,20 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class StrategyExecutor {
 
-	private StrategyExecutor() {
-		throw new UnsupportedOperationException(StrategyExecutor.class + " ist not meant to be instanciated.");
+	String _symbol;
+	BarSeries _series;
+	Strategy _strategy;
+	double _entryPrice;
+	
+	public StrategyExecutor(String symbol) {
+		_series = new BaseBarSeriesBuilder()
+				.withName(symbol)
+				.withNumTypeOf(DecimalNum::valueOf)
+				.build();
+		_strategy = buildStrategy(_series);
 	}
 	
-	public static Strategy buildStrategy(BarSeries series) {
+	private final Strategy buildStrategy(BarSeries series) {
 		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
 		VolumeIndicator volume = new VolumeIndicator(series);
 		SMAIndicator sma20 = new SMAIndicator(closePrice, 20);
@@ -69,15 +78,30 @@ public class StrategyExecutor {
 		return new BaseStrategy("AlphaEntry", entryRule, exitRule);
 	}
 	
+	public void onHistoricalBar(Bar bar) {
+		_series.addBar(bar);
+	}
+	
+	public void onNewBar(Bar bar) {
+		
+		_series.addBar(bar);
+		int lastIndex = _series.getEndIndex();
+		
+		ClosePriceIndicator closePrice = new ClosePriceIndicator(_series);
+
+		if (_strategy.shouldEnter(lastIndex)) {
+			Num close = closePrice.getValue(lastIndex);
+			_entryPrice = close.doubleValue();
+		}
+	}
 	; // call from outside. Define Map and maybe use Enum for keys
-	public static Map<String, Double> isEntry(BarSeries series) {
+	public Map<String, Double> isEntry(BarSeries series) {
 		Map<String, Double> entryExitPrices = new HashMap<>();
 		
-		Strategy strategy = buildStrategy(series);
-		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
+		ClosePriceIndicator closePrice = new ClosePriceIndicator(_series);
 		int lastIndex = series.getEndIndex();
 		
-		if (strategy.shouldEnter(lastIndex)) {
+		if (_strategy.shouldEnter(lastIndex)) {
 			
 			Num entry = closePrice.getValue(lastIndex);
 			
