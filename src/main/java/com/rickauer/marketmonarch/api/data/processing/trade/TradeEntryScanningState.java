@@ -26,11 +26,13 @@ public class TradeEntryScanningState extends TradeMonitorState {
 
 	private static Logger _entryScanLogger = LogManager.getLogger(TradeEntryScanningState.class.getName());
 
+	Object _lock;
 	Map<String, Contract> _stockWatchlist;
 
 	public TradeEntryScanningState(TradeMonitorContext context) {
 		super(context);
 		_stockWatchlist = initializeStockWatchlist();
+		_lock = new Object();
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class TradeEntryScanningState extends TradeMonitorState {
 
 			int requestId = 0;
 
-			synchronized (_context.getHistoricalData()) {
+			synchronized (_lock) {
 				try {
 					String symbol = watchlistKeys.get(i);
 					requestId = _context.getController().getNextRequestId();
@@ -62,7 +64,7 @@ public class TradeEntryScanningState extends TradeMonitorState {
 							TradingConstants.KEEP_UP_TO_DATE, 
 							null
 							);
-					_context.getHistoricalData().wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
+					_lock.wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
 
 					if (_hasReceivedApiResponse == true) {
 						System.out.println("==================================================================================================");
@@ -133,9 +135,9 @@ public class TradeEntryScanningState extends TradeMonitorState {
 		System.out.println("==");
 		if (_context.getHistoricalData().get(reqId) != null) {
 
-			synchronized (_context.getHistoricalData()) {
+			synchronized (_lock) {
 				_hasReceivedApiResponse = true;
-				_context.getHistoricalData().notify();
+				_lock.notify();
 			}
 		}
 	}
