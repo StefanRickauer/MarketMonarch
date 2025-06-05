@@ -17,7 +17,6 @@ public class TradeMonitorContext {
 	TradeMonitorState _state;
 	private final InteractiveBrokersApiController _controller;
 	private StockAnalysisManager _analysisManager;
-//	private Map<Integer, BarSeries> _historicalData;	
 	Contract _tradedContract;
 	double _stopLossLimit;
 	double _stopLossAuxPrice;
@@ -26,7 +25,6 @@ public class TradeMonitorContext {
 	
 	public TradeMonitorContext(InteractiveBrokersApiController controller) {
 		_controller = controller;
-;//		_historicalData = new HashMap<>();;
 		_analysisManager = new StockAnalysisManager();
 	}
 	
@@ -47,13 +45,10 @@ public class TradeMonitorContext {
 		return _analysisManager;
 	}
 	
+	; // rename?
 	public Map<String, StrategyExecutor> getHistoricalData() {
 		return _analysisManager.getExecutors();
 	}
-	
-//	public Map<Integer, BarSeries> getHistoricalData() {
-//		return _historicalData;
-//	}
 	
 	public Contract getContract() {
 		return _tradedContract;

@@ -257,13 +257,8 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	@Override
 	public void historicalData(int reqId, Bar bar) {
-		
 		MarketMonarch._preTradeContext.getState().processHistoricalData(reqId, bar);																														
 		MarketMonarch._tradingContext.getState().processHistoricalData(reqId, StockUtils.stringToZonedDateTime(bar.time()), bar.open(), bar.high(), bar.low(), bar.close(), Double.parseDouble(bar.volume().toString()));
-		
-		if (MarketMonarch._stocksToTradeWith.get(reqId) != null) {
-			MarketMonarch._stocksToTradeWith.get(reqId).addCandleStick(new CandleStick(bar.time(), bar.open(), bar.close(), bar.high(), bar.low(), bar.volume()));
-		}
 	}
 
 	@Override
@@ -476,14 +471,6 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	public void historicalDataEnd(int reqId, String startDateStr, String endDateStr) {
 		MarketMonarch._preTradeContext.getState().processHistoricalDataEnd(reqId, startDateStr, endDateStr);
 		MarketMonarch._tradingContext.getState().processHistoricalDataEnd(reqId, startDateStr, endDateStr);
-		
-		if (MarketMonarch._stocksToTradeWith.get(reqId) != null) {
-			_ibRequestHandlerLogger.info("Gathered historical data for Symbol: '" + MarketMonarch._stocksToTradeWith.get(reqId).getSymbol() + "', Request-ID: " + reqId + ".");
-			
-			synchronized(MarketMonarch._stocksToTradeWith) {
-				MarketMonarch._stocksToTradeWith.notify();
-			}
-		}
 	}
 
 	@Override

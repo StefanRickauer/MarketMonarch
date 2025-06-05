@@ -131,20 +131,6 @@ public class TradeEntryScanningState extends TradeMonitorState {
 					DecimalNum.valueOf(0));
 			_context.getStockAnalysisManager().handleHistoricalBar(reqId, baseBar);
 		}
-		
-//		if (_context.getHistoricalData().get(reqId) != null) {
-//			Bar baseBar = new BaseBar(
-//					Duration.ofMillis(5), 
-//					time, 
-//					DecimalNum.valueOf(open), 
-//					DecimalNum.valueOf(high),
-//					DecimalNum.valueOf(low), 
-//					DecimalNum.valueOf(close), 
-//					DecimalNum.valueOf(volume),
-//					DecimalNum.valueOf(0));
-//			_context.getHistoricalData().get(reqId).addBar(baseBar);
-//		}
-
 	}
 
 	@Override
@@ -159,13 +145,5 @@ public class TradeEntryScanningState extends TradeMonitorState {
 				_lock.notify();
 			}
 		}
-		
-//		if (_context.getHistoricalData().get(reqId) != null) {
-//
-//			synchronized (_lock) {
-//				_hasReceivedApiResponse = true;
-//				_lock.notify();
-//			}
-//		}
 	}
 }

@@ -59,7 +59,7 @@ import org.apache.commons.lang3.exception.*;
 public final class MarketMonarch {
 
 	public static final String PROGRAM = "MarketMonarch";
-	private static final String VERSION = "0.75";
+	private static final String VERSION = "0.8";
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 
@@ -74,15 +74,11 @@ public final class MarketMonarch {
 	private static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _interactiveBrokersController;
 
-	public static Map<Integer, CandleSeries> _stocksToTradeWith;		// stocks that are being observed 
 	public static PreTradeContext _preTradeContext;
 	public static TradeMonitorContext _tradingContext;
 
 	static {
-		_stocksToTradeWith = new HashMap<>();
-
 		_interactiveBrokersController = new InteractiveBrokersApiController();
-
 
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 
