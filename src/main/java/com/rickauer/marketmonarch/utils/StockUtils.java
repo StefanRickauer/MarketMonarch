@@ -94,11 +94,14 @@ public class StockUtils {
 	}
 
 	public static ZonedDateTime stringToZonedDateTime(String string) {
-		String dateTimeStr = string.substring(0, DATESTRING_LENGTH_WITHOUT_TIMEZONE);
+		
+		int zoneStartIndex = string.lastIndexOf(' ');
+		String dateTimeStr = string.substring(0, zoneStartIndex);
 		LocalDateTime localDateTime = stringToLocalDateTime(dateTimeStr);
 
-		ZoneId systemZone = ZoneId.systemDefault();
-		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, systemZone);
+		String zoneStr = string.substring(zoneStartIndex + 1);
+		ZoneId zoneId = ZoneId.of(zoneStr);
+		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, zoneId);
 
 		return zonedDateTime;
 	}
