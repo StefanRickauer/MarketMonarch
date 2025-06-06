@@ -28,6 +28,7 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class StrategyExecutor {
 
+	String _timeStampZoneId;
 	String _symbol;
 	BarSeries _series;
 	Strategy _strategy;
@@ -102,6 +103,18 @@ public class StrategyExecutor {
 	
 	public BarSeries getSeries() {
 		return _series;
+	}
+	
+	public void setZoneId(String time) {
+		int index = time.lastIndexOf(' ');
+		String zone = time.substring(index + 1); 
+
+		_timeStampZoneId = zone;
+	}
+	
+	; // needed for realtimebars
+	public String getZoneId() {
+		return _timeStampZoneId;
 	}
 	
 	; // call from outside. Define Map and maybe use Enum for keys

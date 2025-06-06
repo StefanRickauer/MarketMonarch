@@ -70,13 +70,6 @@ public class TradeEntryScanningState extends TradeMonitorState {
 					_lock.wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
 
 					if (_hasReceivedApiResponse == true) {
-						System.out.println("==================================================================================================");
-						System.out.println("==================================================================================================");
-						System.out.println("==================================================================================================");
-						System.out.println("==================================================================================================");
-						System.out.println("==================================================================================================");
-						System.out.println("==================================================================================================");
-						System.out.println("==================================================================================================");
 						_entryScanLogger.info("Received resoponse for symbol: " + symbol);
 						_hasReceivedApiResponse = false;
 					} else {
@@ -135,12 +128,13 @@ public class TradeEntryScanningState extends TradeMonitorState {
 
 	@Override
 	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {
-		System.out.println("==");
+
 		String symbol = _context.getStockAnalysisManager().getSymbolById(reqId);
 		
 		if (_context.getStockAnalysisManager().getExecutorBySymbol(symbol) != null) {
 			
 			synchronized (_lock) {
+				_context.getStockAnalysisManager().getExecutorBySymbol(symbol).setZoneId(endDateStr);
 				_hasReceivedApiResponse = true;
 				_lock.notify();
 			}

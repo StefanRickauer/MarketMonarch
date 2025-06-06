@@ -156,6 +156,8 @@ public final class MarketMonarch {
 			System.out.println("IMPORTATN NOTICE: Order is based on greatest profit loss.");
 			for (Map.Entry<String, StrategyExecutor> entry : _tradingContext.getStockAnalysisManager().getExecutors().entrySet()) {
 				System.out.println(entry.getValue().getSymbol());
+				System.out.println(entry.getValue().getZoneId());
+				
 //				System.out.println(entry.getKey());
 				
 			}
