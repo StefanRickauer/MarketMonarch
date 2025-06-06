@@ -50,11 +50,9 @@ public class TradeEntryScanningState extends TradeMonitorState {
 				try {
 					String symbol = watchlistKeys.get(i);
 					requestId = _context.getController().getNextRequestId();
-//					BarSeries series = new BaseBarSeriesBuilder().withName(symbol)
-//							.withNumTypeOf(DecimalNum::valueOf).build();
+
 					_context.getStockAnalysisManager().getSymbolLookupTable().put(requestId, symbol);
 					_context.getStockAnalysisManager().getExecutors().put(symbol, new StrategyExecutor(symbol));
-//					_context.getHistoricalData().put(requestId, series);
 					_context.getController().getSocket().reqHistoricalData(
 							requestId, 
 							_stockWatchlist.get(symbol),
