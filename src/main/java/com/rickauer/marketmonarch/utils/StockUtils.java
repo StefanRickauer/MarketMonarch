@@ -35,7 +35,6 @@ public class StockUtils {
 
 	public static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern("yyyyMMdd HH:mm:ss");
 	public static final int TRADING_DAY_INTERVALS = 13;
-	private static final int DATESTRING_LENGTH_WITHOUT_TIMEZONE = 17;
 
 	private StockUtils() {
 		throw new UnsupportedOperationException(
@@ -86,7 +85,8 @@ public class StockUtils {
 	}
 
 	private static String extractDate(String dateWithZone) {
-		return dateWithZone.substring(0, DATESTRING_LENGTH_WITHOUT_TIMEZONE);
+		int zoneStartIndex = dateWithZone.lastIndexOf(' ');
+		return dateWithZone.substring(0, zoneStartIndex);
 	}
 
 	public static int getMinuteOfLastEntry(int intervalLength) {

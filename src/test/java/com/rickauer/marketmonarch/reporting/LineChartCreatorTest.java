@@ -6,6 +6,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +29,11 @@ public class LineChartCreatorTest {
 	public static void initializeTestData() {
 		FileSupplier.createFolder(FileSupplier.getTemporaryFolder());
 		mockData = new ArrayList<>();
-		ZonedDateTime time = ZonedDateTime.parse("2025-04-25T11:50:05+02:00[Europe/Berlin]");
+		ZonedDateTime time = ZonedDateTime.now(ZoneId.of("US/Eastern"));
 		for (int i = 300; i >= 0; i--) {
 			
 			mockData.add(new CandleStick(
-					time.minusSeconds(i * 5).toString().replace("T", " ").replace("-", "").replace("+", ":"),		// <- not proud of this piece of code, but hey, it works ;)
+					time.minusSeconds(i * 5).toString(),		// <- not proud of this piece of code, but hey, it works ;)
 					generateRandomDoubleBetweenXandY(5, 20), 
 					generateRandomDoubleBetweenXandY(5, 20), 
 					generateRandomDoubleBetweenXandY(5, 20), 
