@@ -33,6 +33,11 @@ public class StockAnalysisManager {
 		return _symbolLookupTable;
 	}
 	
+	public void updateSymbolLookupTable(int newKey, String value) {
+		_symbolLookupTable.entrySet().removeIf(entry -> value.equals(entry.getValue()));
+		_symbolLookupTable.put(newKey, value);
+	}
+	
 	public String getSymbolById(int requestId) {
 		return _symbolLookupTable.get(requestId);
 	}
