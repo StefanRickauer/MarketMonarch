@@ -33,7 +33,10 @@ public class TradingConstants {
 	public static final String BARSIZE_SETTING_FIVE_SECONDS = "5 secs";
 	
 	public static final String END_DATE_TIME_UNTIL_NOW = "";
-	public static final String WHAT_TO_SHOW = "TRADES";
+	public static final String SHOW_TRADES = "TRADES";			// Prices based on real trades
+	public static final String SHOW_MIDPOINT = "MIDPOINT";		// Prices based on average of ask and bid price
+	public static final String SHOW_BID = "BID";				// Prices based on bid price. Bid: Max. price a buyer is willing to pay
+	public static final String SHOW_ASK = "ASK";				// Prices based on ask price. Ask: Min. price a seller is willing to sell his stocks for
 	public static final int USE_REGULAR_TRADING_HOUR_DATA = 1;
 	public static final int FORMAT_DATE = 1;		// Docs won't tell much either 
 	public static final boolean KEEP_UP_TO_DATE = false;

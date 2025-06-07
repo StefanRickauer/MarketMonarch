@@ -59,7 +59,7 @@ public class TradeEntryScanningState extends TradeMonitorState {
 							TradingConstants.END_DATE_TIME_UNTIL_NOW, 
 							TradingConstants.LOOKBACK_PERIOD_FOUR_HOURS_TEN_MINUTES_IN_SECONDS,
 							TradingConstants.BARSIZE_SETTING_FIVE_SECONDS, 
-							TradingConstants.WHAT_TO_SHOW,
+							TradingConstants.SHOW_TRADES,
 							TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, 
 							TradingConstants.FORMAT_DATE,
 							TradingConstants.KEEP_UP_TO_DATE, 
@@ -69,6 +69,7 @@ public class TradeEntryScanningState extends TradeMonitorState {
 
 					if (_hasReceivedApiResponse == true) {
 						_entryScanLogger.info("Received resoponse for symbol: " + symbol);
+						; // Update request id and add request for live data here
 						_hasReceivedApiResponse = false;
 					} else {
 						_entryScanLogger
@@ -82,9 +83,7 @@ public class TradeEntryScanningState extends TradeMonitorState {
 			}
 		}
 		
-		
-		; // Anschließend Live-Daten abfragen und analysieren
-		; // prüfen, ob für die Abfrage der historischen Daten eine separate Datenstruktur verwendet werden soll, sodass sich historische Daten und
+		; // lock -> erst freigeben, wenn entry gefunden.
 		; // Live-Daten nicht gegenseitig blockieren
 		
 		
