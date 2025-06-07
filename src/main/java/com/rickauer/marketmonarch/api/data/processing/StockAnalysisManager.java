@@ -42,6 +42,10 @@ public class StockAnalysisManager {
 		return _symbolLookupTable.get(requestId);
 	}
 	
+	public String getZoneIdByRequestId(int requestId) {
+		return _executors.get(_symbolLookupTable.get(requestId)).getZoneId();
+	}
+	
 	public void handleHistoricalBar(int requestId, Bar bar) {
 		String symbol = getSymbolById(requestId);
 		StrategyExecutor executor = _executors.get(symbol);
@@ -52,13 +56,14 @@ public class StockAnalysisManager {
 		}
 	}
 	
-	public void handleNewBar(int requestId, Bar bar) {
+	public boolean handleNewBar(int requestId, Bar bar) {
 		String symbol = getSymbolById(requestId);
 		StrategyExecutor executor = _executors.get(symbol);
 		if (executor != null) {
-			executor.onNewBar(bar);
+			return executor.onNewBar(bar);
 		} else {
 			_analysisLogger.error("Could not get symbol for request id: " + requestId);
+			return false;
 		}
 	}
 }

@@ -141,28 +141,6 @@ public class StockUtils {
 		return Timestamp.valueOf(time);
 	}
 
-	; // call after all historical data is received.
-	public static BarSeries buildSeriesFromCandleBars(List<CandleStick> candles) {
-		BarSeries series = new BaseBarSeriesBuilder().withName("stock_series").withNumTypeOf(DecimalNum::valueOf)
-				.build();
-
-		for (CandleStick candle : candles) {
-			Bar bar = new BaseBar(
-					Duration.ofMillis(5), 
-					candle.getZonedDateTime(), 
-					DecimalNum.valueOf(candle.getOpen()),
-					DecimalNum.valueOf(candle.getHigh()), 
-					DecimalNum.valueOf(candle.getLow()),
-					DecimalNum.valueOf(candle.getClose()), 
-					DecimalNum.valueOf(candle.getVolumeAsDouble()),
-					DecimalNum.valueOf(0));
-
-			series.addBar(bar);
-		}
-
-		return series;
-	}
-
 	public static TradeDto getFirstByIndex(List<TradeDto> trades) {
 		return trades.stream()
 				.min(Comparator.comparingInt(TradeDto::getId))

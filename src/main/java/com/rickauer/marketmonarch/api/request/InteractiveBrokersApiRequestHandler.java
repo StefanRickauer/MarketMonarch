@@ -277,11 +277,17 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 		MarketMonarch._preTradeContext.getState().processDataEnd(reqId);
 	}
 
-	@Override
+	@Override                                                         	                       
 	public void realtimeBar(int reqId, long time, double open, double high, double low, double close, Decimal volume,
 			Decimal wap, int count) {
-		// TODO Auto-generated method stub
-
+		MarketMonarch._tradingContext.getState().processRealtimeBar(reqId, StockUtils.longToZonedDateTime(time, MarketMonarch._tradingContext.getStockAnalysisManager().getZoneIdByRequestId(reqId)), open, high, low, close, volume, wap, count);
+		; // Code unten nach Test löschen!
+		System.out.println("DEBUG: " + StockUtils.longToZonedDateTime(time, MarketMonarch._tradingContext.getStockAnalysisManager().getZoneIdByRequestId(reqId)));
+		System.out.println("=====================================");
+		System.out.println("=====================================");
+		System.out.println("=====================================");
+		System.out.println("=====================================");
+		System.out.println("=====================================");
 	}
 
 	@Override

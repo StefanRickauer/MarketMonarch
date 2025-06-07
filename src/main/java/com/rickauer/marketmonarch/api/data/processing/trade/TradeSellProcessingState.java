@@ -83,4 +83,10 @@ public class TradeSellProcessingState extends TradeMonitorState {
 	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {
 		// intentionally left blank 
 	}
+
+	@Override
+	public void processRealtimeBar(int reqId, ZonedDateTime time, double open, double high, double low, double close,
+			Decimal volume, Decimal wap, int count) {
+		// intentionally left blank 
+	}
 }

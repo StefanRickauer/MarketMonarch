@@ -24,4 +24,10 @@ public class TradeInactiveState extends TradeMonitorState {
 	public void processHistoricalData(int reqId, ZonedDateTime time, double open, double high, double low, double close,
 			double volume) {	/* intentionally left blank */ }
 
+	@Override
+	public void processRealtimeBar(int reqId, ZonedDateTime time, double open, double high, double low, double close,
+			Decimal volume, Decimal wap, int count) {
+		// intentionally left blank 
+	}
+
 }

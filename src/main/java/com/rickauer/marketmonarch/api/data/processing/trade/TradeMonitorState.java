@@ -19,4 +19,5 @@ public abstract class TradeMonitorState {
 	public abstract void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice);
 	public abstract void processHistoricalData(int reqId, ZonedDateTime time, double open, double high, double low, double close, double volume); 
 	public abstract void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr);
+	public abstract void processRealtimeBar(int reqId, ZonedDateTime time, double open, double high, double low, double close, Decimal volume, Decimal wap, int count);
 }

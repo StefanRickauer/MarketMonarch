@@ -27,13 +27,15 @@ public class TradeEntryScanningState extends TradeMonitorState {
 
 	private static Logger _entryScanLogger = LogManager.getLogger(TradeEntryScanningState.class.getName());
 
-	Object _lock;
+	Object _lockHistoricalData;
+	Object _lockLiveData;
 	Map<String, Contract> _stockWatchlist;
 
 	public TradeEntryScanningState(TradeMonitorContext context) {
 		super(context);
 		_stockWatchlist = initializeStockWatchlist();
-		_lock = new Object();
+		_lockHistoricalData = new Object();
+		_lockLiveData = new Object();
 	}
 
 	@Override
@@ -46,12 +48,12 @@ public class TradeEntryScanningState extends TradeMonitorState {
 
 			int requestId = 0;
 
-			synchronized (_lock) {
+			synchronized (_lockHistoricalData) {
 				try {
 					String symbol = watchlistKeys.get(i);
 					requestId = _context.getController().getNextRequestId();
 
-					_context.getStockAnalysisManager().getSymbolLookupTable().put(requestId, symbol);
+					_context.getStockAnalysisManager().updateSymbolLookupTable(requestId, symbol);
 					_context.getStockAnalysisManager().getExecutors().put(symbol, new StrategyExecutor(symbol));
 					_context.getController().getSocket().reqHistoricalData(
 							requestId, 
@@ -65,15 +67,24 @@ public class TradeEntryScanningState extends TradeMonitorState {
 							TradingConstants.KEEP_UP_TO_DATE, 
 							null
 							);
-					_lock.wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
+					_lockHistoricalData.wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
 
 					if (_hasReceivedApiResponse == true) {
 						_entryScanLogger.info("Received resoponse for symbol: " + symbol);
-						; // Update request id and add request for live data here
+						requestId = _context.getController().getNextRequestId();
+						_context.getStockAnalysisManager().updateSymbolLookupTable(requestId, symbol);
+						_context.getController().getSocket().reqRealTimeBars(
+								requestId, 
+								_stockWatchlist.get(symbol),
+								5, 
+								TradingConstants.SHOW_TRADES, 
+								true, 
+								null
+								);
 						_hasReceivedApiResponse = false;
+						_entryScanLogger.info("Requested live feed for symbol: " + symbol);
 					} else {
-						_entryScanLogger
-								.warn("Did not receive response for symbol: " + symbol + ". Repeating request.");
+						_entryScanLogger.warn("Did not receive response for symbol: " + symbol + ". Repeating request.");
 						i--;
 					}
 
@@ -83,9 +94,13 @@ public class TradeEntryScanningState extends TradeMonitorState {
 			}
 		}
 		
-		; // lock -> erst freigeben, wenn entry gefunden.
-		; // Live-Daten nicht gegenseitig blockieren
-		
+		synchronized (_lockLiveData) {
+			try {
+				_lockLiveData.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		_context.setState(new TradeInactiveState(_context));
 	}
@@ -130,10 +145,43 @@ public class TradeEntryScanningState extends TradeMonitorState {
 		
 		if (_context.getStockAnalysisManager().getExecutorBySymbol(symbol) != null) {
 			
-			synchronized (_lock) {
+			synchronized (_lockHistoricalData) {
 				_context.getStockAnalysisManager().getExecutorBySymbol(symbol).setZoneId(endDateStr);
 				_hasReceivedApiResponse = true;
-				_lock.notify();
+				_lockHistoricalData.notify();
+			}
+		}
+	}
+
+	@Override
+	public void processRealtimeBar(int reqId, ZonedDateTime time, double open, double high, double low, double close, Decimal volume, Decimal wap, int count) {
+		
+		String symbol = _context.getStockAnalysisManager().getSymbolById(reqId);
+		
+		if (_context.getStockAnalysisManager().getExecutorBySymbol(symbol) != null) {
+			
+			double vol = Double.parseDouble(volume.toString());
+			
+			Bar baseBar = new BaseBar(
+					Duration.ofMillis(5),
+					time,
+					DecimalNum.valueOf(open),
+					DecimalNum.valueOf(high),
+					DecimalNum.valueOf(low),
+					DecimalNum.valueOf(close),
+					DecimalNum.valueOf(vol),
+					DecimalNum.valueOf(0));
+			; // Daten wie Einstiegspreis, StopLoss usw. noch speichern!
+			boolean foundEntry = _context.getStockAnalysisManager().handleNewBar(reqId, baseBar); 
+			
+			if (foundEntry) {
+				
+				_entryScanLogger.info("Found entry for symbol: " + _context.getStockAnalysisManager().getSymbolById(reqId) + ". Canceling live feeds.");
+				_context.getStockAnalysisManager().getSymbolLookupTable().entrySet().stream().forEach(entry -> _context.getController().getSocket().cancelRealTimeBars(entry.getKey()));
+				
+				synchronized (_lockLiveData) {
+					_lockLiveData.notify();
+				}
 			}
 		}
 	}

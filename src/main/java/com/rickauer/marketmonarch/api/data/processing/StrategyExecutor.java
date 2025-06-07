@@ -84,8 +84,8 @@ public class StrategyExecutor {
 		_series.addBar(bar);
 	}
 	
-	public void onNewBar(Bar bar) {
-		
+	public synchronized boolean onNewBar(Bar bar) {
+		boolean shouldEnter = false;
 		_series.addBar(bar);
 		int lastIndex = _series.getEndIndex();
 		
@@ -94,7 +94,9 @@ public class StrategyExecutor {
 		if (_strategy.shouldEnter(lastIndex)) {
 			Num close = closePrice.getValue(lastIndex);
 			_entryPrice = close.doubleValue();
+			shouldEnter = true;
 		}
+		return shouldEnter;
 	}
 	
 	public String getSymbol() {

@@ -35,5 +35,11 @@ public class TradeBuyProcessingState extends TradeMonitorState {
 		// intentionally left blank 
 	}
 
+	@Override
+	public void processRealtimeBar(int reqId, ZonedDateTime time, double open, double high, double low, double close,
+			Decimal volume, Decimal wap, int count) {
+		// intentionally left blank 
+	}
+
 
 }
