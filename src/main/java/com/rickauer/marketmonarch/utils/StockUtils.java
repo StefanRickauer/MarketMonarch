@@ -114,13 +114,13 @@ public class StockUtils {
 		return LocalDateTime.parse(time, java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
 	}
 
-	public static double calculateStopLoss(BarSeries series, int periodInBars) {
-		if (series.getBarCount() < periodInBars) {
+	public static double calculateStopLoss(BarSeries series, int numberOfBarsToCheck) {
+		if (series.getBarCount() < numberOfBarsToCheck) {
 			return Double.NaN;
 		}
 
 		LowPriceIndicator lowPrice = new LowPriceIndicator(series);
-		LowestValueIndicator lowestLow = new LowestValueIndicator(lowPrice, periodInBars);
+		LowestValueIndicator lowestLow = new LowestValueIndicator(lowPrice, numberOfBarsToCheck);
 
 		int lastIndex = series.getEndIndex();
 		return lowestLow.getValue(lastIndex).doubleValue();
