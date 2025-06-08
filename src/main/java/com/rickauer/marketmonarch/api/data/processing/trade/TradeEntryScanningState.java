@@ -115,11 +115,13 @@ public class TradeEntryScanningState extends TradeMonitorState {
 		if (_foundEntry) {
 			_context.setState(new TradeBuyProcessingState(_context));
 		}
-		_entryScanLogger.info("Timeout reached. No entry found. Restarting pre trade phase.");
+		_entryScanLogger.info("Timeout reached. No entry found.");
+		cancelLiveFeeds();
+		_entryScanLogger.info("Restarting pre trade phase.");
 	}
 
 	@Override
-	public void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
+	public void processOrderStatus(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
 		// intentionally left blank 
 	}
 
@@ -188,8 +190,12 @@ public class TradeEntryScanningState extends TradeMonitorState {
 			
 			if (_foundEntry) {
 				
-				_entryScanLogger.info("Found entry for symbol: " + _context.getStockAnalysisManager().getSymbolById(reqId) + ". Canceling live feeds.");
-				_context.getStockAnalysisManager().getSymbolLookupTable().entrySet().stream().forEach(entry -> _context.getController().getSocket().cancelRealTimeBars(entry.getKey()));
+				_entryScanLogger.info("Found entry for symbol: " + _context.getStockAnalysisManager().getSymbolById(reqId) + ".");
+				cancelLiveFeeds();
+				
+				_entryScanLogger.info("Updating trading context...");
+				_context.setEntryPrice(_context.getStockAnalysisManager().getExecutorBySymbol(symbol).getEntryPrice());
+				_context.setContract(_stockWatchlist.get(symbol)); 
 				_context.setRestartSession(false);
 				
 				synchronized (_lockLiveData) {
@@ -197,6 +203,11 @@ public class TradeEntryScanningState extends TradeMonitorState {
 				}
 			}
 		}
+	}
+	
+	private void cancelLiveFeeds() {
+		_entryScanLogger.info("Canceling live feeds...");
+		_context.getStockAnalysisManager().getSymbolLookupTable().entrySet().stream().forEach(entry -> _context.getController().getSocket().cancelRealTimeBars(entry.getKey()));
 	}
 	
 }
