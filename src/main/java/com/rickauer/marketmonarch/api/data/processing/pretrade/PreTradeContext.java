@@ -97,6 +97,15 @@ public class PreTradeContext {
 		return -1.0;
 	}
 	
+	public double getAvailableFunds() {
+		for (AccountSummaryItem item: _accountSummary) {
+			if (item.getTag().equals("AvailableFunds")) {
+				return item.getValueAsDouble();
+			}
+		}
+		return -1.0;
+	}
+	
 	public Map<String, Long> getAllCompanyFloats() {
 		return _allCompanyFloats;
 	}

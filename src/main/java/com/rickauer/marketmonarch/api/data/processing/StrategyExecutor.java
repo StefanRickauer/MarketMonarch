@@ -114,9 +114,11 @@ public class StrategyExecutor {
 		_timeStampZoneId = zone;
 	}
 	
-	; // needed for realtimebars
 	public String getZoneId() {
 		return _timeStampZoneId;
 	}
 	
+	public double getEntryPrice() {
+		return _entryPrice;
+	}
 }

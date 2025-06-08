@@ -41,6 +41,7 @@ public class PreTradeAccountValidationState extends PreTradeState {
 			_tradeAccountValidationLogger.info("Net Liquidation: " + _context.getNetLiquidation());
 			_tradeAccountValidationLogger.info("Total Cash: " + _context.getTotalCash());
 			_tradeAccountValidationLogger.info("Buying Power: " + _context.getBuyingPower());
+			_tradeAccountValidationLogger.info("Available Funds: " + _context.getAvailableFunds());
 			
 			validateAccount();
 			_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state...");
