@@ -44,7 +44,7 @@ public class PreTradeRequestHistoricalDataState extends PreTradeState {
 							TradingConstants.LOOKBACK_PERIOD_TWO_DAYS, 
 							TradingConstants.BARSIZE_SETTING_FIVE_MINUTES, 
 							TradingConstants.SHOW_TRADES, 
-							TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, 
+							TradingConstants.USE_REGULAR_TRADING_HOUR_DATA_INTEGER, 
 							TradingConstants.FORMAT_DATE,
 							TradingConstants.KEEP_UP_TO_DATE, 
 							null

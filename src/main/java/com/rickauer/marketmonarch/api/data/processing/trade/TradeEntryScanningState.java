@@ -30,12 +30,14 @@ public class TradeEntryScanningState extends TradeMonitorState {
 	Object _lockHistoricalData;
 	Object _lockLiveData;
 	Map<String, Contract> _stockWatchlist;
-
+	volatile boolean _foundEntry;
+	
 	public TradeEntryScanningState(TradeMonitorContext context) {
 		super(context);
-		_stockWatchlist = initializeStockWatchlist();
 		_lockHistoricalData = new Object();
 		_lockLiveData = new Object();
+		_stockWatchlist = initializeStockWatchlist();
+		_foundEntry = false;
 	}
 
 	@Override
@@ -59,16 +61,20 @@ public class TradeEntryScanningState extends TradeMonitorState {
 							requestId, 
 							_stockWatchlist.get(symbol),
 							TradingConstants.END_DATE_TIME_UNTIL_NOW, 
-							TradingConstants.LOOKBACK_PERIOD_FOUR_HOURS_TEN_MINUTES_IN_SECONDS,
+							TradingConstants.LOOKBACK_PERIOD_TWO_HOURS_FIVE_MINUTES_IN_SECONDS,
 							TradingConstants.BARSIZE_SETTING_FIVE_SECONDS, 
 							TradingConstants.SHOW_TRADES,
-							TradingConstants.USE_REGULAR_TRADING_HOUR_DATA, 
+							TradingConstants.USE_REGULAR_TRADING_HOUR_DATA_INTEGER, 
 							TradingConstants.FORMAT_DATE,
 							TradingConstants.KEEP_UP_TO_DATE, 
 							null
 							);
 					_lockHistoricalData.wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
 
+					if (_foundEntry) {
+						break;
+					}
+					
 					if (_hasReceivedApiResponse == true) {
 						_entryScanLogger.info("Received resoponse for symbol: " + symbol);
 						requestId = _context.getController().getNextRequestId();
@@ -78,7 +84,7 @@ public class TradeEntryScanningState extends TradeMonitorState {
 								_stockWatchlist.get(symbol),
 								5, 
 								TradingConstants.SHOW_TRADES, 
-								true, 
+								TradingConstants.USE_REGULAR_TRADING_HOUR_DATA_BOOLEAN, 
 								null
 								);
 						_hasReceivedApiResponse = false;
@@ -94,14 +100,17 @@ public class TradeEntryScanningState extends TradeMonitorState {
 			}
 		}
 		
-		synchronized (_lockLiveData) {
-			try {
-				_lockLiveData.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		if (_foundEntry == false) {			
+			synchronized (_lockLiveData) {
+				try {
+					; // wait for two hours?
+					_lockLiveData.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		
+		System.out.println("Should fire.");
 		_context.setState(new TradeInactiveState(_context));
 	}
 
@@ -172,9 +181,9 @@ public class TradeEntryScanningState extends TradeMonitorState {
 					DecimalNum.valueOf(vol),
 					DecimalNum.valueOf(0));
 			; // Daten wie Einstiegspreis, StopLoss usw. noch speichern!
-			boolean foundEntry = _context.getStockAnalysisManager().handleNewBar(reqId, baseBar); 
+			boolean _foundEntry = _context.getStockAnalysisManager().handleNewBar(reqId, baseBar); 
 			
-			if (foundEntry) {
+			if (_foundEntry) {
 				
 				_entryScanLogger.info("Found entry for symbol: " + _context.getStockAnalysisManager().getSymbolById(reqId) + ". Canceling live feeds.");
 				_context.getStockAnalysisManager().getSymbolLookupTable().entrySet().stream().forEach(entry -> _context.getController().getSocket().cancelRealTimeBars(entry.getKey()));
