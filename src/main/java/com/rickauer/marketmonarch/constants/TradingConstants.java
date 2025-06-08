@@ -2,6 +2,8 @@ package com.rickauer.marketmonarch.constants;
 
 public class TradingConstants {
 
+	public static final long TWO_HOURS_TIMEOUT_MS = 7_200_000L;
+	
 	public static final long FIVE_MINUTES_TIMEOUT_MS = 300_000L;
 	public static final long FIFTEEN_MINUTES_TIMEOUT_MS = 900_000L;
 	

@@ -21,6 +21,7 @@ import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
+import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeAccountValidationState;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
 public class TradeEntryScanningState extends TradeMonitorState {
@@ -100,24 +101,26 @@ public class TradeEntryScanningState extends TradeMonitorState {
 			}
 		}
 		
+		// only true if entry found during historical data request
 		if (_foundEntry == false) {			
 			synchronized (_lockLiveData) {
 				try {
-					; // wait for two hours?
-					_lockLiveData.wait();
+					_lockLiveData.wait(TradingConstants.TWO_HOURS_TIMEOUT_MS);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		System.out.println("Should fire.");
-		_context.setState(new TradeInactiveState(_context));
+		
+		if (_foundEntry) {
+			_context.setState(new TradeBuyProcessingState(_context));
+		}
+		_entryScanLogger.info("Timeout reached. No entry found. Restarting pre trade phase.");
 	}
 
 	@Override
 	public void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
-		// TODO Auto-generated method stub
-
+		// intentionally left blank 
 	}
 
 	private Map<String, Contract> initializeStockWatchlist() {
@@ -187,6 +190,7 @@ public class TradeEntryScanningState extends TradeMonitorState {
 				
 				_entryScanLogger.info("Found entry for symbol: " + _context.getStockAnalysisManager().getSymbolById(reqId) + ". Canceling live feeds.");
 				_context.getStockAnalysisManager().getSymbolLookupTable().entrySet().stream().forEach(entry -> _context.getController().getSocket().cancelRealTimeBars(entry.getKey()));
+				_context.setRestartSession(false);
 				
 				synchronized (_lockLiveData) {
 					_lockLiveData.notify();
@@ -194,4 +198,5 @@ public class TradeEntryScanningState extends TradeMonitorState {
 			}
 		}
 	}
+	
 }

@@ -18,6 +18,7 @@ public class TradeMonitorContext {
 	private final InteractiveBrokersApiController _controller;
 	private StockAnalysisManager _analysisManager;
 	Contract _tradedContract;
+	boolean _restartSession;
 	double _stopLossLimit;
 	double _stopLossAuxPrice;
 	double _takeProfitLimit;
@@ -26,6 +27,7 @@ public class TradeMonitorContext {
 	public TradeMonitorContext(InteractiveBrokersApiController controller) {
 		_controller = controller;
 		_analysisManager = new StockAnalysisManager();
+		_restartSession = true;
 	}
 	
 	public InteractiveBrokersApiController getController() {
@@ -88,5 +90,13 @@ public class TradeMonitorContext {
 	
 	public void setQuantity(long quan) {
 		_quantity = quan;
+	}
+	
+	public void setRestartSession(boolean restartSession) {
+		_restartSession = restartSession;
+	}
+	
+	public boolean getRestartSession() {
+		return _restartSession;
 	}
 }

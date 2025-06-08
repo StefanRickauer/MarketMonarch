@@ -101,26 +101,22 @@ public final class MarketMonarch {
 			ensureOperationalReadiness();
 			setUpWorkingEnvironment();
 			
-			_tradingContext.setState(new TradeInactiveState(_tradingContext));
-			_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));				
-			
-			
-			// DEBUG ONLY: Remove before going live =======================================
-			for (StockMetrics metric : _preTradeContext.getHistoricalData().values()) {
-				_marketMonarchLogger.debug("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
-				+ ", Company Share Float: " + _preTradeContext.getAllCompanyFloats().get(metric.getSymbol()));
+			while (_tradingContext.getRestartSession()) {
+				
+				_tradingContext.setState(new TradeInactiveState(_tradingContext));
+				_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));				
+				
+				
+				// DEBUG ONLY: Remove before going live =======================================
+				for (StockMetrics metric : _preTradeContext.getHistoricalData().values()) {
+					_marketMonarchLogger.debug("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
+					+ ", Company Share Float: " + _preTradeContext.getAllCompanyFloats().get(metric.getSymbol()));
+				}
+				// DEBUG ONLY END =============================================================
+				
+				
+				_tradingContext.setState(new TradeEntryScanningState(_tradingContext));
 			}
-			// DEBUG ONLY END =============================================================
-			
-			// Make money
-			// Docs: Orders are submitted via the EClient.placeOrder method. From the
-			// snippet below, note how a variable holding the nextValidId is incremented
-			// automatically.
-			
-			// for each remaining search result
-			//		- request 5 sec candles of the past 3 days
-			
-			_tradingContext.setState(new TradeEntryScanningState(_tradingContext));
 
 			
 			//		- convert these candles to barseries
