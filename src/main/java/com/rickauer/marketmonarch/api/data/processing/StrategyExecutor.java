@@ -119,26 +119,4 @@ public class StrategyExecutor {
 		return _timeStampZoneId;
 	}
 	
-	; // call from outside. Define Map and maybe use Enum for keys
-	public Map<String, Double> isEntry(BarSeries series) {
-		Map<String, Double> entryExitPrices = new HashMap<>();
-		
-		ClosePriceIndicator closePrice = new ClosePriceIndicator(_series);
-		int lastIndex = series.getEndIndex();
-		
-		if (_strategy.shouldEnter(lastIndex)) {
-			
-			Num entry = closePrice.getValue(lastIndex);
-			
-			double entryPrice = entry.doubleValue(); 
-			double stopLossPrice = StockUtils.calculateStopLoss(series, 720);
-			double takeProfit = StockUtils.calculateTakeProfit(entryPrice);
-			
-			entryExitPrices.put("buy", entryPrice);
-			entryExitPrices.put("stop loss", stopLossPrice);
-			entryExitPrices.put("take profit", takeProfit);
-		}
-		
-		return entryExitPrices;
-	}
 }
