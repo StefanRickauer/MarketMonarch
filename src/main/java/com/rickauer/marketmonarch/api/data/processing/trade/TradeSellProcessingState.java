@@ -6,8 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ib.client.Bar;
+import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.ib.client.Order;
+import com.ib.client.OrderState;
 import com.ib.client.OrderType;
 import com.ib.client.Types.TimeInForce;
 import com.rickauer.marketmonarch.api.enums.OrderStatus;
@@ -77,6 +79,12 @@ public class TradeSellProcessingState extends TradeMonitorState {
 	}
 
 	@Override
+	public void processOpenOrder(String msg, int orderId, Contract contract, Order order, OrderState orderState) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	public void processHistoricalData(int reqId, ZonedDateTime time, double open, double high, double low, double close, double volume) {
 		// intentionally left blank 		
 	}
@@ -91,4 +99,5 @@ public class TradeSellProcessingState extends TradeMonitorState {
 			Decimal volume, Decimal wap, int count) {
 		// intentionally left blank 
 	}
+
 }

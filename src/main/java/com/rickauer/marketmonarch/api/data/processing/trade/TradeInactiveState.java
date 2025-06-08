@@ -3,7 +3,10 @@ package com.rickauer.marketmonarch.api.data.processing.trade;
 import java.time.ZonedDateTime;
 
 import com.ib.client.Bar;
+import com.ib.client.Contract;
 import com.ib.client.Decimal;
+import com.ib.client.Order;
+import com.ib.client.OrderState;
 
 public class TradeInactiveState extends TradeMonitorState {
 
@@ -27,6 +30,11 @@ public class TradeInactiveState extends TradeMonitorState {
 	@Override
 	public void processRealtimeBar(int reqId, ZonedDateTime time, double open, double high, double low, double close,
 			Decimal volume, Decimal wap, int count) {
+		// intentionally left blank 
+	}
+
+	@Override
+	public void processOpenOrder(String msg, int orderId, Contract contract, Order order, OrderState orderState) {
 		// intentionally left blank 
 	}
 

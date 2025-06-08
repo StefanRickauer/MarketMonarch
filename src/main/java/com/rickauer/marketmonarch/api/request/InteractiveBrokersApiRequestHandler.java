@@ -133,7 +133,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	@Override
 	public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
 		String message = EWrapperMsgGenerator.openOrder(orderId, contract, order, orderState);
-		MarketMonarch._tradingContext.getState().processOrderStatus(message, null, null, null, 0.0);
+		MarketMonarch._tradingContext.getState().processOpenOrder(message, orderId, contract, order, orderState);
 	}
 
 	@Override

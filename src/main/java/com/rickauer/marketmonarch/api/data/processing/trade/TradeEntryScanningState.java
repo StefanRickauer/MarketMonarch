@@ -17,6 +17,8 @@ import org.ta4j.core.num.DecimalNum;
 
 import com.ib.client.Contract;
 import com.ib.client.Decimal;
+import com.ib.client.Order;
+import com.ib.client.OrderState;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
@@ -185,7 +187,7 @@ public class TradeEntryScanningState extends TradeMonitorState {
 					DecimalNum.valueOf(close),
 					DecimalNum.valueOf(vol),
 					DecimalNum.valueOf(0));
-			; // Daten wie Einstiegspreis, StopLoss usw. noch speichern!
+			
 			boolean _foundEntry = _context.getStockAnalysisManager().handleNewBar(reqId, baseBar); 
 			
 			if (_foundEntry) {
@@ -208,6 +210,11 @@ public class TradeEntryScanningState extends TradeMonitorState {
 	private void cancelLiveFeeds() {
 		_entryScanLogger.info("Canceling live feeds...");
 		_context.getStockAnalysisManager().getSymbolLookupTable().entrySet().stream().forEach(entry -> _context.getController().getSocket().cancelRealTimeBars(entry.getKey()));
+	}
+
+	@Override
+	public void processOpenOrder(String msg, int orderId, Contract contract, Order order, OrderState orderState) {
+		// intentionally left blank 
 	}
 	
 }
