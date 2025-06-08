@@ -15,10 +15,11 @@ public class TradingConstants {
 	
 	public static final int MAXIMUM_NUMBER_OF_SCAN_RESULTS = 4;
 	
+	public static final double PUFFER_FACTOR = 0.98;							// number * PUFFER = 2%
 	public static final double TAKE_PROFIT_FACTOR = 1.05;						// number * TAKE_PROFIT = 5%
 	
 	public static final String ACCOUNT_SUMMARY_GROUP = "All";
-	public static final String ACCOUNT_SUMMARY_TAGS = "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue";
+	public static final String ACCOUNT_SUMMARY_TAGS = "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue,AvailableFunds";
 	
 	public static final String SCANNER_INSTRUMENT = "STK";
 	public static final String SCANNER_LOCATION_CODE = "STK.US.MAJOR";

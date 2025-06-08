@@ -133,6 +133,11 @@ public class StockUtils {
 		return takeProfitRounded;
 	}
 
+	public static double calculateQuantity(double totalCash, double entryPrice) {
+		double availableCash = Math.floor(totalCash * TradingConstants.PUFFER_FACTOR);
+		return Math.floor(availableCash / entryPrice);
+	}
+	
 	public static LocalDateTime timestampToLocalDateTime(Timestamp time) {
 		return time.toLocalDateTime();
 	}

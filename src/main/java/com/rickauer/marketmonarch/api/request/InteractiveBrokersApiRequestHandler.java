@@ -125,18 +125,15 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	}
 
 	@Override
-	public void orderStatus(int orderId, String status, Decimal filled, Decimal remaining, double avgFillPrice,
-			int permId, int parentId, double lastFillPrice, int clientId, String whyHeld, double mktCapPrice) {
-		; // ADD code to handle responses here
-		// check if order status == "Filled", save all other values
+	public void orderStatus(int orderId, String status, Decimal filled, Decimal remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld, double mktCapPrice) {	
 		String message = EWrapperMsgGenerator.orderStatus( orderId, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld, mktCapPrice);
-		MarketMonarch._tradingContext.getState().processOrderData(message, status, filled, remaining, avgFillPrice);
+		MarketMonarch._tradingContext.getState().processOrderStatus(message, status, filled, remaining, avgFillPrice);
 	}										
 
 	@Override
 	public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
 		String message = EWrapperMsgGenerator.openOrder(orderId, contract, order, orderState);
-		MarketMonarch._tradingContext.getState().processOrderData(message, null, null, null, 0.0);
+		MarketMonarch._tradingContext.getState().processOrderStatus(message, null, null, null, 0.0);
 	}
 
 	@Override

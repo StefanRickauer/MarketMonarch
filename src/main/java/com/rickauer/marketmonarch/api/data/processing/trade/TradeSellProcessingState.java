@@ -27,6 +27,8 @@ public class TradeSellProcessingState extends TradeMonitorState {
 	public void onEnter() {
 		_tradeStateLogger.info("Trading state 'sell processing' set.");
 		
+		; // berechne stoploss usw. basierend auf averageFillPrice! stoploss muss 10% unter averageFillPrice liegen. Methode schreiben.
+		
 		String timeStamp = StockUtils.getCurrentTimestampAsString();
 		String ocaGroup = "oca_group_" + timeStamp;
 		String action = "SELL";
@@ -65,7 +67,7 @@ public class TradeSellProcessingState extends TradeMonitorState {
 	}
 
 	@Override
-	public void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
+	public void processOrderStatus(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
 		_tradeStateLogger.info(msg);
 		
 		if (status.equals(OrderStatus.FILLED.getOrderStatus())) {

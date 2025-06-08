@@ -15,7 +15,7 @@ public class TradeInactiveState extends TradeMonitorState {
 	public void onEnter() 				{	/* intentionally left blank */ }
 
 	@Override
-	public void processOrderData(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) 		{	/* intentionally left blank */ }
+	public void processOrderStatus(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) 		{	/* intentionally left blank */ }
 
 	@Override
 	public void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr) {	/* intentionally left blank */ }

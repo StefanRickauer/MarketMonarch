@@ -19,10 +19,12 @@ public class TradeMonitorContext {
 	private StockAnalysisManager _analysisManager;
 	Contract _tradedContract;
 	boolean _restartSession;
+	double _entryPrice;
+	double _quantity;
+	double _averageFillPrice;
 	double _stopLossLimit;
 	double _stopLossAuxPrice;
 	double _takeProfitLimit;
-	long _quantity;
 	
 	public TradeMonitorContext(InteractiveBrokersApiController controller) {
 		_controller = controller;
@@ -60,6 +62,14 @@ public class TradeMonitorContext {
 		_tradedContract = contract;
 	}
 	
+	public double getEntryPrice() {
+		return _entryPrice;
+	}
+	
+	public void setEntryPrice(double entryPrice) {
+		_entryPrice = entryPrice;
+	}
+	
 	public double getStopLossLimit() {
 		return _stopLossLimit;
 	}
@@ -88,7 +98,7 @@ public class TradeMonitorContext {
 		return Decimal.get(_quantity);
 	}
 	
-	public void setQuantity(long quan) {
+	public void setQuantity(double quan) {
 		_quantity = quan;
 	}
 	
@@ -98,5 +108,13 @@ public class TradeMonitorContext {
 	
 	public boolean getRestartSession() {
 		return _restartSession;
+	}
+	
+	public void setAverageFillPrice(double fillPrice) {
+		_averageFillPrice = fillPrice;
+	}
+	
+	public double getAverageFillPrice() {
+		return _averageFillPrice;
 	}
 }

@@ -1,6 +1,6 @@
 package com.rickauer.marketmonarch.api.enums;
 
-enum OrderTransactionType {
+public enum OrderTransactionType {
 	BUY("BUY"), 
 	SELL("SELL");
 	
