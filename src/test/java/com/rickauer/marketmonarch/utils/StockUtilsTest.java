@@ -336,4 +336,37 @@ public class StockUtilsTest {
 		
 		assertEquals(expected, actual);
 	}
+	
+	@Test
+	void calculateQuantityTestBasic() {
+		double totalCash = 1000.00;
+		double entryPrice = 12.34;
+		
+		double expected = 79;
+		double actual = StockUtils.calculateQuantity(totalCash, entryPrice);
+		
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	void calculateQuantityTestExactDivision() {
+		double totalCash = 980.00;
+		double entryPrice = 10.00;
+		
+		double expected = 96;
+		double actual = StockUtils.calculateQuantity(totalCash, entryPrice);
+		
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	void calculateQuantityTestSmallCash() {
+		double totalCash = 20.00;
+		double entryPrice = 25.00;
+		
+		double expected = 0;
+		double actual = StockUtils.calculateQuantity(totalCash, entryPrice);
+		
+		assertEquals(expected, actual);
+	}
 }
