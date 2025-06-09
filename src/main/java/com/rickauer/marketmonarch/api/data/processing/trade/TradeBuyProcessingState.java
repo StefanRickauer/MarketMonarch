@@ -49,17 +49,17 @@ public class TradeBuyProcessingState extends TradeMonitorState {
 		order.tif(TimeInForce.GTC);
 		
 		int orderId = _context.getController().getOrderId();
-		
 		_context.getController().getSocket().placeOrder(orderId, _context.getContract(), order);
 		
 		synchronized(_lock) {
 			try {
 				_lock.wait();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				_buyOrderLogger.error("Error waiting for lock to be released.");
 			}
 		}
-		_buyOrderLogger.info(String.format("Placed order: BUY   @ %s | Durchschn. Ausführungspreis: %.2f "), _context.getContract().symbol(), _context.getAverageFillPrice());
+		_buyOrderLogger.info(String.format("Placed order: BUY   @ %s | Menge: %s | Durchschn. Ausführungspreis: %.2f | Investierte Summe: %s"), 
+				_context.getContract().symbol(), _context.getQuantity().toString(), _context.getAverageFillPrice(), _context.getQuantity().multiply(Decimal.get(_context.getAverageFillPrice())).toString());
 		_context.setState(new TradeSellProcessingState(_context));
 	}
 
