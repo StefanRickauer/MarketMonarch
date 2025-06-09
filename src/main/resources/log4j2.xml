@@ -113,12 +113,22 @@
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.TradeEntryScanningState" level="trace"
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.EntryScanningState" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />
 		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.TradeBuyProcessingState" level="trace"
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.BuyProcessingState" level="trace"
+			additivity="false">
+			<AppenderRef ref="ConsoleAppender" />
+			<AppenderRef ref="FileAppender" />
+		</Logger>
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.SellExitCalculationState" level="trace"
+			additivity="false">
+			<AppenderRef ref="ConsoleAppender" />
+			<AppenderRef ref="FileAppender" />
+		</Logger>
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.SellProcessingState" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />

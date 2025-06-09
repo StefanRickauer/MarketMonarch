@@ -26,16 +26,16 @@ import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.AccountValidationState;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
-public class TradeEntryScanningState extends TradeMonitorState {
+public class EntryScanningState extends TradeState {
 
-	private static Logger _entryScanLogger = LogManager.getLogger(TradeEntryScanningState.class.getName());
+	private static Logger _entryScanLogger = LogManager.getLogger(EntryScanningState.class.getName());
 
 	Object _lockHistoricalData;
 	Object _lockLiveData;
 	Map<String, Contract> _stockWatchlist;
 	volatile boolean _foundEntry;
 	
-	public TradeEntryScanningState(TradeMonitorContext context) {
+	public EntryScanningState(TradeContext context) {
 		super(context);
 		_lockHistoricalData = new Object();
 		_lockLiveData = new Object();
@@ -117,7 +117,7 @@ public class TradeEntryScanningState extends TradeMonitorState {
 		}
 		
 		if (_foundEntry) {
-			_context.setState(new TradeBuyProcessingState(_context));
+			_context.setState(new BuyProcessingState(_context));
 		}
 		_entryScanLogger.info("Timeout reached. No entry found.");
 		cancelLiveFeeds();

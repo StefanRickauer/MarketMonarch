@@ -17,13 +17,13 @@ import com.rickauer.marketmonarch.api.enums.OrderTransactionType;
 import com.rickauer.marketmonarch.api.enums.TradingOrderType;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
-public class TradeBuyProcessingState extends TradeMonitorState {
+public class BuyProcessingState extends TradeState {
 
-	private static Logger _buyOrderLogger = LogManager.getLogger(TradeBuyProcessingState.class.getName());
+	private static Logger _buyOrderLogger = LogManager.getLogger(BuyProcessingState.class.getName());
 	
 	Object _lock;
 	
-	TradeBuyProcessingState(TradeMonitorContext context) {
+	BuyProcessingState(TradeContext context) {
 		super(context);
 		_lock = new Object();
 	}
@@ -60,7 +60,7 @@ public class TradeBuyProcessingState extends TradeMonitorState {
 		}
 		_buyOrderLogger.info(String.format("Placed order: BUY   @ %s | Menge: %s | Durchschn. Ausführungspreis: %.2f | Investierte Summe: %s"), 
 				_context.getContract().symbol(), _context.getQuantity().toString(), _context.getAverageFillPrice(), _context.getQuantity().multiply(Decimal.get(_context.getAverageFillPrice())).toString());
-		_context.setState(new TradeSellExitCalculationState(_context));
+		_context.setState(new SellExitCalculationState(_context));
 	}
 
 	@Override

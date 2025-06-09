@@ -18,17 +18,17 @@ import com.rickauer.marketmonarch.api.enums.TradingOrderType;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
-public class TradeSellProcessingState extends TradeMonitorState {
+public class SellProcessingState extends TradeState {
 
-	private static Logger _tradeStateLogger = LogManager.getLogger(TradeSellProcessingState.class.getName());
+	private static Logger _sellProcessingLogger = LogManager.getLogger(SellProcessingState.class.getName());
 	
-	TradeSellProcessingState(TradeMonitorContext context) {
+	SellProcessingState(TradeContext context) {
 		super(context);
 	}
 
 	@Override
 	public void onEnter() {
-		_tradeStateLogger.info("Trading state 'sell processing' set.");
+		_sellProcessingLogger.info("Trading state 'sell processing' set.");
 		
 		; // berechne stoploss usw. basierend auf averageFillPrice! stoploss muss 10% unter averageFillPrice liegen. Methode schreiben.
 		
@@ -65,13 +65,13 @@ public class TradeSellProcessingState extends TradeMonitorState {
 		_context.getController().placeOrder(orderId++, _context.getContract(), takeProfitOrder);
 		_context.getController().placeOrder(orderId, _context.getContract(), stopLossOrder);
 		
-		_tradeStateLogger.info("Placed OCA group order: groupId=" + ocaGroup + ", orders=2 [" + action + " " + quantity.toString() + " " + _context.getContract().symbol() + " @ limit=" + _context.getTakeProfitLimit() + ", "
+		_sellProcessingLogger.info("Placed OCA group order: groupId=" + ocaGroup + ", orders=2 [" + action + " " + quantity.toString() + " " + _context.getContract().symbol() + " @ limit=" + _context.getTakeProfitLimit() + ", "
 				+  action + " " + quantity.toString() + " " + _context.getContract().symbol() + " @ " + "stop=" + _context.getStopLossAuxPrice() + " and limit=" + _context.getStopLossLimit());
 	}
 
 	@Override
 	public void processOrderStatus(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
-		_tradeStateLogger.info(msg);
+		_sellProcessingLogger.info(msg);
 		
 		if (status.equals(OrderStatus.FILLED.getOrderStatus())) {
 			; // save data, 

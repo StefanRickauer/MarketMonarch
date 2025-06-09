@@ -2,14 +2,19 @@ package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import java.time.ZonedDateTime;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
 
-public class TradeSellExitCalculationState extends TradeMonitorState {
+public class SellExitCalculationState extends TradeState {
 
-	TradeSellExitCalculationState(TradeMonitorContext context) {
+	private static Logger _sellExitCalculationLogger = LogManager.getLogger(SellExitCalculationState.class.getName());
+	
+	SellExitCalculationState(TradeContext context) {
 		super(context);
 	}
 
@@ -17,7 +22,7 @@ public class TradeSellExitCalculationState extends TradeMonitorState {
 	public void onEnter() {
 		// Verkauf: obere Schranke -> limit
 		// Verkauf: untere Schranke -> aux und limit
-		_context.setState(new TradeSellProcessingState(_context));
+		_context.setState(new SellProcessingState(_context));
 	}
 
 	@Override

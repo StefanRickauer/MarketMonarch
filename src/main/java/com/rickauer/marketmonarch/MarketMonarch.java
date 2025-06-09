@@ -29,9 +29,9 @@ import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.AccountValidationState;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeContext;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.RequestHistoricalDataState;
-import com.rickauer.marketmonarch.api.data.processing.trade.TradeEntryScanningState;
+import com.rickauer.marketmonarch.api.data.processing.trade.EntryScanningState;
 import com.rickauer.marketmonarch.api.data.processing.trade.TradeInactiveState;
-import com.rickauer.marketmonarch.api.data.processing.trade.TradeMonitorContext;
+import com.rickauer.marketmonarch.api.data.processing.trade.TradeContext;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
@@ -75,7 +75,7 @@ public final class MarketMonarch {
 	private static InteractiveBrokersApiController _interactiveBrokersController;
 
 	public static PreTradeContext _preTradeContext;
-	public static TradeMonitorContext _tradingContext;
+	public static TradeContext _tradingContext;
 
 	static {
 		_interactiveBrokersController = new InteractiveBrokersApiController();
@@ -91,7 +91,7 @@ public final class MarketMonarch {
 		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 
 		_preTradeContext = new PreTradeContext(_interactiveBrokersController, _financialModellingPrepController);
-		_tradingContext = new TradeMonitorContext(_interactiveBrokersController);
+		_tradingContext = new TradeContext(_interactiveBrokersController);
 	}
 
 	public static void main(String[] args) {
@@ -115,7 +115,7 @@ public final class MarketMonarch {
 				// DEBUG ONLY END =============================================================
 				
 				
-				_tradingContext.setState(new TradeEntryScanningState(_tradingContext));
+				_tradingContext.setState(new EntryScanningState(_tradingContext));
 			}
 
 			

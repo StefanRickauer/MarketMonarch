@@ -8,9 +8,9 @@ import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
 
-public class TradeInactiveState extends TradeMonitorState {
+public class TradeInactiveState extends TradeState {
 
-	public TradeInactiveState(TradeMonitorContext context) {
+	public TradeInactiveState(TradeContext context) {
 		super(context);
 	}
 

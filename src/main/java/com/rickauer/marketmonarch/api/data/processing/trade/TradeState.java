@@ -8,12 +8,12 @@ import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
 
-public abstract class TradeMonitorState {
+public abstract class TradeState {
 	
-	TradeMonitorContext _context;
+	TradeContext _context;
 	boolean _hasReceivedApiResponse;
 	
-	TradeMonitorState(TradeMonitorContext context) {
+	TradeState(TradeContext context) {
 		_context = context;
 		_hasReceivedApiResponse = false;
 	}

@@ -12,9 +12,9 @@ import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.data.processing.StockAnalysisManager;
 import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
 
-public class TradeMonitorContext {
+public class TradeContext {
 	
-	TradeMonitorState _state;
+	TradeState _state;
 	private final InteractiveBrokersApiController _controller;
 	private StockAnalysisManager _analysisManager;
 	Contract _tradedContract;
@@ -26,7 +26,7 @@ public class TradeMonitorContext {
 	double _stopLossAuxPrice;
 	double _takeProfitLimit;
 	
-	public TradeMonitorContext(InteractiveBrokersApiController controller) {
+	public TradeContext(InteractiveBrokersApiController controller) {
 		_controller = controller;
 		_analysisManager = new StockAnalysisManager();
 		_restartSession = true;
@@ -36,11 +36,11 @@ public class TradeMonitorContext {
 		return _controller;
 	}
 	
-	public TradeMonitorState getState() {
+	public TradeState getState() {
 		return _state;
 	}
 	
-	public void setState(TradeMonitorState newState) {
+	public void setState(TradeState newState) {
 		_state = newState;
 		newState.onEnter();
 	}
