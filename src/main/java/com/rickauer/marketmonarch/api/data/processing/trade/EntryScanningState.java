@@ -103,7 +103,8 @@ public class EntryScanningState extends TradeState {
 			}
 		}
 		
-		_entryScanLogger.info("Waiting for scanner to detect entry...");
+		_entryScanLogger.info("Waiting for scanner to detect entry....");
+		_entryScanLogger.warn("Note: Please consider the trading hours of the respective exchange.");
 		
 		// only true if entry found during historical data request
 		if (_foundEntry == false) {			
@@ -191,6 +192,10 @@ public class EntryScanningState extends TradeState {
 					DecimalNum.valueOf(0));
 			
 			boolean _foundEntry = _context.getStockAnalysisManager().handleNewBar(reqId, baseBar); 
+			
+			;; // Entfernen nach einmaligem Test!
+			_entryScanLogger.debug(time.toEpochSecond() + ": " + symbol);
+			
 			
 			if (_foundEntry) {
 				
