@@ -50,11 +50,6 @@ public class TradeContext {
 		return _analysisManager;
 	}
 	
-	; // rename?
-	public Map<String, StrategyExecutor> getHistoricalData() {
-		return _analysisManager.getExecutors();
-	}
-	
 	public Contract getContract() {
 		return _tradedContract;
 	}
