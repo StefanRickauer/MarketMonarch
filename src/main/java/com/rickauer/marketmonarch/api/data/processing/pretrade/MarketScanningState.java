@@ -13,11 +13,11 @@ import com.ib.client.TagValue;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
-public class PreTradeMarketScanningState extends PreTradeState {
+public class MarketScanningState extends PreTradeState {
 
-	private static Logger _marketScanningLogger = LogManager.getLogger(PreTradeMarketScanningState.class.getName());
+	private static Logger _marketScanningLogger = LogManager.getLogger(MarketScanningState.class.getName());
 	
-	public PreTradeMarketScanningState(PreTradeContext context) {
+	public MarketScanningState(PreTradeContext context) {
 		super(context);
 	}
 
@@ -50,12 +50,12 @@ public class PreTradeMarketScanningState extends PreTradeState {
 		
 		if (_hasReceivedApiResponse == true) {
 			_marketScanningLogger.info("Received scan results for request ID: '"  + requestId + "'. Changing state...");
-			_context.setState(new PreTradeFilterByFloatState(_context));
+			_context.setState(new FilterByFloatState(_context));
 		} else {
 			_context.getIbController().getSocket().cancelScannerSubscription(requestId);
 			_marketScanningLogger.warn("Timeout reached. Did not receive API response. Resetting scan results and repeating state.");
 			_context.getScanResult().clear();
-			_context.setState(new PreTradeMarketScanningState(_context));
+			_context.setState(new MarketScanningState(_context));
 		}
 	}
 

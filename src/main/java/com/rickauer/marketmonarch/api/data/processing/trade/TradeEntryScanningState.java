@@ -23,7 +23,7 @@ import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
-import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeAccountValidationState;
+import com.rickauer.marketmonarch.api.data.processing.pretrade.AccountValidationState;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
 public class TradeEntryScanningState extends TradeMonitorState {
@@ -102,6 +102,8 @@ public class TradeEntryScanningState extends TradeMonitorState {
 				}
 			}
 		}
+		
+		_entryScanLogger.info("Waiting for scanner to detect entry...");
 		
 		// only true if entry found during historical data request
 		if (_foundEntry == false) {			

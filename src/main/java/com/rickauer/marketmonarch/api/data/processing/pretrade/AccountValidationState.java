@@ -11,11 +11,11 @@ import com.ib.client.ContractDetails;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
-public class PreTradeAccountValidationState extends PreTradeState {
+public class AccountValidationState extends PreTradeState {
 
-	private static Logger _tradeAccountValidationLogger = LogManager.getLogger(PreTradeAccountValidationState.class.getName());
+	private static Logger _tradeAccountValidationLogger = LogManager.getLogger(AccountValidationState.class.getName());
 	
-	public PreTradeAccountValidationState(PreTradeContext context) {
+	public AccountValidationState(PreTradeContext context) {
 		super(context);
 	}
 
@@ -45,11 +45,11 @@ public class PreTradeAccountValidationState extends PreTradeState {
 			
 			validateAccount();
 			_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state...");
-			_context.setState(new PreTradeDataFetchingState(_context));
+			_context.setState(new DataFetchingState(_context));
 		} else {			
 			_context.getIbController().getSocket().cancelAccountSummary(requestId);
 			_tradeAccountValidationLogger.warn("Timeout reached. Did not receive API response. Repeating state.");
-			_context.setState(new PreTradeAccountValidationState(_context));
+			_context.setState(new AccountValidationState(_context));
 		}
 	}
 	

@@ -14,11 +14,11 @@ import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.utils.FileSupplier;
 
-public class PreTradeDataFetchingState extends PreTradeState {
+public class DataFetchingState extends PreTradeState {
 
-	private static Logger _dataFetchingLogger = LogManager.getLogger(PreTradeDataFetchingState.class.getName());
+	private static Logger _dataFetchingLogger = LogManager.getLogger(DataFetchingState.class.getName());
 	
-	public PreTradeDataFetchingState(PreTradeContext context) {
+	public DataFetchingState(PreTradeContext context) {
 		super(context);
 	}
 
@@ -73,7 +73,7 @@ public class PreTradeDataFetchingState extends PreTradeState {
 		validateCompanyFloats();
 		_dataFetchingLogger.info("Received all company free floats. Changing state...");
 		
-		_context.setState(new PreTradeMarketScanningState(_context));
+		_context.setState(new MarketScanningState(_context));
 	}
 
 	@Override

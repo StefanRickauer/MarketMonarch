@@ -12,11 +12,11 @@ import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
-public class PreTradeReduceToNState extends PreTradeState {
+public class ReduceToNState extends PreTradeState {
 
-	private static Logger _reduceResultLogger = LogManager.getLogger(PreTradeReduceToNState.class.getName());
+	private static Logger _reduceResultLogger = LogManager.getLogger(ReduceToNState.class.getName());
 	
-	public PreTradeReduceToNState(PreTradeContext context) {
+	public ReduceToNState(PreTradeContext context) {
 		super(context);
 	}
 

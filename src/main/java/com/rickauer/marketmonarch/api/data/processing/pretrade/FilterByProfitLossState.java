@@ -13,11 +13,11 @@ import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
-public class PreTradeFilterByProfitLossState extends PreTradeState {
+public class FilterByProfitLossState extends PreTradeState {
 
-	private static Logger _filterByProfitLossLogger = LogManager.getLogger(PreTradeFilterByProfitLossState.class.getName());
+	private static Logger _filterByProfitLossLogger = LogManager.getLogger(FilterByProfitLossState.class.getName());
 
-	public PreTradeFilterByProfitLossState(PreTradeContext context) {
+	public FilterByProfitLossState(PreTradeContext context) {
 		super(context);
 	}
 
@@ -48,11 +48,11 @@ public class PreTradeFilterByProfitLossState extends PreTradeState {
 				throw new RuntimeException("Error during wait.");
 			}
 			
-			_context.setState(new PreTradeAccountValidationState(_context));
+			_context.setState(new AccountValidationState(_context));
 		} else if (_context.getScanResult().size() > TradingConstants.MAXIMUM_NUMBER_OF_SCAN_RESULTS) {
 			_filterByProfitLossLogger.info("Number of elibible stocks (" + _context.getScanResult().size() + ") exceeds maximum number of premitted results. Reducing results to: " 
 					+ TradingConstants.MAXIMUM_NUMBER_OF_SCAN_RESULTS + ". Changing state.");
-			_context.setState(new PreTradeReduceToNState(_context));
+			_context.setState(new ReduceToNState(_context));
 		} else {
 			_filterByProfitLossLogger.info("Number of elibible stocks: " + _context.getScanResult().size() + ". Pre-trading phase finished.");
 			_context.setState(new PreTradeInactiveState(_context));

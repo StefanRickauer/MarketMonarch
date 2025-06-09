@@ -11,11 +11,11 @@ import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
-public class PreTradeFilterByFloatState extends PreTradeState {
+public class FilterByFloatState extends PreTradeState {
 
-	private static Logger _filterByFloatLogger = LogManager.getLogger(PreTradeFilterByFloatState.class.getName());
+	private static Logger _filterByFloatLogger = LogManager.getLogger(FilterByFloatState.class.getName());
 	
-	public PreTradeFilterByFloatState(PreTradeContext context) {
+	public FilterByFloatState(PreTradeContext context) {
 		super(context);
 	}
 
@@ -56,7 +56,7 @@ public class PreTradeFilterByFloatState extends PreTradeState {
 				+ numberOfStocksBeforeFiltering + " entries. Failed searches in totoal: " + failedSearchesCount);
 
 		_filterByFloatLogger.info("Changing state...");
-		_context.setState(new PreTradeRequestHistoricalDataState(_context));
+		_context.setState(new RequestHistoricalDataState(_context));
 	}
 
 	@Override

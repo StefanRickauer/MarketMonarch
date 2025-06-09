@@ -15,12 +15,12 @@ import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
-public class PreTradeRequestHistoricalDataState extends PreTradeState {
+public class RequestHistoricalDataState extends PreTradeState {
 
-	private static Logger _reqHistDataLogger = LogManager.getLogger(PreTradeRequestHistoricalDataState.class.getName());
+	private static Logger _reqHistDataLogger = LogManager.getLogger(RequestHistoricalDataState.class.getName());
 	private List<String> _incompleteRequests;
 	
-	public PreTradeRequestHistoricalDataState(PreTradeContext context) {
+	public RequestHistoricalDataState(PreTradeContext context) {
 		super(context);
 		_incompleteRequests = new ArrayList<>();
 	}
@@ -72,7 +72,7 @@ public class PreTradeRequestHistoricalDataState extends PreTradeState {
 			}
 			_reqHistDataLogger.info("Changing state...");
 		}
-		_context.setState(new PreTradeFilterByProfitLossState(_context));
+		_context.setState(new FilterByProfitLossState(_context));
 	}
 
 	@Override

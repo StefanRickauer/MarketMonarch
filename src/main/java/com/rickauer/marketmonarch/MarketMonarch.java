@@ -26,9 +26,9 @@ import com.rickauer.marketmonarch.api.data.CandleSeries;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
-import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeAccountValidationState;
+import com.rickauer.marketmonarch.api.data.processing.pretrade.AccountValidationState;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeContext;
-import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeRequestHistoricalDataState;
+import com.rickauer.marketmonarch.api.data.processing.pretrade.RequestHistoricalDataState;
 import com.rickauer.marketmonarch.api.data.processing.trade.TradeEntryScanningState;
 import com.rickauer.marketmonarch.api.data.processing.trade.TradeInactiveState;
 import com.rickauer.marketmonarch.api.data.processing.trade.TradeMonitorContext;
@@ -104,7 +104,7 @@ public final class MarketMonarch {
 			while (_tradingContext.getRestartSession()) {
 				
 				_tradingContext.setState(new TradeInactiveState(_tradingContext));
-				_preTradeContext.setState(new PreTradeAccountValidationState(_preTradeContext));				
+				_preTradeContext.setState(new AccountValidationState(_preTradeContext));				
 				
 				
 				// DEBUG ONLY: Remove before going live =======================================
