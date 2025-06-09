@@ -60,7 +60,7 @@ public class TradeBuyProcessingState extends TradeMonitorState {
 		}
 		_buyOrderLogger.info(String.format("Placed order: BUY   @ %s | Menge: %s | Durchschn. Ausführungspreis: %.2f | Investierte Summe: %s"), 
 				_context.getContract().symbol(), _context.getQuantity().toString(), _context.getAverageFillPrice(), _context.getQuantity().multiply(Decimal.get(_context.getAverageFillPrice())).toString());
-		_context.setState(new TradeSellProcessingState(_context));
+		_context.setState(new TradeSellExitCalculationState(_context));
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import com.ib.client.OrderState;
 import com.ib.client.OrderType;
 import com.ib.client.Types.TimeInForce;
 import com.rickauer.marketmonarch.api.enums.OrderStatus;
+import com.rickauer.marketmonarch.api.enums.OrderTransactionType;
 import com.rickauer.marketmonarch.api.enums.TradingOrderType;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
 import com.rickauer.marketmonarch.utils.StockUtils;
@@ -33,7 +34,7 @@ public class TradeSellProcessingState extends TradeMonitorState {
 		
 		String timeStamp = StockUtils.getCurrentTimestampAsString();
 		String ocaGroup = "oca_group_" + timeStamp;
-		String action = "SELL";
+		String action = OrderTransactionType.SELL.getAction(); 
 		String orderTypeTakeProfit = TradingOrderType.LMT.getCode();
 		String orderTypeStopLoss = TradingOrderType.STPLMT.getCode();
 		Decimal quantity = _context.getQuantity();
