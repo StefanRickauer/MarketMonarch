@@ -193,10 +193,6 @@ public class EntryScanningState extends TradeState {
 			
 			boolean _foundEntry = _context.getStockAnalysisManager().handleNewBar(reqId, baseBar); 
 			
-			;; // Entfernen nach einmaligem Test!
-			_entryScanLogger.debug(time.toEpochSecond() + ": " + symbol);
-			
-			
 			if (_foundEntry) {
 				
 				_entryScanLogger.info("Found entry for symbol: " + _context.getStockAnalysisManager().getSymbolById(reqId) + ".");

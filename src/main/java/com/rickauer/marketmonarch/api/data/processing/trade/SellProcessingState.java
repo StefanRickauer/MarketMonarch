@@ -22,6 +22,8 @@ public class SellProcessingState extends TradeState {
 
 	private static Logger _sellProcessingLogger = LogManager.getLogger(SellProcessingState.class.getName());
 	
+	Object _lock = new Object();
+	
 	SellProcessingState(TradeContext context) {
 		super(context);
 	}
@@ -67,10 +69,22 @@ public class SellProcessingState extends TradeState {
 		
 		_sellProcessingLogger.info("Placed OCA group order: groupId=" + ocaGroup + ", orders=2 [" + action + " " + quantity.toString() + " " + _context.getContract().symbol() + " @ limit=" + _context.getTakeProfitLimit() + ", "
 				+  action + " " + quantity.toString() + " " + _context.getContract().symbol() + " @ " + "stop=" + _context.getStopLossAuxPrice() + " and limit=" + _context.getStopLossLimit());
+		
+		synchronized (_lock) {
+			try {
+				_lock.wait();
+			} catch (Exception e) {
+				_sellProcessingLogger.error("Error waiting for lock to be notified.");
+			}
+		}
+		
+		; // save data (maybe here or in a new state class
+		_context.setState(new TradeInactiveState(_context));
 	}
 
 	@Override
 	public void processOrderStatus(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
+		
 		_sellProcessingLogger.info(msg);
 		
 		if (status.equals(OrderStatus.FILLED.getOrderStatus())) {
@@ -79,8 +93,9 @@ public class SellProcessingState extends TradeState {
 			_sellProcessingLogger.info("Order executed. Average entry price (buy): " + _context.getAverageBuyFillPrice() + 
 					", average exit price (sell): " + _context.getAverageSellFillPrice() + ". Total P&L: ." + (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()));
 			
-			; // save data, 
-			_context.setState(new TradeInactiveState(_context));
+			synchronized (_lock) {
+				_lock.notify();
+			}
 		}
 	}
 
