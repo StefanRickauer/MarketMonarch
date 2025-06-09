@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
@@ -166,5 +167,15 @@ public class StockUtils {
 	
 	public static String getCurrentTimestampAsString() {
 		return String.valueOf(System.currentTimeMillis());
+	}
+	
+	public static boolean isWithinTradingWindow(ZonedDateTime localTime) {
+		ZonedDateTime newYorkTime = localTime.withZoneSameInstant(ZoneId.of("US/Eastern"));
+		LocalTime nyTime = newYorkTime.toLocalTime();
+		
+		LocalTime start = LocalTime.of(10, 15);
+		LocalTime end = LocalTime.of(13, 30);
+		
+		return !nyTime.isBefore(start) && !nyTime.isAfter(end);
 	}
 }

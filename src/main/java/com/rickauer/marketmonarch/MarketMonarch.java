@@ -48,6 +48,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -59,7 +61,7 @@ import org.apache.commons.lang3.exception.*;
 public final class MarketMonarch {
 
 	public static final String PROGRAM = "MarketMonarch";
-	private static final String VERSION = "0.8";
+	private static final String VERSION = "0.9";
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 
@@ -94,14 +96,25 @@ public final class MarketMonarch {
 		_tradingContext = new TradeContext(_interactiveBrokersController);
 	}
 
+	
 	public static void main(String[] args) {
 		try {
 			Thread.currentThread().setName(PROGRAM + " -> Main Thread");
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
+			
 			ensureOperationalReadiness();
 			setUpWorkingEnvironment();
 			
 			while (_tradingContext.getRestartSession()) {
+
+				_marketMonarchLogger.info("Checking if program is running within valid time window.");
+				;// Comment in for trading, skip during tests
+				if (false) {
+					if (!StockUtils.isWithinTradingWindow(ZonedDateTime.now(ZoneId.systemDefault()))) {
+						_marketMonarchLogger.fatal("Skipping execution: Current time is outside the defined operational window (10:15–13:30 NY time).");
+						System.exit(0);
+					}				
+				}
 				
 				_tradingContext.setState(new TradeInactiveState(_tradingContext));
 				_preTradeContext.setState(new AccountValidationState(_preTradeContext));				

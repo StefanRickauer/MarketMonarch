@@ -394,4 +394,32 @@ public class StockUtilsTest {
 		
 		assertEquals(expected, actual);
 	}
+	
+	@Test
+	void isWithinTradingWindowBeforeTest() {
+		assertFalse(StockUtils.isWithinTradingWindow(berlinTime(15, 0)));
+	}
+	
+	@Test
+	void isWithinTradingWindowAtStartTest() {
+		assertTrue(StockUtils.isWithinTradingWindow(berlinTime(16, 15)));
+	}
+	
+	@Test
+	void isWithinTradingWindowMiddleTest() {
+		assertTrue(StockUtils.isWithinTradingWindow(berlinTime(17, 45)));
+	}
+	
+	@Test
+	void isWithinTradingWindowAtEndTest() {
+		assertTrue(StockUtils.isWithinTradingWindow(berlinTime(19, 30)));
+	}
+	
+	@Test
+	void isWithinTradingWindowAfterTest() {
+		assertFalse(StockUtils.isWithinTradingWindow(berlinTime(20, 0)));
+	}
+	private ZonedDateTime berlinTime(int hour, int minute) {
+		return ZonedDateTime.of(2025, 6, 9, hour, minute, 0, 0, ZoneId.of("Europe/Berlin"));
+	}
 }
