@@ -9,6 +9,7 @@ import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
+import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class SellExitCalculationState extends TradeState {
 
@@ -21,7 +22,11 @@ public class SellExitCalculationState extends TradeState {
 	@Override
 	public void onEnter() {
 		// Verkauf: obere Schranke -> limit
+		double takeProfit = StockUtils.calculateTakeProfit(_context.getAverageFillPrice());
+		_context.setTakeProfitLimit(takeProfit);
+		
 		// Verkauf: untere Schranke -> aux und limit
+
 		_context.setState(new SellProcessingState(_context));
 	}
 
