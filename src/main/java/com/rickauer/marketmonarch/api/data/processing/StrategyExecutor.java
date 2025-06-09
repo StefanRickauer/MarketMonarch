@@ -1,6 +1,7 @@
 package com.rickauer.marketmonarch.api.data.processing;
 
 import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,14 @@ public class StrategyExecutor {
 	
 	public synchronized boolean onNewBar(Bar bar) {
 		boolean shouldEnter = false;
+		
+		ZonedDateTime newEndTime = bar.getEndTime();
+		ZonedDateTime lastEndTime = _series.getLastBar().getEndTime();
+		
+		if (!newEndTime.isAfter(lastEndTime)) {
+			return shouldEnter;
+		}
+		
 		_series.addBar(bar);
 		int lastIndex = _series.getEndIndex();
 		
