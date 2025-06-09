@@ -175,7 +175,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
             try {
 				lock.wait(TWO_MINUTES_IN_MILLIS);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				_ibRequestHandlerLogger.error("Timeout reached. Error requesting order ID.");
 			} 
             return _orderId;
         }

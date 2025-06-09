@@ -21,7 +21,8 @@ public class TradeContext {
 	boolean _restartSession;
 	double _entryPrice;
 	double _quantity;
-	double _averageFillPrice;
+	double _averageBuyFillPrice;
+	double _averageSellFillPrice;
 	double _stopLossLimit;
 	double _stopLossAuxPrice;
 	double _takeProfitLimit;
@@ -110,11 +111,19 @@ public class TradeContext {
 		return _restartSession;
 	}
 	
-	public void setAverageFillPrice(double fillPrice) {
-		_averageFillPrice = fillPrice;
+	public void setAverageBuyFillPrice(double fillPrice) {
+		_averageBuyFillPrice = fillPrice;
 	}
 	
-	public double getAverageFillPrice() {
-		return _averageFillPrice;
+	public double getAverageBuyFillPrice() {
+		return _averageBuyFillPrice;
+	}
+
+	public void setAverageSellFillPrice(double fillPrice) {
+		_averageSellFillPrice = fillPrice;
+	}
+	
+	public double getAverageSellFillPrice() {
+		return _averageSellFillPrice;
 	}
 }

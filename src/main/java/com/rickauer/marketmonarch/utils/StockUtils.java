@@ -128,11 +128,9 @@ public class StockUtils {
 		return lowestLow.getValue(lastIndex).doubleValue();
 	}
 
-	public static double calculateTakeProfit(double actualPrice) {
-		double takeProfitRaw = actualPrice * TradingConstants.TAKE_PROFIT_FACTOR;
-		double takeProfitRounded = new BigDecimal(takeProfitRaw).setScale(2, RoundingMode.HALF_UP).doubleValue();
-
-		return takeProfitRounded;
+	public static double calculateTargetPrice(double actualPrice, double factor) {
+		BigDecimal raw = BigDecimal.valueOf(actualPrice * factor);
+	    return raw.setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public static double calculateQuantity(double totalCash, double entryPrice) {

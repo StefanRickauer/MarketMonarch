@@ -9,6 +9,7 @@ import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class SellExitCalculationState extends TradeState {
@@ -21,12 +22,22 @@ public class SellExitCalculationState extends TradeState {
 
 	@Override
 	public void onEnter() {
-		// Verkauf: obere Schranke -> limit
-		double takeProfit = StockUtils.calculateTakeProfit(_context.getAverageFillPrice());
+		
+		_sellExitCalculationLogger.info("Entered exit calculation state.");
+		_sellExitCalculationLogger.info("Calculating exit prices required for next state.");
+		
+		double averageFillPrice = _context.getAverageBuyFillPrice();
+		
+		double takeProfit = StockUtils.calculateTargetPrice(averageFillPrice, TradingConstants.TAKE_PROFIT_FACTOR);
 		_context.setTakeProfitLimit(takeProfit);
 		
-		// Verkauf: untere Schranke -> aux und limit
+		double stopLossAuxPrice = StockUtils.calculateTargetPrice(averageFillPrice, TradingConstants.STOP_LIMIT_STOP_PRICE_FACTOR);
+		_context.setStopLossAuxPrice(stopLossAuxPrice);
+		
+		double stopLossLmtPrice = StockUtils.calculateTargetPrice(averageFillPrice, TradingConstants.STOP_LIMIT_LIMIT_PRICE_FACTOR);
+		_context.setStopLossLimit(stopLossLmtPrice);
 
+		_sellExitCalculationLogger.info("Done calculating prices. Changing state.");
 		_context.setState(new SellProcessingState(_context));
 	}
 

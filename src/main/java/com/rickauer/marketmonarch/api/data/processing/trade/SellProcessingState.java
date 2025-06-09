@@ -74,6 +74,11 @@ public class SellProcessingState extends TradeState {
 		_sellProcessingLogger.info(msg);
 		
 		if (status.equals(OrderStatus.FILLED.getOrderStatus())) {
+			_context.setAverageSellFillPrice(avgFillPrice);
+			
+			_sellProcessingLogger.info("Order executed. Average entry price (buy): " + _context.getAverageBuyFillPrice() + 
+					", average exit price (sell): " + _context.getAverageSellFillPrice() + ". Total P&L: ." + (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()));
+			
 			; // save data, 
 			_context.setState(new TradeInactiveState(_context));
 		}
@@ -81,8 +86,7 @@ public class SellProcessingState extends TradeState {
 
 	@Override
 	public void processOpenOrder(String msg, int orderId, Contract contract, Order order, OrderState orderState) {
-		// TODO Auto-generated method stub
-		
+		_sellProcessingLogger.info(msg);
 	}
 	
 	@Override

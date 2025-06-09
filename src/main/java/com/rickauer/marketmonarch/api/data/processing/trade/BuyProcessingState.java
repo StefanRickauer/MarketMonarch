@@ -59,7 +59,7 @@ public class BuyProcessingState extends TradeState {
 			}
 		}
 		_buyOrderLogger.info(String.format("Placed order: BUY   @ %s | Menge: %s | Durchschn. Ausführungspreis: %.2f | Investierte Summe: %s"), 
-				_context.getContract().symbol(), _context.getQuantity().toString(), _context.getAverageFillPrice(), _context.getQuantity().multiply(Decimal.get(_context.getAverageFillPrice())).toString());
+				_context.getContract().symbol(), _context.getQuantity().toString(), _context.getAverageBuyFillPrice(), _context.getQuantity().multiply(Decimal.get(_context.getAverageBuyFillPrice())).toString());
 		_context.setState(new SellExitCalculationState(_context));
 	}
 
@@ -69,7 +69,7 @@ public class BuyProcessingState extends TradeState {
 		_buyOrderLogger.info(msg);
 		
 		if (status.equals(OrderStatus.FILLED.getOrderStatus())) {
-			_context.setAverageFillPrice(avgFillPrice);
+			_context.setAverageBuyFillPrice(avgFillPrice);
 			synchronized (_lock) {
 				_lock.notify();
 			}
