@@ -1,5 +1,7 @@
 package com.rickauer.marketmonarch.utils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
@@ -128,14 +130,20 @@ public class StockUtils {
 
 	public static double calculateTakeProfit(double actualPrice) {
 		double takeProfitRaw = actualPrice * TradingConstants.TAKE_PROFIT_FACTOR;
-		double takeProfitRounded = Math.round(takeProfitRaw * 100.0) / 100.0;
+		double takeProfitRounded = new BigDecimal(takeProfitRaw).setScale(2, RoundingMode.HALF_UP).doubleValue();
 
 		return takeProfitRounded;
 	}
 
 	public static double calculateQuantity(double totalCash, double entryPrice) {
-		double availableCash = Math.floor(totalCash * TradingConstants.PUFFER_FACTOR);
-		return Math.floor(availableCash / entryPrice);
+		BigDecimal puffer = BigDecimal.valueOf(TradingConstants.PUFFER_FACTOR);
+		BigDecimal cash = BigDecimal.valueOf(totalCash).multiply(puffer).setScale(2, RoundingMode.FLOOR);
+		
+		BigDecimal price = BigDecimal.valueOf(entryPrice);
+		
+		BigDecimal quantity = cash.divide(price, 0, RoundingMode.FLOOR);
+
+		return quantity.doubleValue();
 	}
 	
 	public static LocalDateTime timestampToLocalDateTime(Timestamp time) {
