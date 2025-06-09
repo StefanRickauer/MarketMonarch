@@ -67,8 +67,8 @@ public class SellProcessingState extends TradeState {
 		_context.getController().placeOrder(orderId++, _context.getContract(), takeProfitOrder);
 		_context.getController().placeOrder(orderId, _context.getContract(), stopLossOrder);
 		
-		_sellProcessingLogger.info("Placed OCA group order: groupId=" + ocaGroup + ", orders=2 [" + action + " " + quantity.toString() + " " + _context.getContract().symbol() + " @ limit=" + _context.getTakeProfitLimit() + ", "
-				+  action + " " + quantity.toString() + " " + _context.getContract().symbol() + " @ " + "stop=" + _context.getStopLossAuxPrice() + " and limit=" + _context.getStopLossLimit());
+		_sellProcessingLogger.info("Placed OCA group order: groupId=" + ocaGroup + ", orders=2 [" + action + "(Take Profit) @ " + _context.getContract().symbol() + " | Menge: " + quantity.toString() + " | Limit: " + _context.getTakeProfitLimit() + ", "
+				+  action + "(Stop Loss) @ " + _context.getContract().symbol() + " | Menge: " + quantity.toString() +  " | Stop Preis: " + _context.getStopLossAuxPrice() + " | Limit: " + _context.getStopLossLimit() + "]");
 		
 		synchronized (_lock) {
 			try {

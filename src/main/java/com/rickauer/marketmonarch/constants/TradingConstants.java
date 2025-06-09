@@ -3,9 +3,8 @@ package com.rickauer.marketmonarch.constants;
 public class TradingConstants {
 
 	public static final long TWO_HOURS_TIMEOUT_MS = 7_200_000L;
-	
-	public static final long FIVE_MINUTES_TIMEOUT_MS = 300_000L;
 	public static final long FIFTEEN_MINUTES_TIMEOUT_MS = 900_000L;
+	public static final long FIVE_MINUTES_TIMEOUT_MS = 300_000L;
 	
 	public static final int MIN_NUMBER_OF_SHARES = 5_000_000;
 	public static final int MAX_NUMBER_OF_SHARES = 20_000_000;
@@ -15,6 +14,7 @@ public class TradingConstants {
 	
 	public static final int MAXIMUM_NUMBER_OF_SCAN_RESULTS = 4;
 	
+	public static final double BUY_LIMIT_PUFFER = 1.02;
 	public static final double PUFFER_FACTOR = 0.98;							// number * PUFFER = 2%
 	public static final double TAKE_PROFIT_FACTOR = 1.05;						// number * TAKE_PROFIT = 5%
 	public static final double STOP_LIMIT_STOP_PRICE_FACTOR = 0.9;				// number * STOP_PRICE = 90%  -> Triggered at 10% below

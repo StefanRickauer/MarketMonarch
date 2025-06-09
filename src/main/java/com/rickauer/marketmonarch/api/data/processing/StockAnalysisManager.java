@@ -56,14 +56,13 @@ public class StockAnalysisManager {
 		}
 	}
 	
-	public boolean handleNewBar(int requestId, Bar bar) {
+	public void handleNewBar(int requestId, Bar bar) {
 		String symbol = getSymbolById(requestId);
 		StrategyExecutor executor = _executors.get(symbol);
 		if (executor != null) {
-			return executor.onNewBar(bar);
+			executor.onNewBar(bar);
 		} else {
 			_analysisLogger.error("Could not get symbol for request id: " + requestId);
-			return false;
 		}
 	}
 }

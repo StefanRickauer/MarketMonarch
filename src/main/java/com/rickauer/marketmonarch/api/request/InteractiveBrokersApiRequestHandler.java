@@ -127,13 +127,17 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	@Override
 	public void orderStatus(int orderId, String status, Decimal filled, Decimal remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld, double mktCapPrice) {	
 		String message = EWrapperMsgGenerator.orderStatus( orderId, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld, mktCapPrice);
-		MarketMonarch._tradingContext.getState().processOrderStatus(message, status, filled, remaining, avgFillPrice);
+		if (MarketMonarch._tradingContext.getState() != null) {
+			MarketMonarch._tradingContext.getState().processOrderStatus(message, status, filled, remaining, avgFillPrice);
+		}
 	}										
 
 	@Override
 	public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
 		String message = EWrapperMsgGenerator.openOrder(orderId, contract, order, orderState);
-		MarketMonarch._tradingContext.getState().processOpenOrder(message, orderId, contract, order, orderState);
+		if (MarketMonarch._tradingContext.getState() != null) {
+			MarketMonarch._tradingContext.getState().processOpenOrder(message, orderId, contract, order, orderState);
+		}
 	}
 
 	@Override
@@ -275,16 +279,12 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	}
 
 	@Override                                                         	                       
-	public void realtimeBar(int reqId, long time, double open, double high, double low, double close, Decimal volume,
-			Decimal wap, int count) {
+	public void realtimeBar(int reqId, long time, double open, double high, double low, double close, Decimal volume, Decimal wap, int count) {
 		MarketMonarch._tradingContext.getState().processRealtimeBar(reqId, StockUtils.longToZonedDateTime(time, MarketMonarch._tradingContext.getStockAnalysisManager().getZoneIdByRequestId(reqId)), open, high, low, close, volume, wap, count);
+		
+		
 		; // Code unten nach Test löschen!
 		System.out.println("DEBUG: " + StockUtils.longToZonedDateTime(time, MarketMonarch._tradingContext.getStockAnalysisManager().getZoneIdByRequestId(reqId)));
-		System.out.println("=====================================");
-		System.out.println("=====================================");
-		System.out.println("=====================================");
-		System.out.println("=====================================");
-		System.out.println("=====================================");
 	}
 
 	@Override

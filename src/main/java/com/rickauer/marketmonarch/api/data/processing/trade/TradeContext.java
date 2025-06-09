@@ -1,5 +1,7 @@
 package com.rickauer.marketmonarch.api.data.processing.trade;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +65,7 @@ public class TradeContext {
 	}
 	
 	public void setEntryPrice(double entryPrice) {
-		_entryPrice = entryPrice;
+		_entryPrice = BigDecimal.valueOf(entryPrice).setScale(2, RoundingMode.HALF_DOWN).doubleValue();
 	}
 	
 	public double getStopLossLimit() {

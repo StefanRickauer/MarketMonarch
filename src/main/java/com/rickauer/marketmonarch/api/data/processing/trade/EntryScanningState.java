@@ -34,6 +34,7 @@ public class EntryScanningState extends TradeState {
 	Object _lockLiveData;
 	Map<String, Contract> _stockWatchlist;
 	volatile boolean _foundEntry;
+	volatile boolean _timeoutReached;
 	
 	public EntryScanningState(TradeContext context) {
 		super(context);
@@ -41,6 +42,7 @@ public class EntryScanningState extends TradeState {
 		_lockLiveData = new Object();
 		_stockWatchlist = initializeStockWatchlist();
 		_foundEntry = false;
+		_timeoutReached = true;
 	}
 
 	@Override
@@ -112,17 +114,22 @@ public class EntryScanningState extends TradeState {
 				try {
 					_lockLiveData.wait(TradingConstants.TWO_HOURS_TIMEOUT_MS);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					_entryScanLogger.error("Error waiting for notification.");
 				}
 			}
 		}
 		
 		if (_foundEntry) {
+			_foundEntry = false;
+			_timeoutReached = false;
 			_context.setState(new BuyProcessingState(_context));
+		} 
+		
+		if (_timeoutReached) {			
+			_entryScanLogger.info("Timeout reached. No entry found.");
+			cancelLiveFeeds();
+			_entryScanLogger.info("Restarting pre trade phase");
 		}
-		_entryScanLogger.info("Timeout reached. No entry found.");
-		cancelLiveFeeds();
-		_entryScanLogger.info("Restarting pre trade phase.");
 	}
 
 	@Override
@@ -191,10 +198,10 @@ public class EntryScanningState extends TradeState {
 					DecimalNum.valueOf(vol),
 					DecimalNum.valueOf(0));
 			
-			boolean _foundEntry = _context.getStockAnalysisManager().handleNewBar(reqId, baseBar); 
+			_context.getStockAnalysisManager().handleNewBar(reqId, baseBar); 
 			
-			if (_foundEntry) {
-				
+			if (_context.getStockAnalysisManager().getExecutorBySymbol(symbol).getShouldEnter() && !_foundEntry) {
+				_foundEntry = true;
 				_entryScanLogger.info("Found entry for symbol: " + _context.getStockAnalysisManager().getSymbolById(reqId) + ".");
 				cancelLiveFeeds();
 				
@@ -202,7 +209,7 @@ public class EntryScanningState extends TradeState {
 				_context.setEntryPrice(_context.getStockAnalysisManager().getExecutorBySymbol(symbol).getEntryPrice());
 				_context.setContract(_stockWatchlist.get(symbol)); 
 				_context.setRestartSession(false);
-				
+				System.out.println("TEST");
 				synchronized (_lockLiveData) {
 					_lockLiveData.notify();
 				}

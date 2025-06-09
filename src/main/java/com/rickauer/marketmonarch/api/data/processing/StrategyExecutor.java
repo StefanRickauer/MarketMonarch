@@ -25,6 +25,7 @@ import org.ta4j.core.rules.StopLossRule;
 import org.ta4j.core.rules.UnderIndicatorRule;
 
 import com.rickauer.marketmonarch.api.data.CandleStick;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class StrategyExecutor {
@@ -34,6 +35,7 @@ public class StrategyExecutor {
 	BarSeries _series;
 	Strategy _strategy;
 	double _entryPrice;
+	boolean _shouldEnter;
 	
 	public StrategyExecutor(String symbol) {
 		_symbol = symbol;
@@ -42,16 +44,17 @@ public class StrategyExecutor {
 				.withNumTypeOf(DecimalNum::valueOf)
 				.build();
 		_strategy = buildStrategy(_series);
+		_shouldEnter = false;
 	}
 	
 	private final Strategy buildStrategy(BarSeries series) {
 		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
 		VolumeIndicator volume = new VolumeIndicator(series);
-		SMAIndicator sma20 = new SMAIndicator(closePrice, 20);
-		SMAIndicator sma50 = new SMAIndicator(closePrice, 50);
-		SMAIndicator sma200 =new SMAIndicator(closePrice, 200);
-		RSIIndicator rsi = new RSIIndicator(closePrice, 14);
-		SMAIndicator avgVolume = new SMAIndicator(volume, 30);
+		SMAIndicator sma240 = new SMAIndicator(closePrice, 240);
+		SMAIndicator sma600 = new SMAIndicator(closePrice, 600);
+		SMAIndicator sma2400 =new SMAIndicator(closePrice, 2400);
+		RSIIndicator rsi = new RSIIndicator(closePrice, 168);
+		SMAIndicator avgVolume = new SMAIndicator(volume, 360);
 		
 		Indicator<Num> volumeThreshold = new Indicator<>() {
 			@Override
@@ -70,8 +73,8 @@ public class StrategyExecutor {
 			}
 		};
 		
-		Rule trendRule = new OverIndicatorRule(sma50, sma200);
-		Rule pullbackRule = new UnderIndicatorRule(closePrice, sma20);
+		Rule trendRule = new OverIndicatorRule(sma600, sma2400);
+		Rule pullbackRule = new UnderIndicatorRule(closePrice, sma240);
 		Rule rsiRule = new OverIndicatorRule(rsi, series.numOf(50));
 		Rule volumeSpikeRule = new OverIndicatorRule(volume, volumeThreshold);
 		
@@ -85,14 +88,13 @@ public class StrategyExecutor {
 		_series.addBar(bar);
 	}
 	
-	public synchronized boolean onNewBar(Bar bar) {
-		boolean shouldEnter = false;
+	public synchronized void onNewBar(Bar bar) {
 		
 		ZonedDateTime newEndTime = bar.getEndTime();
 		ZonedDateTime lastEndTime = _series.getLastBar().getEndTime();
 		
 		if (!newEndTime.isAfter(lastEndTime)) {
-			return shouldEnter;
+			return;
 		}
 		
 		_series.addBar(bar);
@@ -102,10 +104,9 @@ public class StrategyExecutor {
 
 		if (_strategy.shouldEnter(lastIndex)) {
 			Num close = closePrice.getValue(lastIndex);
-			_entryPrice = close.doubleValue();
-			shouldEnter = true;
+			_entryPrice = StockUtils.calculateTargetPrice(close.doubleValue(), TradingConstants.BUY_LIMIT_PUFFER);
+			_shouldEnter = true;
 		}
-		return shouldEnter;
 	}
 	
 	public String getSymbol() {
@@ -129,5 +130,9 @@ public class StrategyExecutor {
 	
 	public double getEntryPrice() {
 		return _entryPrice;
+	}
+	
+	public boolean getShouldEnter() {
+		return _shouldEnter;
 	}
 }
