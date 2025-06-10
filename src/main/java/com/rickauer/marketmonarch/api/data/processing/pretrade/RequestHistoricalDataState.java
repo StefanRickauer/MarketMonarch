@@ -49,7 +49,7 @@ public class RequestHistoricalDataState extends PreTradeState {
 							TradingConstants.KEEP_UP_TO_DATE, 
 							null
 							);
-					_context.getHistoricalData().wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
+					_context.getHistoricalData().wait(TradingConstants.TWO_MINUTES_TIMEOUT_MS);
 					
 					if (_hasReceivedApiResponse == true) {
 						_reqHistDataLogger.info(_context.getHistoricalData().get(requestId).getSymbol() + ": P&L = " + _context.getHistoricalData().get(requestId).getProfitLossChange());
