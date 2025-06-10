@@ -105,8 +105,8 @@ public class EntryScanningState extends TradeState {
 			}
 		}
 		
-		_entryScanLogger.info("Waiting for scanner to detect entry....");
 		_entryScanLogger.warn("Note: Please consider the trading hours of the respective exchange.");
+		_entryScanLogger.info("Waiting for scanner to detect entry. Logging connectivity check every two minutes...");
 		
 		// only true if entry found during historical data request
 		if (_foundEntry == false) {			

@@ -3,7 +3,7 @@
 	<Appenders>
 		<Console name="ConsoleAppender" target="SYSTEM_OUT">
 			<PatternLayout
-				pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+				pattern="%d{HH:mm:ss.SSS} [%t] %-5level %c{1} - %msg%n" />
 		</Console>
 		<File name="FileAppender"
 			fileName="./logs/MarketMonarch-${date:yyyyMMdd}.log"
@@ -74,6 +74,11 @@
 			<AppenderRef ref="FileAppender" />
 		</Logger>
 		<Logger name="com.rickauer.marketmonarch.api.data.processing.StockAnalysisManager" level="trace"
+			additivity="false">
+			<AppenderRef ref="ConsoleAppender" />
+			<AppenderRef ref="FileAppender" />
+		</Logger>
+		<Logger name="com.rickauer.marketmonarch.api.data.processing.StrategyExecutor" level="trace"
 			additivity="false">
 			<AppenderRef ref="ConsoleAppender" />
 			<AppenderRef ref="FileAppender" />

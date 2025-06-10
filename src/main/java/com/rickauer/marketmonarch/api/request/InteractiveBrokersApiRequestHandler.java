@@ -189,7 +189,6 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	@Override
 	public void nextValidId(int orderId) {
 		synchronized (lock) {
-			_ibRequestHandlerLogger.info(EWrapperMsgGenerator.nextValidId(orderId));
             _orderId = orderId;
             lock.notifyAll();  
         }
@@ -281,10 +280,6 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	@Override                                                         	                       
 	public void realtimeBar(int reqId, long time, double open, double high, double low, double close, Decimal volume, Decimal wap, int count) {
 		MarketMonarch._tradingContext.getState().processRealtimeBar(reqId, StockUtils.longToZonedDateTime(time, MarketMonarch._tradingContext.getStockAnalysisManager().getZoneIdByRequestId(reqId)), open, high, low, close, volume, wap, count);
-		
-		
-		; // Code unten nach Test löschen!
-		System.out.println("DEBUG: " + StockUtils.longToZonedDateTime(time, MarketMonarch._tradingContext.getStockAnalysisManager().getZoneIdByRequestId(reqId)));
 	}
 
 	@Override

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BaseBar;
 import org.ta4j.core.BarSeries;
@@ -30,6 +32,9 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class StrategyExecutor {
 
+	private static Logger _strategyLogger = LogManager.getLogger(StrategyExecutor.class.getName());
+	private static ZonedDateTime _lastLoggedTime = null;
+	
 	String _timeStampZoneId;
 	String _symbol;
 	BarSeries _series;
@@ -106,6 +111,11 @@ public class StrategyExecutor {
 			Num close = closePrice.getValue(lastIndex);
 			_entryPrice = StockUtils.calculateTargetPrice(close.doubleValue(), TradingConstants.BUY_LIMIT_PUFFER);
 			_shouldEnter = true;
+		}
+		
+		if ( (!newEndTime.equals(_lastLoggedTime)) && (newEndTime.getMinute() % 2 == 0) && (newEndTime.getSecond() == 0) ) {
+			_lastLoggedTime = newEndTime;
+			_strategyLogger.info("Connectivity check: Market data stream confirmed active. Next status log in 2 minutes.");
 		}
 	}
 	

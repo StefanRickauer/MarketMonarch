@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -177,5 +178,31 @@ public class StockUtils {
 		LocalTime end = LocalTime.of(13, 30);
 		
 		return !nyTime.isBefore(start) && !nyTime.isAfter(end);
+	}
+	
+	public static long millisUntilTradingWindowNYSE(int hour, int minute) {
+		ZonedDateTime nowHere = ZonedDateTime.now(ZoneId.systemDefault());
+		ZoneId newYorkZone = ZoneId.of("US/Eastern");
+		ZonedDateTime nowInNewYork = nowHere.withZoneSameInstant(newYorkZone);
+		
+		LocalDate targetDate = nowInNewYork.toLocalTime().isBefore(LocalTime.of(hour, minute))
+				? nowInNewYork.toLocalDate()
+				: nowInNewYork.toLocalDate().plusDays(1);
+		
+		ZonedDateTime next1015NY = ZonedDateTime.of(targetDate, LocalTime.of(hour, minute), newYorkZone);
+		
+		Duration duration = Duration.between(nowHere, next1015NY.withZoneSameInstant(ZoneId.systemDefault()));
+		return duration.toMillis();
+	}
+	
+	public static String formatMillis(long millis) {
+		long seconds = millis / 1000;
+		long minutes = seconds / 60;
+		long hours = minutes / 60;
+		
+		long remainingSeconds = seconds % 60;
+		long remainingMinutes = minutes % 60;
+		
+		return String.format("%02d:%02d:%02d", hours, remainingMinutes, remainingSeconds);
 	}
 }

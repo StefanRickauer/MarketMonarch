@@ -108,13 +108,15 @@ public final class MarketMonarch {
 			while (_tradingContext.getRestartSession()) {
 
 				_marketMonarchLogger.info("Checking if program is running within valid time window.");
-				;// Comment in for trading, skip during tests
-				if (false) {
-					if (!StockUtils.isWithinTradingWindow(ZonedDateTime.now(ZoneId.systemDefault()))) {
-						_marketMonarchLogger.fatal("Skipping execution: Current time is outside the defined operational window (10:15–13:30 NY time).");
-						System.exit(0);
-					}				
-				}
+
+				if (!StockUtils.isWithinTradingWindow(ZonedDateTime.now(ZoneId.systemDefault()))) {
+					_marketMonarchLogger.warn("Pausing execution: Current time is outside the defined operational window (10:15–13:30 NY time).");
+					long sleepDuration = StockUtils.millisUntilTradingWindowNYSE(10, 15);
+					String formattedSleepDuration = StockUtils.formatMillis(sleepDuration);
+					_marketMonarchLogger.warn("Waiting for scheduled time - resuming in " + formattedSleepDuration);
+					Thread.sleep(sleepDuration);
+					_marketMonarchLogger.warn("Scheduled time reached. Proceeding with execution.");
+				}				
 				
 				_tradingContext.setState(new TradeInactiveState(_tradingContext));
 				_preTradeContext.setState(new AccountValidationState(_preTradeContext));				
