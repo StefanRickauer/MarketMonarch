@@ -112,7 +112,7 @@ public class EntryScanningState extends TradeState {
 		if (_foundEntry == false) {			
 			synchronized (_lockLiveData) {
 				try {
-					_lockLiveData.wait(TradingConstants.TWO_HOURS_TIMEOUT_MS);
+					_lockLiveData.wait(TradingConstants.FIFTEEN_MINUTES_TIMEOUT_MS);
 				} catch (InterruptedException e) {
 					_entryScanLogger.error("Error waiting for notification.");
 				}
