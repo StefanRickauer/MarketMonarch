@@ -119,6 +119,8 @@ public class EntryScanningState extends TradeState {
 			}
 		}
 		
+		cancelLiveFeeds();
+		
 		if (_foundEntry) {
 			_foundEntry = false;
 			_timeoutReached = false;
@@ -127,7 +129,6 @@ public class EntryScanningState extends TradeState {
 		
 		if (_timeoutReached) {			
 			_entryScanLogger.info("Timeout reached. No entry found.");
-			cancelLiveFeeds();
 			_entryScanLogger.info("Restarting pre trade phase");
 		}
 	}
@@ -203,7 +204,6 @@ public class EntryScanningState extends TradeState {
 			if (_context.getStockAnalysisManager().getExecutorBySymbol(symbol).getShouldEnter() && !_foundEntry) {
 				_foundEntry = true;
 				_entryScanLogger.info("Found entry for symbol: " + _context.getStockAnalysisManager().getSymbolById(reqId) + ".");
-				cancelLiveFeeds();
 				
 				_entryScanLogger.info("Updating trading context...");
 				_context.setEntryPrice(_context.getStockAnalysisManager().getExecutorBySymbol(symbol).getEntryPrice());
