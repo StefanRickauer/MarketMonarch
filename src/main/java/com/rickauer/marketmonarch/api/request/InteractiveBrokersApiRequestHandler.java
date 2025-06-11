@@ -59,9 +59,9 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	private EReaderSignal _readerSignal;
 	private EClientSocket _clientSocket;
 	private int _requestId;
-	private int _orderId;					; // necessary? Because orderId will only be retrieved via API call
+	private int _orderId;
 
-	; // initialize TradeMonitorState
+
 	public InteractiveBrokersApiRequestHandler() {
 		_readerSignal = new EJavaSignal();
 		_clientSocket = new EClientSocket(this, _readerSignal);
@@ -171,7 +171,6 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	}
 
-	; // If called with more than one Controller active, orderId will be reset. Make sure only one Controller is active.
 	public int waitForNextOrderId() {
 
         synchronized (lock) {
@@ -390,9 +389,10 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 	@Override
 	public void error(int id, int errorCode, String errorMsg, String advancedOrderRejectJson) {
 		if (advancedOrderRejectJson == null) {
-			advancedOrderRejectJson = "";
+			_ibRequestHandlerLogger.error("RequestID: " + id + ", Error Code: " + errorCode + ", Error Message: " + errorMsg);
+		} else {
+			_ibRequestHandlerLogger.error("RequestID: " + id + ", Error Code: " + errorCode + ", Error Message: " + errorMsg + "Advanced Order Reject Json:\n" + advancedOrderRejectJson);
 		}
-		_ibRequestHandlerLogger.error("RequestID: " + id + ", Error Code: " + errorCode + ", Error Message: " + errorMsg + "Advanced Order Reject Json:\n" + advancedOrderRejectJson);
 	}
 
 	@Override

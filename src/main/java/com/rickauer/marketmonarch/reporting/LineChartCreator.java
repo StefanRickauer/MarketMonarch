@@ -75,7 +75,6 @@ public final class LineChartCreator {
 		renderer.setSeriesStroke(0, new BasicStroke(1.0f));
 		plot.setRenderer(renderer);
 		
-		; // replace value with acutal buy time and buy price, sell time and sell price
 		Date buyTime = Date.from(MarketMonarch._tradingContext.getEntryDetected().toInstant()); 
 		double buyPrice = MarketMonarch._tradingContext.getAverageBuyFillPrice();
 		Date sellTime = Date.from(MarketMonarch._tradingContext.getExitTriggerd().toInstant());

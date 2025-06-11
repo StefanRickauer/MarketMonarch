@@ -33,8 +33,6 @@ public class SellProcessingState extends TradeState {
 	public void onEnter() {
 		_sellProcessingLogger.info("Trading state 'sell processing' set.");
 		
-		; // berechne stoploss usw. basierend auf averageFillPrice! stoploss muss 10% unter averageFillPrice liegen. Methode schreiben.
-		
 		String timeStamp = StockUtils.getCurrentTimestampAsString();
 		String ocaGroup = "oca_group_" + timeStamp;
 		String action = OrderTransactionType.SELL.getAction(); 
