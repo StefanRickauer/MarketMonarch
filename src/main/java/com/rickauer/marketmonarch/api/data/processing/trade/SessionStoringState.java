@@ -30,6 +30,7 @@ public class SessionStoringState extends TradeState {
 		
 		_sessionStoringLogger.info("Entered session storing state.");
 		_sessionStoringLogger.info("Saving session metrics.");
+		_sessionStoringLogger.info("Notice: Session metrics only contain bars up to the moment an entry was detected!");
 		
 		try {
 			BarSeries history = _context.getStockAnalysisManager().getExecutorBySymbol(_context.getContract().symbol()).getSeries();
