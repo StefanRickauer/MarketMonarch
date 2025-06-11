@@ -66,6 +66,7 @@ public final class MarketMonarch {
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 
 	public static final String COMPANY_FLOATS_BACKUP_FOLDER= FileSupplier.getBackupFolder() + "\\Company Floats\\";
+	public static final String SESSION_STORAGE_FOLDER = FileSupplier.getSessionFolder();
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyDao _apiAccess;

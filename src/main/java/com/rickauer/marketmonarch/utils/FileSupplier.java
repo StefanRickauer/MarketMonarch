@@ -29,6 +29,10 @@ public final class FileSupplier {
 		return getWorkingDirectory() + "/backup";
 	}
 	
+	public static String getSessionFolder() {
+		return getWorkingDirectory() + "/sessions";
+	}
+	
 	public static void createFolder(String folder) {
 
 		_fileSupplierLogger.info("Creating folder: '" + folder + "'.");

@@ -79,8 +79,7 @@ public class SellProcessingState extends TradeState {
 			}
 		}
 		
-		; // save data (maybe here or in a new state class
-		_context.setState(new TradeInactiveState(_context));
+		_context.setState(new SessionStoringState(_context));
 	}
 
 	@Override
