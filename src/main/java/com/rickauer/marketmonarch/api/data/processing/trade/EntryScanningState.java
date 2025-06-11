@@ -208,8 +208,8 @@ public class EntryScanningState extends TradeState {
 				_entryScanLogger.info("Updating trading context...");
 				_context.setEntryPrice(_context.getStockAnalysisManager().getExecutorBySymbol(symbol).getEntryPrice());
 				_context.setContract(_stockWatchlist.get(symbol)); 
+				_context.setEntryTime(baseBar.getEndTime());
 				_context.setRestartSession(false);
-				System.out.println("TEST");
 				synchronized (_lockLiveData) {
 					_lockLiveData.notify();
 				}

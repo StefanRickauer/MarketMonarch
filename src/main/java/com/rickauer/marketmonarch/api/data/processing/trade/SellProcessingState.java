@@ -1,5 +1,6 @@
 package com.rickauer.marketmonarch.api.data.processing.trade;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import org.apache.logging.log4j.LogManager;
@@ -92,6 +93,8 @@ public class SellProcessingState extends TradeState {
 			
 			_sellProcessingLogger.info("Order executed. Average entry price (buy): " + _context.getAverageBuyFillPrice() + 
 					", average exit price (sell): " + _context.getAverageSellFillPrice() + ". Total P&L: ." + (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()));
+			
+			_context.setExitTime(ZonedDateTime.now(ZoneId.of("US/Eastern")).withNano(0));
 			
 			synchronized (_lock) {
 				_lock.notify();

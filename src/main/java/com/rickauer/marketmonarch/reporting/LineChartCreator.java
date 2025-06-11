@@ -27,7 +27,10 @@ import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.ta4j.core.Bar;
+import org.ta4j.core.BarSeries;
 
+import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.utils.FileSupplier;
 
@@ -44,13 +47,13 @@ public final class LineChartCreator {
 		tradingData = new DefaultCategoryDataset();
 	}
 	
-	public void createLineGraphAndSaveFile(List<CandleStick> tradedStock, double stopLoss) {
+	public void createLineGraphAndSaveFile(BarSeries tradedStock, double stopLoss) {
 		
 		Font font = new Font("Arial", Font.BOLD, 12);
 		
 		XYSeries series = new XYSeries("Trade");
-		for (CandleStick stick : tradedStock) {
-			series.add(stick.getInstant().toEpochMilli(), stick.getClose());
+		for (Bar stick : tradedStock.getBarData()) {
+			series.add(stick.getEndTime().toInstant().toEpochMilli(), stick.getClosePrice().doubleValue());
 		}
 		
 		XYSeriesCollection dataset = new XYSeriesCollection(series);
@@ -73,10 +76,10 @@ public final class LineChartCreator {
 		plot.setRenderer(renderer);
 		
 		; // replace value with acutal buy time and buy price, sell time and sell price
-		Date buyTime = Date.from(tradedStock.get(10).getInstant());
-		double buyPrice = tradedStock.get(10).getClose();
-		Date sellTime = Date.from(tradedStock.get(tradedStock.size() - 10).getInstant());
-		double sellPrice = tradedStock.get(20).getClose();
+		Date buyTime = Date.from(MarketMonarch._tradingContext.getEntryDetected().toInstant()); 
+		double buyPrice = MarketMonarch._tradingContext.getAverageBuyFillPrice();
+		Date sellTime = Date.from(MarketMonarch._tradingContext.getExitTriggerd().toInstant());
+		double sellPrice = MarketMonarch._tradingContext.getAverageSellFillPrice();
 		
 		XYDrawableAnnotation buyMarker = new XYDrawableAnnotation(
 				buyTime.getTime(),

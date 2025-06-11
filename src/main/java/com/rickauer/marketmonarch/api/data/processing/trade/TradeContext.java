@@ -2,6 +2,7 @@ package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,8 @@ public class TradeContext {
 	double _stopLossLimit;
 	double _stopLossAuxPrice;
 	double _takeProfitLimit;
+	ZonedDateTime _entryDetectedAt;
+	ZonedDateTime _exitTriggeredAt;
 	
 	public TradeContext(InteractiveBrokersApiController controller) {
 		_controller = controller;
@@ -123,4 +126,21 @@ public class TradeContext {
 	public double getAverageSellFillPrice() {
 		return _averageSellFillPrice;
 	}
+	
+	public void setEntryTime(ZonedDateTime time) {
+		_entryDetectedAt = time;
+	}
+	
+	public ZonedDateTime getEntryDetected() {
+		return _entryDetectedAt;
+	}
+	
+	public void setExitTime(ZonedDateTime time) {
+		_exitTriggeredAt = time;
+	}
+	
+	public ZonedDateTime getExitTriggerd() {
+		return _exitTriggeredAt;
+	}
+	
 }
