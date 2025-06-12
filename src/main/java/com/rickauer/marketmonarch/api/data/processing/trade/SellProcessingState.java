@@ -35,7 +35,7 @@ public class SellProcessingState extends TradeState {
 
 	@Override
 	public void onEnter() {
-		_sellProcessingLogger.info("Trading state 'sell processing' set.");
+		_sellProcessingLogger.info("Entered sell processing state.");
 		
 		String timeStamp = StockUtils.getCurrentTimestampAsString();
 		String ocaGroup = "oca_group_" + timeStamp;
@@ -71,14 +71,21 @@ public class SellProcessingState extends TradeState {
 		_orderIds.add(orderId);
 		_context.getController().placeOrder(orderId, _context.getContract(), stopLossOrder);
 		
-		_sellProcessingLogger.info("Placed OCA group order: groupId=" + ocaGroup + ", orders=2 [" + action + "(Take Profit) @ " + _context.getContract().symbol() + " | Menge: " + quantity.toString() + " | Limit: " + _context.getTakeProfitLimit() + ", "
-				+  action + "(Stop Loss) @ " + _context.getContract().symbol() + " | Menge: " + quantity.toString() +  " | Stop Preis: " + _context.getStopLossAuxPrice() + " | Limit: " + _context.getStopLossLimit() + "]");
+		_sellProcessingLogger.info("Placed OCA Group Order: " + 
+				"\n\t| Group ID: " + ocaGroup + 
+				"\n\t| SELL (Take Profit) @ " + _context.getContract().symbol() + 
+				"\n\t\t| Volume: " + quantity.toString() + " shares" + 
+				"\n\t\t| Limit: " + _context.getTakeProfitLimit() + "$" + 
+				"\n\t| SELL (Stop Loss) @ " + _context.getContract().symbol() +
+				"\n\t\t| Volume: " + quantity.toString() + " shares" + 
+				"\n\t\t| Stop Price: " + _context.getStopLossAuxPrice() + "$" + 
+				"\n\t\t| Limit: " + _context.getStopLossLimit() + "$");
 		
 		synchronized (_lock) {
 			try {
 				_lock.wait();
 			} catch (Exception e) {
-				_sellProcessingLogger.error("Error waiting for lock to be notified.");
+				_sellProcessingLogger.error("Error while waiting for lock to be notified.");
 			}
 		}
 		
@@ -94,8 +101,13 @@ public class SellProcessingState extends TradeState {
 			if (status.equals(OrderStatus.FILLED.getOrderStatus())) {
 				_context.setAverageSellFillPrice(avgFillPrice);
 				
-				_sellProcessingLogger.info("Order executed. Average Entry Price (buy): " + _context.getAverageBuyFillPrice() + 
-						", Average Exit Price (sell): " + _context.getAverageSellFillPrice() + ". Total P&L: ." + (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()));
+				_sellProcessingLogger.info("Order Filled: " + 
+						"\n\t| SELL @ " + _context.getContract().symbol() + 
+						"\n\t| Volume: " + _context.getQuantity().toString() + " shares" +
+						"\n\t| Average Fill Price (BUY): " + _context.getAverageBuyFillPrice() + "$" + 
+						"\n\t| Average Fill Price (SELL): " + _context.getAverageSellFillPrice() + "$" + 
+						"\n\t| P&L Per Share: " + _context.getAverageSellFillPrice() + (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()) + "$" +
+						"\n\t| P&L In Total: " + _context.getAverageSellFillPrice() + ((_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()) * _context.getQuantityAsInteger()) + "$");
 				
 				_context.setExitTime(ZonedDateTime.now(ZoneId.of("US/Eastern")).withNano(0));
 				
