@@ -178,6 +178,11 @@ public final class MarketMonarch {
 			_marketMonarchLogger.info("Created company floats backup folder.");
 		}
 		
+		File sessionStorageFolder = new File(SESSION_STORAGE_FOLDER);
+		if (!sessionStorageFolder.exists()) {
+			sessionStorageFolder.mkdir();
+			_marketMonarchLogger.info("Created session storage folder.");
+		}
 		_marketMonarchLogger.info("Set up environment.");
 	}
 }

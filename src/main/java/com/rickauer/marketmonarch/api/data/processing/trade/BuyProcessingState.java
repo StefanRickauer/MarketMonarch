@@ -65,6 +65,7 @@ public class BuyProcessingState extends TradeState {
 				"\n\t| Volume: " + _context.getQuantity().toString() + " shares" + 
 				"\n\t| Average Fill Price: " + _context.getAverageBuyFillPrice() + "$" +
 				"\n\t| Total Investment: " + (Double.parseDouble(quantity.toString()) * _context.getAverageBuyFillPrice()) + "$");
+		
 		_context.setState(new SellExitCalculationState(_context));
 	}
 
