@@ -77,7 +77,7 @@ public final class LineChartCreator {
 		
 		Date buyTime = Date.from(MarketMonarch._tradingContext.getEntryDetected().toInstant()); 
 		double buyPrice = MarketMonarch._tradingContext.getAverageBuyFillPrice();
-		Date sellTime = Date.from(MarketMonarch._tradingContext.getExitTriggerd().toInstant());
+		Date sellTime = Date.from(MarketMonarch._tradingContext.getExitTriggered().toInstant());
 		double sellPrice = MarketMonarch._tradingContext.getAverageSellFillPrice();
 		
 		XYDrawableAnnotation buyMarker = new XYDrawableAnnotation(

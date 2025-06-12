@@ -8,8 +8,6 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 public class TradeDto {
 	private int _id;
 	private String _symbol;
-	private int _buyOrderId;
-	private int _sellOrderId;
 	private double _entryPrice;
 	private double _exitPrice;
 	private int _quantity;
@@ -18,7 +16,23 @@ public class TradeDto {
 	private double _stopLoss;
 	private double _takeProfit;
 	private double _orderEfficiencyRatio;
+
+
+	public TradeDto() {
+		// default constructor
+	}
 	
+	public TradeDto(String symbol, double entryPrice, double exitPrice, int quantity, LocalDateTime entryTime, LocalDateTime exitTime, double stopLossLimit, double takeProfit) { 
+		_symbol = symbol;
+		_entryPrice = entryPrice;
+		_exitPrice = exitPrice;
+		_quantity = quantity;
+		_entryTime = entryTime;
+		_exitTime = exitTime;
+		_stopLoss = stopLossLimit;
+		_takeProfit = takeProfit;
+	}
+
 	public int getId() {
 		return _id;
 	}
@@ -33,22 +47,6 @@ public class TradeDto {
 	
 	public void setSymbol(String symbol) {
 		_symbol = symbol;
-	}
-	
-	public int getBuyOrderId() {
-		return _buyOrderId;
-	}
-	
-	public void setBuyOrderId(int id) {
-		_buyOrderId = id;
-	}
-	
-	public int getSellOrderId() {
-		return _sellOrderId;
-	}
-	
-	public void setSellOrderId(int id) {
-		_sellOrderId = id;
 	}
 	
 	public double getEntryPrice() {
@@ -126,6 +124,6 @@ public class TradeDto {
 	@Override
 	public String toString() {
 		return String.format("id=%d, symbol=%s, buyOrderID=%d, sellOrderId=%d, entryPrice=%f, exitPrice=%f, entryTime=%s, exitTime=%s, stopLoss=%f, takeProfit=%f, orderEfficiencyRatio=%f", 
-				_id, _symbol, _buyOrderId, _sellOrderId, _entryPrice, _exitPrice, _entryTime, _exitTime, _stopLoss, _takeProfit, _orderEfficiencyRatio);
+				_id, _symbol, _entryPrice, _exitPrice, _entryTime, _exitTime, _stopLoss, _takeProfit, _orderEfficiencyRatio);
 	}
 }

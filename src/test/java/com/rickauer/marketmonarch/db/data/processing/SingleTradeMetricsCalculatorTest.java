@@ -20,8 +20,6 @@ public class SingleTradeMetricsCalculatorTest {
 		testData = new TradeDto();
 		
 		testData.setSymbol("TEST");
-		testData.setBuyOrderId(1);
-		testData.setSellOrderId(2);
 		testData.setEntryPrice(10.0);
 		testData.setExitPrice(20.0);
 		testData.setQuantity(200);

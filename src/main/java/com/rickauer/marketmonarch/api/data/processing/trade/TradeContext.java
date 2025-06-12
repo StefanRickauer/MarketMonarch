@@ -147,7 +147,7 @@ public class TradeContext {
 		_exitTriggeredAt = time;
 	}
 	
-	public ZonedDateTime getExitTriggerd() {
+	public ZonedDateTime getExitTriggered() {
 		return _exitTriggeredAt;
 	}
 	

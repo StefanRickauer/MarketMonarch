@@ -15,6 +15,7 @@ import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
 import com.rickauer.marketmonarch.MarketMonarch;
+import com.rickauer.marketmonarch.db.data.TradeDto;
 import com.rickauer.marketmonarch.utils.FileSupplier;
 
 public class SessionStoringState extends TradeState {
@@ -29,7 +30,7 @@ public class SessionStoringState extends TradeState {
 	public void onEnter() {
 		
 		_sessionStoringLogger.info("Entered session storing state.");
-		_sessionStoringLogger.info("Saving session metrics.");
+		_sessionStoringLogger.info("Saving session metrics to file system.");
 		_sessionStoringLogger.info("Notice: Session metrics only contain bars up to the moment an entry was detected!");
 		
 		try {
@@ -46,6 +47,20 @@ public class SessionStoringState extends TradeState {
 		} catch (Exception e) {
 			_sessionStoringLogger.error("Failed to save session metrics.");
 		}
+		
+		_sessionStoringLogger.info("Saving session metrics to database.");
+		TradeDto session = new TradeDto(
+				MarketMonarch._tradingContext.getContract().symbol(),
+				MarketMonarch._tradingContext.getAverageBuyFillPrice(),
+				MarketMonarch._tradingContext.getAverageSellFillPrice(),
+				MarketMonarch._tradingContext.getQuantityAsInteger(),
+				MarketMonarch._tradingContext.getEntryDetected().toLocalDateTime(),
+				MarketMonarch._tradingContext.getExitTriggered().toLocalDateTime(),
+				MarketMonarch._tradingContext.getStopLossLimit(),
+				MarketMonarch._tradingContext.getTakeProfitLimit()
+				);
+		
+		;; // TODO: save data to database!
 		
 		_context.setState(new TradeInactiveState(_context));
 	}

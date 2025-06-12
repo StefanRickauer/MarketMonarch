@@ -20,10 +20,8 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class FinancialDataDaoTest {
 
-	private static final int ID = 9999999;
+	private static final int ID = 1;
 	private static final String SYMBOL = "Test-Symbol";
-	private static final int BUY_ID = 2;
-	private static final int SELL_ID = 3;
 	private static final double ENTRY_PRICE = 15.0;
 	private static final double EXIT_PRICE = 20.0;
 	private static final int QUANTITY = 100;
@@ -36,10 +34,7 @@ public class FinancialDataDaoTest {
 	@Test
 	void A_insertIntoDatabaseTest() {
 		TradeDto testData = new TradeDto();
-		testData.setId(ID);
 		testData.setSymbol(SYMBOL);
-		testData.setBuyOrderId(BUY_ID);
-		testData.setSellOrderId(SELL_ID);
 		testData.setEntryPrice(ENTRY_PRICE);
 		testData.setExitPrice(EXIT_PRICE);
 		testData.setQuantity(QUANTITY);
@@ -62,7 +57,7 @@ public class FinancialDataDaoTest {
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		FinancialDataDao db = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		
-		try (ResultSet result = db.executeSqlQuery("SELECT entry_price FROM trade where id = 9999999")) {
+		try (ResultSet result = db.executeSqlQuery("SELECT entry_price FROM trade where symbol = 'Test-Symbol'")) {
 			
 			// If db.executeSqlQuery finds nothing, result.next() will be false and the else-brach will be executed (verified by querying a non existent database).
 			if (result.next()) {
@@ -92,8 +87,6 @@ public class FinancialDataDaoTest {
 
 			assertEquals(ID, trade.getId());
 			assertEquals(SYMBOL, trade.getSymbol());
-			assertEquals(BUY_ID, trade.getBuyOrderId());
-			assertEquals(SELL_ID, trade.getSellOrderId());
 			assertEquals(ENTRY_PRICE, trade.getEntryPrice());
 			assertEquals(EXIT_PRICE, trade.getExitPrice());
 			assertEquals(QUANTITY, trade.getQuantity());
@@ -111,7 +104,7 @@ public class FinancialDataDaoTest {
 		FinancialDataDao db = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		
 		int rows = 0;
-		rows = db.executeSqlUpdate("DELETE FROM trade WHERE id = 9999999");
+		rows = db.executeSqlUpdate("DELETE FROM trade WHERE symbol = 'Test-Symbol'");
 		
 		assertTrue(rows != 0);
 		

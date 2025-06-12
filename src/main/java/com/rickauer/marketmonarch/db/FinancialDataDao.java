@@ -24,13 +24,13 @@ public final class FinancialDataDao extends DatabaseDao {
 	}
 	
 	public int insertRow(TradeDto trade) {
-		String insertion = "INSERT INTO trade VALUES(%d, '%s', %d, %d, %f, %f, %d, '%s', '%s', %f, %f, %f)";
+		String insertion = "INSERT INTO trade (symbol, entry_price, exit_price, quantity, entry_time, exit_time, stop_loss, take_profit, order_efficiency_ratio) VALUES('%s', %f, %f, %d, '%s', '%s', %f, %f, %f)";
 		
 		// Locale.US is necessary, because otherwise double-values cause Exception: Guess because they are being turned into 1,0 whereas the ',' is interpreted 
 		// as a separator instead of a floating point!
-		String query = String.format(Locale.US, insertion, trade.getId(), trade.getSymbol(), trade.getBuyOrderId(),
-				trade.getSellOrderId(), trade.getEntryPrice(), trade.getExitPrice(), trade.getQuantity(), trade.getEntryTime(),
-				trade.getExitTime(), trade.getStopLoss(), trade.getTakeProfit(), trade.getOrderEfficiencyRatio()); 
+		String query = String.format(Locale.US, insertion, trade.getSymbol(), trade.getEntryPrice(), 
+				trade.getExitPrice(), trade.getQuantity(), trade.getEntryTime(), trade.getExitTime(), trade.getStopLoss(), 
+				trade.getTakeProfit(), trade.getOrderEfficiencyRatio()); 
 		
 		return executeSqlUpdate(query);
 	}
@@ -46,10 +46,7 @@ public final class FinancialDataDao extends DatabaseDao {
 			while (allTrades.next()) {
 				row = new TradeDto();
 
-				row.setId(allTrades.getInt("id"));
 				row.setSymbol(allTrades.getString("symbol"));
-				row.setBuyOrderId(allTrades.getInt("buy_order_id"));
-				row.setSellOrderId(allTrades.getInt("sell_order_id"));
 				row.setEntryPrice(allTrades.getDouble("entry_price"));
 				row.setExitPrice(allTrades.getDouble("exit_price"));
 				row.setStopLoss(allTrades.getDouble("stop_loss"));
