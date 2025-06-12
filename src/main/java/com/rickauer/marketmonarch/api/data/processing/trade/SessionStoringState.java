@@ -51,7 +51,7 @@ public class SessionStoringState extends TradeState {
 	}
 
 	@Override
-	public void processOrderStatus(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
+	public void processOrderStatus(String msg, int orderId, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
 		// intentionally left blank 
 	}
 

@@ -19,7 +19,7 @@ public abstract class TradeState {
 	}
 	
 	public abstract void onEnter();
-	public abstract void processOrderStatus(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice);
+	public abstract void processOrderStatus(String msg, int orderId, String status, Decimal filled, Decimal remaining, double avgFillPrice);
 	public abstract void processOpenOrder(String msg, int orderId, Contract contract, Order order, OrderState orderState);
 	public abstract void processHistoricalData(int reqId, ZonedDateTime time, double open, double high, double low, double close, double volume); 
 	public abstract void processHistoricalDataEnd(int reqId, String startDateStr, String endDateStr);

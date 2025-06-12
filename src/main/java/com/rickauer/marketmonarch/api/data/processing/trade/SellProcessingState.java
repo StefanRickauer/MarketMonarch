@@ -2,6 +2,8 @@ package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,9 +26,11 @@ public class SellProcessingState extends TradeState {
 	private static Logger _sellProcessingLogger = LogManager.getLogger(SellProcessingState.class.getName());
 	
 	Object _lock = new Object();
+	List<Integer> _orderIds;
 	
 	SellProcessingState(TradeContext context) {
 		super(context);
+		_orderIds = new ArrayList<>();
 	}
 
 	@Override
@@ -62,8 +66,9 @@ public class SellProcessingState extends TradeState {
 		stopLossOrder.ocaType(1);
 		
 		int orderId = _context.getController().getOrderId();
-		
+		_orderIds.add(orderId);
 		_context.getController().placeOrder(orderId++, _context.getContract(), takeProfitOrder);
+		_orderIds.add(orderId);
 		_context.getController().placeOrder(orderId, _context.getContract(), stopLossOrder);
 		
 		_sellProcessingLogger.info("Placed OCA group order: groupId=" + ocaGroup + ", orders=2 [" + action + "(Take Profit) @ " + _context.getContract().symbol() + " | Menge: " + quantity.toString() + " | Limit: " + _context.getTakeProfitLimit() + ", "
@@ -81,27 +86,31 @@ public class SellProcessingState extends TradeState {
 	}
 
 	@Override
-	public void processOrderStatus(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
+	public void processOrderStatus(String msg, int orderId, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
 		
-		_sellProcessingLogger.info(msg);
-		
-		if (status.equals(OrderStatus.FILLED.getOrderStatus())) {
-			_context.setAverageSellFillPrice(avgFillPrice);
-			
-			_sellProcessingLogger.info("Order executed. Average entry price (buy): " + _context.getAverageBuyFillPrice() + 
-					", average exit price (sell): " + _context.getAverageSellFillPrice() + ". Total P&L: ." + (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()));
-			
-			_context.setExitTime(ZonedDateTime.now(ZoneId.of("US/Eastern")).withNano(0));
-			
-			synchronized (_lock) {
-				_lock.notify();
+		if (_orderIds.contains(orderId)) {
+			_sellProcessingLogger.info(msg);			
+
+			if (status.equals(OrderStatus.FILLED.getOrderStatus())) {
+				_context.setAverageSellFillPrice(avgFillPrice);
+				
+				_sellProcessingLogger.info("Order executed. Average Entry Price (buy): " + _context.getAverageBuyFillPrice() + 
+						", Average Exit Price (sell): " + _context.getAverageSellFillPrice() + ". Total P&L: ." + (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()));
+				
+				_context.setExitTime(ZonedDateTime.now(ZoneId.of("US/Eastern")).withNano(0));
+				
+				synchronized (_lock) {
+					_lock.notify();
+				}
 			}
 		}
 	}
 
 	@Override
 	public void processOpenOrder(String msg, int orderId, Contract contract, Order order, OrderState orderState) {
-		_sellProcessingLogger.info(msg);
+		if (_orderIds.contains(orderId)) {
+			_sellProcessingLogger.info(msg);			
+		}
 	}
 	
 	@Override

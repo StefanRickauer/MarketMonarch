@@ -133,47 +133,10 @@ public final class MarketMonarch {
 				
 				_tradingContext.setState(new EntryScanningState(_tradingContext));
 			}
-
 			
-			//		- convert these candles to barseries
-			//		- request live data for symbol
-			//			-- add live candle to bar series
-			//			-- analyze bar series
-			//			-- if should enter is true
-			//				--- stop monitoring other stocks
-			//				--- calculate entry price from last close + puffer
-			//				--- calculate exit price
-			//					---- all prices in orders are of type double
-			//				--- calculate total quantity											-> (available money - buffer) / entry price -> floor the result 
-			//				--- create order object for BUY 										-> orderType = "LMT" for limit order
-			//				--- place order
-			//				--- if order is filled													-> 	EWrapper.orderStatus()	will be called every time the status changes:	order.status == "Filled" means order has been placed 
-			// 					---- get price														->																			order.avgFillPrice is the average price for each stock
-			//					---- calculate desired win and maximum loss for the stock based on the average fill price
-			//					---- create new order object for SELL								-> orderType = "STPLMT" for stop limit order
-			//					---- keep monitoring live data
-			//							----- if actual price > average fill price
-			//										------ set stop loss to desired win				-> set auxPrice() and lmtPrice() of the order and place it again
-			//							----- if actual price < average fill price	
-			//										------ set stop loss to maximum loss			-> set auxPrice() and lmtPrice() of the order and place it again
-			// Order example
-			//			order.action("BUY");		or "SELL"
-			//			order.orderType("LMT");		or "STPLMT"
-			//			order.totalQuantity(quantity);
-			//			order.lmtPrice(Double);				+ order.auxPrice(Double) if "STPLMT" is used
-			//			order.tif(TimeInForce.DAY);			// default
-			
-			
-			// DEBUG ONLY: Remove before going live =======================================
-			System.out.println("IMPORTATN NOTICE: Order is based on greatest profit loss.");
-			for (Map.Entry<String, StrategyExecutor> entry : _tradingContext.getStockAnalysisManager().getExecutors().entrySet()) {
-				System.out.println(entry.getValue().getSymbol());
-				System.out.println(entry.getValue().getZoneId());
-				
-//				System.out.println(entry.getKey());
-				
-			}
-			// DEBUG ONLY END =============================================================
+			_marketMonarchLogger.info("Done trading. Add code to save data to database. Create report and send via mail");
+			_marketMonarchLogger.info("Goodbye!");
+			System.exit(0);
 			
 		} catch (Throwable t) {
 			// Workaround because usage of t will throw exception.

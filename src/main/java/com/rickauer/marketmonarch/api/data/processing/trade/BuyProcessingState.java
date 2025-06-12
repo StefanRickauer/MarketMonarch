@@ -62,14 +62,14 @@ public class BuyProcessingState extends TradeState {
 			}
 		}
 		_buyOrderLogger.info("Placed order: BUY @ " + _context.getContract().symbol() + 
-				" | Menge: " + _context.getQuantity().toString() + 
-				" | Durchschn. Ausführungspreis: " + _context.getAverageBuyFillPrice() + 
-				" | Investierte Summe: " + (Double.parseDouble(quantity.toString()) * _context.getAverageBuyFillPrice()) );
+				" | Volume: " + _context.getQuantity().toString() + 
+				" | Average Fill Price: " + _context.getAverageBuyFillPrice() + 
+				" | Total Investment: " + (Double.parseDouble(quantity.toString()) * _context.getAverageBuyFillPrice()) );
 		_context.setState(new SellExitCalculationState(_context));
 	}
 
 	@Override
-	public void processOrderStatus(String msg, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
+	public void processOrderStatus(String msg, int orderId, String status, Decimal filled, Decimal remaining, double avgFillPrice) {
 		
 		_buyOrderLogger.info(msg);
 		
