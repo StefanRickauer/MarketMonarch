@@ -25,7 +25,7 @@ public class FilterByProfitLossState extends PreTradeState {
 	public void onEnter() {
 		_filterByProfitLossLogger.info("Entered filter by P&L state.");
 		
-		_filterByProfitLossLogger.info("Filtering stocks by profit and loss (P&L)...");
+		_filterByProfitLossLogger.info("Filtering stocks by profit and loss (P&L).");
 
 		int numberOfStocksBeforeFiltering = _context.getScanResult().size();
 		

@@ -25,7 +25,7 @@ public class DataFetchingState extends PreTradeState {
 	@Override
 	public void onEnter() {
 		_dataFetchingLogger.info("Entered Data Fetching State.");
-		_dataFetchingLogger.info("Requesting all company free floats...");
+		_dataFetchingLogger.info("Requesting all company free floats.");
 
 		String companyFloats = "";
 
@@ -54,7 +54,7 @@ public class DataFetchingState extends PreTradeState {
 
 		if (companyFloats.equals("")) {
 			_dataFetchingLogger.warn(
-					"No backups today and received an empty or incomplete response from FMP. Attempting to restore latest save point...");
+					"No backups today and received an empty or incomplete response from FMP. Attempting to restore latest save point.");
 
 			File backupFolder = new File(MarketMonarch.COMPANY_FLOATS_BACKUP_FOLDER);
 			File[] backupFiles = backupFolder.listFiles();
@@ -71,7 +71,7 @@ public class DataFetchingState extends PreTradeState {
 				);
 
 		validateCompanyFloats();
-		_dataFetchingLogger.info("Received all company free floats. Changing state...");
+		_dataFetchingLogger.info("Received all company free floats. Changing state.");
 		
 		_context.setState(new MarketScanningState(_context));
 	}

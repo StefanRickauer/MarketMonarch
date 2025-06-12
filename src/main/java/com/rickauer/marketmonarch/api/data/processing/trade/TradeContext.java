@@ -95,6 +95,14 @@ public class TradeContext {
 		_takeProfitLimit = lmt;
 	}
 	
+	public int getQuantityAsInteger() {
+		return (int)_quantity;
+	}
+
+	public double getQuantityAsDouble() {
+		return _quantity;
+	}
+	
 	public Decimal getQuantity() {
 		return Decimal.get(_quantity);
 	}

@@ -31,7 +31,6 @@ public class BuyProcessingState extends TradeState {
 	@Override
 	public void onEnter() {
 		_buyOrderLogger.info("Entered trade buy order processing state.");
-		_buyOrderLogger.info("Placing order...");
 		
 		Order order = new Order();
 		
@@ -49,7 +48,7 @@ public class BuyProcessingState extends TradeState {
 		order.lmtPrice(limitPrice);
 		order.tif(TimeInForce.GTC);
 		
-		_buyOrderLogger.info("Trying to place order. Detected entry price: " + _context.getEntryPrice() + ", Quantity: " + quantity + ", Limit Price: " + limitPrice);
+		_buyOrderLogger.info("Trying to place order. Detected entry price: " + _context.getEntryPrice() + "$, Volume: " + quantity + " Shares, Limit Price: " + limitPrice + "$");
 		
 		int orderId = _context.getController().getOrderId();
 		_context.getController().getSocket().placeOrder(orderId, _context.getContract(), order);
@@ -61,10 +60,11 @@ public class BuyProcessingState extends TradeState {
 				_buyOrderLogger.error("Error waiting for lock to be released.");
 			}
 		}
-		_buyOrderLogger.info("Placed order: BUY @ " + _context.getContract().symbol() + 
-				" | Volume: " + _context.getQuantity().toString() + 
-				" | Average Fill Price: " + _context.getAverageBuyFillPrice() + 
-				" | Total Investment: " + (Double.parseDouble(quantity.toString()) * _context.getAverageBuyFillPrice()) );
+		_buyOrderLogger.info("Placed order: " + 
+				"\n\t| BUY @ " + _context.getContract().symbol() + 
+				"\n\t| Volume: " + _context.getQuantity().toString() + " shares" + 
+				"\n\t| Average Fill Price: " + _context.getAverageBuyFillPrice() + "$" +
+				"\n\t| Total Investment: " + (Double.parseDouble(quantity.toString()) * _context.getAverageBuyFillPrice()) + "$");
 		_context.setState(new SellExitCalculationState(_context));
 	}
 

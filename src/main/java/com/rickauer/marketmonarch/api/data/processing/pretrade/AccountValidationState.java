@@ -44,7 +44,7 @@ public class AccountValidationState extends PreTradeState {
 			_tradeAccountValidationLogger.info("Available Funds: " + _context.getAvailableFunds());
 			
 			validateAccount();
-			_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state...");
+			_tradeAccountValidationLogger.fatal("Account validation succeeded. Changing state.");
 			_context.setState(new DataFetchingState(_context));
 		} else {			
 			_context.getIbController().getSocket().cancelAccountSummary(requestId);

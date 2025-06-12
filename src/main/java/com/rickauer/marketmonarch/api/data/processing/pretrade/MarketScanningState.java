@@ -24,7 +24,7 @@ public class MarketScanningState extends PreTradeState {
 	@Override
 	public void onEnter() {
 		_marketScanningLogger.info("Entered Market Scanning State.");
-		_marketScanningLogger.info("Setting up market scanner subscription and requesting scan results...");
+		_marketScanningLogger.info("Setting up market scanner subscription and requesting scan results.");
 		
 		int requestId = _context.getIbController().getNextRequestId();
 
@@ -37,7 +37,7 @@ public class MarketScanningState extends PreTradeState {
 		filterTagValues.add(new TagValue(TradingConstants.FILTER_TAG_PRICE_ABOVE, TradingConstants.FILTER_VALUE_PRICE_ABOVE));
 		filterTagValues.add(new TagValue(TradingConstants.FILTER_TAG_PRICE_BELOW, TradingConstants.FILTER_VALUE_PRICE_BELOW));
 		
-		_marketScanningLogger.info("Requesting market scanner subscription using request id: '" + requestId + "'...");
+		_marketScanningLogger.info("Requesting market scanner subscription using request id: '" + requestId + "'.");
 		
 		synchronized (_context.getHistoricalData()) {
 			try {
@@ -49,7 +49,7 @@ public class MarketScanningState extends PreTradeState {
 		}
 		
 		if (_hasReceivedApiResponse == true) {
-			_marketScanningLogger.info("Received scan results for request ID: '"  + requestId + "'. Changing state...");
+			_marketScanningLogger.info("Received scan results for request ID: '"  + requestId + "'. Changing state.");
 			_context.setState(new FilterByFloatState(_context));
 		} else {
 			_context.getIbController().getSocket().cancelScannerSubscription(requestId);

@@ -106,7 +106,7 @@ public class EntryScanningState extends TradeState {
 		}
 		
 		_entryScanLogger.warn("Note: Please consider the trading hours of the respective exchange.");
-		_entryScanLogger.info("Waiting for scanner to detect entry. Logging connectivity check every two minutes...");
+		_entryScanLogger.info("Waiting for scanner to detect entry. Logging connectivity check every two minutes!");
 		
 		// only true if entry found during historical data request
 		if (_foundEntry == false) {			
@@ -124,6 +124,7 @@ public class EntryScanningState extends TradeState {
 		if (_foundEntry) {
 			_foundEntry = false;
 			_timeoutReached = false;
+			_entryScanLogger.info("Changing state.");
 			_context.setState(new BuyProcessingState(_context));
 		} 
 		
@@ -205,7 +206,7 @@ public class EntryScanningState extends TradeState {
 				_foundEntry = true;
 				_entryScanLogger.info("Found entry for symbol: " + _context.getStockAnalysisManager().getSymbolById(reqId) + ".");
 				
-				_entryScanLogger.info("Updating trading context...");
+				_entryScanLogger.info("Updating trading context.");
 				_context.setEntryPrice(_context.getStockAnalysisManager().getExecutorBySymbol(symbol).getEntryPrice());
 				_context.setContract(_stockWatchlist.get(symbol)); 
 				_context.setEntryTime(baseBar.getEndTime());
@@ -218,7 +219,7 @@ public class EntryScanningState extends TradeState {
 	}
 	
 	private void cancelLiveFeeds() {
-		_entryScanLogger.info("Canceling live feeds...");
+		_entryScanLogger.info("Canceling live feeds.");
 		_context.getStockAnalysisManager().getSymbolLookupTable().entrySet().stream().forEach(entry -> _context.getController().getSocket().cancelRealTimeBars(entry.getKey()));
 	}
 

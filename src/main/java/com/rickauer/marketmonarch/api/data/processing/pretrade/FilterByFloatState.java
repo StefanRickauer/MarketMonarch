@@ -23,7 +23,7 @@ public class FilterByFloatState extends PreTradeState {
 	public void onEnter() {
 
 		_filterByFloatLogger.info("Entered Filter By Float State.");
-		_filterByFloatLogger.info("Filtering scan results by company share float...");
+		_filterByFloatLogger.info("Filtering scan results by company share float.");
 
 		Map<String, Long> scanResultCompanyFloat = new HashMap<>();
 
@@ -55,7 +55,7 @@ public class FilterByFloatState extends PreTradeState {
 				+ (numberOfStocksBeforeFiltering - _context.getScanResult().size()) + " out of "
 				+ numberOfStocksBeforeFiltering + " entries. Failed searches in totoal: " + failedSearchesCount);
 
-		_filterByFloatLogger.info("Changing state...");
+		_filterByFloatLogger.info("Changing state.");
 		_context.setState(new RequestHistoricalDataState(_context));
 	}
 
