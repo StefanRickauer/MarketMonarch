@@ -36,18 +36,11 @@ import com.rickauer.marketmonarch.utils.FileSupplier;
 
 public final class LineChartCreator {
 	
-	public static final String LINECHART = FileSupplier.getTemporaryFolder() + "/Linechart.jpeg";
-	private static Logger lineGraphCreatorLogger = LogManager.getLogger(LineChartCreator.class.getName());
+	public static final String LINECHART = MarketMonarch.CURRENT_SESSION_STORAGE_FOLDER + "\\Linechart.jpeg";
+	private static Logger _lineGraphCreatorLogger = LogManager.getLogger(LineChartCreator.class.getName());
 	
-	private DefaultCategoryDataset tradingData;
 	
-	public LineChartCreator() {
-		
-		// Constructor must query database for trading stats
-		tradingData = new DefaultCategoryDataset();
-	}
-	
-	public void createLineGraphAndSaveFile(BarSeries tradedStock, double stopLoss) {
+	public static void createLineGraphAndSaveFile(BarSeries tradedStock, double stopLoss) {
 		
 		Font font = new Font("Arial", Font.BOLD, 12);
 		
@@ -156,7 +149,7 @@ public final class LineChartCreator {
 		
 		try {
 			ChartUtils.saveChartAsJPEG(lineGraph, chart, chartWidth, chartHeight);
-			lineGraphCreatorLogger.info("Line graph saved to: " + LINECHART);
+			_lineGraphCreatorLogger.info("Line graph saved to: " + LINECHART);
 		} catch (IOException e) {
 			throw new RuntimeException("Could not save line graph.", e);
 		}

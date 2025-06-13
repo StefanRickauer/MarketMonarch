@@ -16,6 +16,7 @@ import com.ib.client.Order;
 import com.ib.client.OrderState;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.db.data.TradeDto;
+import com.rickauer.marketmonarch.reporting.LineChartCreator;
 import com.rickauer.marketmonarch.utils.FileSupplier;
 
 public class SessionStoringState extends TradeState {
@@ -38,8 +39,9 @@ public class SessionStoringState extends TradeState {
 			
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 			String fileContent = convertToString(history);
-			String sessionFileName = ZonedDateTime.now().format(formatter) + ".csv";
-			String sessionFolder = MarketMonarch.SESSION_STORAGE_FOLDER + "\\" +sessionFileName;
+			String timeStamp = ZonedDateTime.now().format(formatter);
+			String sessionFileName = timeStamp + ".csv";
+			String sessionFolder = MarketMonarch.CURRENT_SESSION_STORAGE_FOLDER + "\\" + sessionFileName;
 			
 			FileSupplier.writeFile(sessionFolder, fileContent);
 		
@@ -60,9 +62,13 @@ public class SessionStoringState extends TradeState {
 				MarketMonarch._tradingContext.getTakeProfitLimit()
 				);
 		
-		;; // TODO: save data to database!
+		if (MarketMonarch._finAccess.insertRow(session) != 0) {
+			_sessionStoringLogger.info("Saved session metrics to database.");
+		} else {
+			_sessionStoringLogger.info("Failed to save session metrics to database.");
+		}
 		
-		_context.setState(new TradeInactiveState(_context));
+		_context.setState(new SessionNotificationState(_context, session));
 	}
 
 	@Override

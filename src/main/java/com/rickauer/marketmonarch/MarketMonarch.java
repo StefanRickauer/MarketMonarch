@@ -67,10 +67,11 @@ public final class MarketMonarch {
 
 	public static final String COMPANY_FLOATS_BACKUP_FOLDER= FileSupplier.getBackupFolder() + "\\Company Floats\\";
 	public static final String SESSION_STORAGE_FOLDER = FileSupplier.getSessionFolder();
+	public static String CURRENT_SESSION_STORAGE_FOLDER = "";
 	
 	private static HealthChecker _healthChecker = new HealthChecker();
 	public static ApiKeyDao _apiAccess;
-	private static FinancialDataDao _finAccess;
+	public static FinancialDataDao _finAccess;
 	private static FmpConnector _fmpConnector;
 	private static FmpRequestController _financialModellingPrepController;
 	private static AlphaVantageConnector _alphaVantage;
@@ -181,6 +182,15 @@ public final class MarketMonarch {
 		File sessionStorageFolder = new File(SESSION_STORAGE_FOLDER);
 		if (!sessionStorageFolder.exists()) {
 			sessionStorageFolder.mkdir();
+			_marketMonarchLogger.info("Created session storage folder.");
+		}
+		
+		java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		String timeStamp = ZonedDateTime.now().format(formatter);
+		CURRENT_SESSION_STORAGE_FOLDER = SESSION_STORAGE_FOLDER + "\\" + timeStamp;
+		File sessionStorageSubFolder = new File(CURRENT_SESSION_STORAGE_FOLDER);
+		if (!sessionStorageSubFolder.exists()) {
+			sessionStorageSubFolder.mkdir();
 			_marketMonarchLogger.info("Created session storage folder.");
 		}
 		_marketMonarchLogger.info("Set up environment.");
