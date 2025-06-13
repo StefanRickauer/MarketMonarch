@@ -4,6 +4,7 @@ public class TradingConstants {
 
 	public static final long TWO_HOURS_TIMEOUT_MS = 7_200_000L;
 	public static final long FIFTEEN_MINUTES_TIMEOUT_MS = 900_000L;
+	public static final long TEN_MINUTES_TIMEOUT_MS = 600_000L;
 	public static final long FIVE_MINUTES_TIMEOUT_MS = 300_000L;
 	public static final long TWO_MINUTES_TIMEOUT_MS = 120_000L;
 	
@@ -13,7 +14,7 @@ public class TradingConstants {
 	public static final int MINIMUM_ACCOUNT_BALANCE = 500;
 	public static final int MINIMUM_PROFIT_LOSS_IN_PERCENT = 10;
 	
-	public static final int MAXIMUM_NUMBER_OF_SCAN_RESULTS = 4;
+	public static final int MAXIMUM_NUMBER_OF_SCAN_RESULTS = 1;
 	
 	public static final double BUY_LIMIT_PUFFER = 1.02;
 	public static final double PUFFER_FACTOR = 0.98;							// number * PUFFER = 2%
@@ -33,6 +34,7 @@ public class TradingConstants {
 	public static final String FILTER_VALUE_PRICE_BELOW = "20";
 	
 	public static final String LOOKBACK_PERIOD_TWO_DAYS = "2 D";
+	public static final String LOOKBACK_PERIOD_SIX_HOURS = "21600 S";
 	public static final String LOOKBACK_PERIOD_FOUR_HOURS_TEN_MINUTES_IN_SECONDS = "15000 S";
 	public static final String LOOKBACK_PERIOD_TWO_HOURS_FIVE_MINUTES_IN_SECONDS = "7500 S";
 
