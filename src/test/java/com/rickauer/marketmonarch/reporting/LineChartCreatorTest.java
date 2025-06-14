@@ -22,8 +22,9 @@ import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class LineChartCreatorTest {
 
-	private static List<CandleStick> mockData;
-	private static double stopLoss;
 	
+	// Load historical bars
+	// Create stop loss
+	// call LineChartCreator.createLineGraphAndSaveFile(_series, _context.getStopLossAuxPrice());
 	// TODO: Add test here
 }

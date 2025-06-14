@@ -1,6 +1,7 @@
 package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
@@ -21,7 +22,10 @@ import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.db.data.TradeDto;
 import com.rickauer.marketmonarch.db.data.TradeReportDto;
 import com.rickauer.marketmonarch.reporting.LineChartCreator;
+import com.rickauer.marketmonarch.reporting.Notifier;
 import com.rickauer.marketmonarch.reporting.ReportPdfCreator;
+
+import jakarta.mail.MessagingException;
 
 public class SessionNotificationState extends TradeState{
 	
@@ -50,7 +54,7 @@ public class SessionNotificationState extends TradeState{
 		_tradeReportData = new TradeReportDto(MarketMonarch._finAccess, _sessionData);
 		
 		_context.getController().getSocket().reqHistoricalData(
-				 _context.getController().getNextRequestId(), 
+				_context.getController().getNextRequestId(), 
 				_context.getContract(),
 				TradingConstants.END_DATE_TIME_UNTIL_NOW, 
 				TradingConstants.LOOKBACK_PERIOD_SIX_HOURS,
@@ -72,28 +76,31 @@ public class SessionNotificationState extends TradeState{
 			LineChartCreator.createLineGraphAndSaveFile(_series, _context.getStopLossAuxPrice());
 		}
 		
+		String sessionReportFile = null;
+		
 		try {
-			ReportPdfCreator.createSessionReport(_tradeReportData, LineChartCreator.LINECHART);
+			sessionReportFile = ReportPdfCreator.createSessionReport(_tradeReportData, LineChartCreator.LINECHART);
 		} catch (IOException e) {
 			_sessionNotificationLogger.error("Could not create PDF report.");
 		}
 		
-		;; // send mail
+		try {
+			Notifier.notifyUser(sessionReportFile);
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			_sessionNotificationLogger.error("Failed to notify user.");
+		} 
 		
 		_context.setState(new TradeInactiveState(_context));
 	}
 
 	@Override
-	public void processOrderStatus(String msg, int orderId, String status, Decimal filled, Decimal remaining,
-			double avgFillPrice) {
-		// TODO Auto-generated method stub
-		
+	public void processOrderStatus(String msg, int orderId, String status, Decimal filled, Decimal remaining, double avgFillPrice) {	
+		// intentionally left blank 
 	}
 
 	@Override
-	public void processOpenOrder(String msg, int orderId, Contract contract, Order order, OrderState orderState) {
-		// TODO Auto-generated method stub
-		
+	public void processOpenOrder(String msg, int orderId, Contract contract, Order order, OrderState orderState) {	
+		// intentionally left blank 
 	}
 
 	@Override
@@ -122,9 +129,8 @@ public class SessionNotificationState extends TradeState{
 
 	@Override
 	public void processRealtimeBar(int reqId, ZonedDateTime time, double open, double high, double low, double close,
-			Decimal volume, Decimal wap, int count) {
-		// TODO Auto-generated method stub
-		
+			Decimal volume, Decimal wap, int count) {	
+		// intentionally left blank 
 	}
 
 }

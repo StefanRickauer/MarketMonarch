@@ -62,6 +62,7 @@ public final class MarketMonarch {
 
 	public static final String PROGRAM = "MarketMonarch";
 	private static final String VERSION = "0.93";
+	public static final String PROGRAM_AND_VERSION = PROGRAM + " " + VERSION;
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
 
@@ -75,7 +76,7 @@ public final class MarketMonarch {
 	private static FmpConnector _fmpConnector;
 	private static FmpRequestController _financialModellingPrepController;
 	private static AlphaVantageConnector _alphaVantage;
-	private static MailtrapServiceConnector _mailtrapService;
+	public static MailtrapServiceConnector _mailtrapService;
 	private static InteractiveBrokersApiController _interactiveBrokersController;
 
 	public static PreTradeContext _preTradeContext;
