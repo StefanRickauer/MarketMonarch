@@ -29,7 +29,7 @@ public final class ReportPdfCreator {
 	
 	private static Logger _reportCreatorLogger = LogManager.getLogger(ReportPdfCreator.class.getName());
 	
-	public static void createSessionReport(TradeReportDto reportData, String filePath) throws IOException {
+	public static String createSessionReport(TradeReportDto reportData, String filePath) throws IOException {
 		
 		_reportCreatorLogger.info("Createing PDF session report.");
 		
@@ -168,7 +168,7 @@ public final class ReportPdfCreator {
 		spp.setPermissions(access);
 
 		// protect document
-//		document.protect(spp);
+		document.protect(spp);
 		try {
 			// Save document
 			document.save(sessionFolder);
@@ -176,9 +176,11 @@ public final class ReportPdfCreator {
 			// Close document
 			document.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			_reportCreatorLogger.error("Error creating session report.");
 		}
 
-		System.out.println("Saved");
+		_reportCreatorLogger.info("Saved Session Report to: " + sessionFolder);
+		
+		return sessionFileName;
 	}
 }
