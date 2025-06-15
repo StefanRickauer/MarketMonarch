@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import jakarta.mail.MessagingException;
 
-class NotifierTest {
+public class NotifierTest {
 
 	public static final String EXPECTED_MESSAGE = "The path provided returned null object. Could not notify user.";
 	
