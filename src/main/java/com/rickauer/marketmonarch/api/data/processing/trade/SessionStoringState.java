@@ -68,7 +68,11 @@ public class SessionStoringState extends TradeState {
 			_sessionStoringLogger.info("Failed to save session metrics to database.");
 		}
 		
-		_context.setState(new SessionNotificationState(_context, session));
+		_sessionStoringLogger.info("Session Notification State currently disabled.");
+		
+		_context.setState(new TradeInactiveState(_context));
+		
+//		_context.setState(new SessionNotificationState(_context, session));
 	}
 
 	@Override
