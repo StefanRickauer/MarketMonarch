@@ -9,6 +9,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +41,11 @@ public final class LineChartCreator {
 	private static Logger _lineGraphCreatorLogger = LogManager.getLogger(LineChartCreator.class.getName());
 	
 	
-	public static void createLineGraphAndSaveFile(BarSeries tradedStock, double stopLoss) {
+	public static void createLineGraphAndSaveFile(BarSeries tradedStock, double stopLoss, ZonedDateTime entryDetected, double entryPrice, ZonedDateTime exitTriggered, double exitPrice) {
+		createLineGraphAndSaveFile(tradedStock, stopLoss, entryDetected, entryPrice, exitTriggered, exitPrice, LINECHART);
+	}
+
+	public static void createLineGraphAndSaveFile(BarSeries tradedStock, double stopLoss, ZonedDateTime entryDetected, double entryPrice, ZonedDateTime exitTriggered, double exitPrice, String saveFilePath) {
 		
 		Font font = new Font("Arial", Font.BOLD, 12);
 		
@@ -68,10 +73,10 @@ public final class LineChartCreator {
 		renderer.setSeriesStroke(0, new BasicStroke(1.0f));
 		plot.setRenderer(renderer);
 		
-		Date buyTime = Date.from(MarketMonarch._tradingContext.getEntryDetected().toInstant()); 
-		double buyPrice = MarketMonarch._tradingContext.getAverageBuyFillPrice();
-		Date sellTime = Date.from(MarketMonarch._tradingContext.getExitTriggered().toInstant());
-		double sellPrice = MarketMonarch._tradingContext.getAverageSellFillPrice();
+		Date buyTime = Date.from(entryDetected.toInstant()); 
+		double buyPrice = entryPrice;
+		Date sellTime = Date.from(exitTriggered.toInstant());
+		double sellPrice = exitPrice;
 		
 		XYDrawableAnnotation buyMarker = new XYDrawableAnnotation(
 				buyTime.getTime(),
@@ -91,7 +96,7 @@ public final class LineChartCreator {
 		buyText.setFont(font);
 		buyText.setPaint(Color.GRAY.darker());
 		plot.addAnnotation(buyText);
-
+		
 		Color sellColor = (sellPrice - buyPrice > 0) ? Color.GREEN : Color.RED;
 		
 		XYDrawableAnnotation sellMarker = new XYDrawableAnnotation(
@@ -143,13 +148,13 @@ public final class LineChartCreator {
 		chart.setBorderVisible(false);
 		plot.setOutlineVisible(false);
 		
-		File lineGraph = new File(LINECHART);
+		File lineGraph = new File(saveFilePath);
 		int chartWidth = 1200;
 		int chartHeight = 600;
 		
 		try {
 			ChartUtils.saveChartAsJPEG(lineGraph, chart, chartWidth, chartHeight);
-			_lineGraphCreatorLogger.info("Line graph saved to: " + LINECHART);
+			_lineGraphCreatorLogger.info("Line graph saved to: " + saveFilePath);
 		} catch (IOException e) {
 			throw new RuntimeException("Could not save line graph.", e);
 		}

@@ -73,7 +73,7 @@ public class SessionNotificationState extends TradeState{
 		if (!_hasReceivedApiResponse) {
 			_sessionNotificationLogger.warn("Did not fetch historical Data. Line chart won't be created.");
 		} else {
-			LineChartCreator.createLineGraphAndSaveFile(_series, _context.getStopLossAuxPrice());
+			LineChartCreator.createLineGraphAndSaveFile(_series, _context.getStopLossAuxPrice(), _context.getEntryDetected(), _context.getAverageBuyFillPrice(), _context.getExitTriggered(), _context.getAverageSellFillPrice());
 		}
 		
 		String sessionReportFile = null;
