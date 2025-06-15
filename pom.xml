@@ -9,6 +9,67 @@
 	<description>Software that trades with stocks based on data analysis and a
 		defined trading strategy.</description>
 
+	<properties>
+		<main.class>com.rickauer.marketmonarch.MarketMonarch</main.class>
+	</properties>
+
+	<build>
+		<plugins>
+			<!-- Build-Prozess: Rechtsklick auf Projekt: Run as -> Maven build... -> Bei Goals: "clean verify" eingeben -> Run -->
+			<!-- 1. Schritt: Fat JAR erstellen -->
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>${main.class}</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- 2. Schritt: JAR als EXE verpacken -->
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<version>2.5.3</version>
+				<executions>
+					<execution>
+						<id>l4j-clui</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<headerType>console</headerType> <!-- gui oder console -->
+					<outfile>${project.build.directory}/${project.name}.exe</outfile>
+					<jar>
+						${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar
+					</jar>
+					<dontWrapJar>false</dontWrapJar>
+					<classPath>
+						<mainClass>${main.class}</mainClass>
+					</classPath>
+					<icon>src/main/resources/icon.ico</icon> <!-- Optional -->
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<dependencies>
 		<dependency>
