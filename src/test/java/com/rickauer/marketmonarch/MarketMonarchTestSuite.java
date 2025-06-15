@@ -24,10 +24,10 @@ import com.rickauer.marketmonarch.utils.StockUtilsTest;
 
 @Suite
 @SelectClasses({ HealthCheckerTest.class, FileSupplierTest.class, 
-	ConfigReaderTest.class, DatabaseDaoTest.class, LineChartCreatorTest.class, ApiKeyDaoTest.class, MailtrapServiceConnectorTest.class,
+	ConfigReaderTest.class, DatabaseDaoTest.class, ApiKeyDaoTest.class, MailtrapServiceConnectorTest.class,
 	AlphaVantageConnectorTest.class, AlhaVantageRequestControllerTest.class, FmpConnectorTest.class, FmpRequestControllerTest.class,
 	InteractiveBrokersApiControllerTest.class, StockUtilsTest.class, StockMetricsTest.class, FinancialDataDaoTest.class, SingleTradeMetricsCalculatorTest.class,
-	AggregateTradeMetricsCalculatorTest.class, StockAnalysisManagerTest.class})
+	AggregateTradeMetricsCalculatorTest.class, StockAnalysisManagerTest.class, LineChartCreatorTest.class})
 public class MarketMonarchTestSuite {
 	// Nothing to do
 }

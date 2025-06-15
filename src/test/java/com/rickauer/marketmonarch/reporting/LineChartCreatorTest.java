@@ -31,6 +31,8 @@ public class LineChartCreatorTest {
 	static String targetFolderPath;
 	static File targetFolder;
 	static String targetFilePath;
+	
+	
 	@BeforeAll
 	static void initializeTestEnvironment() {
 		targetFolderPath = "./src/test/resources/test-session";
