@@ -207,7 +207,7 @@ public class EntryScanningState extends TradeState {
 				_entryScanLogger.info("Found entry for symbol: " + _context.getStockAnalysisManager().getSymbolById(reqId) + ".");
 				
 				_entryScanLogger.info("Updating trading context.");
-				_context.setEntryPrice(_context.getStockAnalysisManager().getExecutorBySymbol(symbol).getEntryPrice());
+				_context.setEntryPrice(_context.getStockAnalysisManager().getExecutorBySymbol(symbol).getBufferedEntryPrice());
 				_context.setContract(_stockWatchlist.get(symbol)); 
 				_context.setEntryTime(baseBar.getEndTime());
 				_context.setRestartSession(false);

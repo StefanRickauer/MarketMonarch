@@ -48,7 +48,7 @@ public class BuyProcessingState extends TradeState {
 		order.lmtPrice(limitPrice);
 		order.tif(TimeInForce.GTC);
 		
-		_buyOrderLogger.info("Trying to place order. Detected entry price: " + _context.getEntryPrice() + "$, Volume: " + quantity + " Shares, Limit Price: " + limitPrice + "$");
+		_buyOrderLogger.info("Trying to place order. Symbol: " + _context.getContract().symbol() + "$, Volume: " + quantity + " Shares, Limit Price (= Detected Entry + Buffer): " + limitPrice + "$");
 		
 		int orderId = _context.getController().getOrderId();
 		_context.getController().getSocket().placeOrder(orderId, _context.getContract(), order);

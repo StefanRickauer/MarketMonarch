@@ -39,7 +39,7 @@ public class StrategyExecutor {
 	String _symbol;
 	BarSeries _series;
 	Strategy _strategy;
-	double _entryPrice;
+	double _bufferedEntryPrice;
 	boolean _shouldEnter;
 	
 	public StrategyExecutor(String symbol) {
@@ -109,7 +109,7 @@ public class StrategyExecutor {
 
 		if (_strategy.shouldEnter(lastIndex)) {
 			Num close = closePrice.getValue(lastIndex);
-			_entryPrice = StockUtils.calculateTargetPrice(close.doubleValue(), TradingConstants.BUY_LIMIT_PUFFER);
+			_bufferedEntryPrice = StockUtils.calculateTargetPrice(close.doubleValue(), TradingConstants.BUY_LIMIT_PUFFER);
 			_shouldEnter = true;
 		}
 		
@@ -138,8 +138,8 @@ public class StrategyExecutor {
 		return _timeStampZoneId;
 	}
 	
-	public double getEntryPrice() {
-		return _entryPrice;
+	public double getBufferedEntryPrice() {
+		return _bufferedEntryPrice;
 	}
 	
 	public boolean getShouldEnter() {
