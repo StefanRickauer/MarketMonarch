@@ -117,6 +117,14 @@ public class StockUtils {
 	public static LocalDateTime stringToLocalDateTime(String time) {
 		return LocalDateTime.parse(time, java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
 	}
+	
+	public static LocalDateTime zonedDateTimeToLocalDateTime(ZonedDateTime time) {
+
+		LocalDateTime localDateTimeRaw = time.toLocalDateTime();
+		java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+		
+		return LocalDateTime.parse(localDateTimeRaw.toString(), formatter);
+	}
 
 	public static double calculateStopLoss(BarSeries series, int numberOfBarsToCheck) {
 		if (series.getBarCount() < numberOfBarsToCheck) {

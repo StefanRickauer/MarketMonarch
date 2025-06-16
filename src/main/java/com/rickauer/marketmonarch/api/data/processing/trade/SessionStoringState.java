@@ -18,6 +18,7 @@ import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.db.data.TradeDto;
 import com.rickauer.marketmonarch.reporting.LineChartCreator;
 import com.rickauer.marketmonarch.utils.FileSupplier;
+import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class SessionStoringState extends TradeState {
 
@@ -47,7 +48,7 @@ public class SessionStoringState extends TradeState {
 		
 			_sessionStoringLogger.info("Saved session metrics to: '" + sessionFolder + "'.");			
 		} catch (Exception e) {
-			_sessionStoringLogger.error("Failed to save session metrics.");
+			_sessionStoringLogger.error("Failed to save session metrics.", e);
 		}
 		
 		_sessionStoringLogger.info("Saving session metrics to database.");
@@ -56,8 +57,8 @@ public class SessionStoringState extends TradeState {
 				MarketMonarch._tradingContext.getAverageBuyFillPrice(),
 				MarketMonarch._tradingContext.getAverageSellFillPrice(),
 				MarketMonarch._tradingContext.getQuantityAsInteger(),
-				MarketMonarch._tradingContext.getEntryDetected().toLocalDateTime(),
-				MarketMonarch._tradingContext.getExitTriggered().toLocalDateTime(),
+				StockUtils.zonedDateTimeToLocalDateTime(MarketMonarch._tradingContext.getEntryDetected()),
+				StockUtils.zonedDateTimeToLocalDateTime(MarketMonarch._tradingContext.getExitTriggered()),
 				MarketMonarch._tradingContext.getStopLossLimit(),
 				MarketMonarch._tradingContext.getTakeProfitLimit()
 				);
