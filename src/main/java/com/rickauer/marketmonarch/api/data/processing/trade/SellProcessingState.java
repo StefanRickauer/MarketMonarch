@@ -100,14 +100,20 @@ public class SellProcessingState extends TradeState {
 
 			if (status.equals(OrderStatus.FILLED.getOrderStatus())) {
 				_context.setAverageSellFillPrice(avgFillPrice);
+
+				double plPerShareRaw = _context.getAverageSellFillPrice() + (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice());
+				double plInTotalRaw = _context.getAverageSellFillPrice() + ((_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()) * _context.getQuantityAsInteger());
+				
+				double plPerShareRounded = StockUtils.roundPrice(plPerShareRaw);
+				double plInTotalRounded = StockUtils.roundPrice(plInTotalRaw);
 				
 				_sellProcessingLogger.info("Order Filled: " + 
 						"\n\t| SELL @ " + _context.getContract().symbol() + 
 						"\n\t| Volume: " + _context.getQuantity().toString() + " shares" +
 						"\n\t| Average Fill Price (BUY): " + _context.getAverageBuyFillPrice() + "$" + 
 						"\n\t| Average Fill Price (SELL): " + _context.getAverageSellFillPrice() + "$" + 
-						"\n\t| P&L Per Share: " + _context.getAverageSellFillPrice() + (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()) + "$" +
-						"\n\t| P&L In Total: " + _context.getAverageSellFillPrice() + ((_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()) * _context.getQuantityAsInteger()) + "$");
+						"\n\t| P&L Per Share: " + plPerShareRounded + "$" +
+						"\n\t| P&L In Total: " + plInTotalRounded + "$");
 				
 				_context.setExitTime(ZonedDateTime.now(ZoneId.of("US/Eastern")).withNano(0));
 				

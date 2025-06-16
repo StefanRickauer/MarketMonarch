@@ -146,6 +146,10 @@ public class StockUtils {
 		return quantity.doubleValue();
 	}
 	
+	public static double roundPrice(double rawPrice) {
+		return BigDecimal.valueOf(rawPrice).setScale(2, RoundingMode.HALF_UP).doubleValue();
+	}
+	
 	public static LocalDateTime timestampToLocalDateTime(Timestamp time) {
 		return time.toLocalDateTime();
 	}
