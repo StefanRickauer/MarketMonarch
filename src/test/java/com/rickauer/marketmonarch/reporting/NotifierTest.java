@@ -15,7 +15,7 @@ public class NotifierTest {
 	@Test
 	void notifyUserInCorrectPathTest() {
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			Notifier.notifyUser("C:\\Users\\noNameForM3\\Test\\mic");
+			Notifier.notifyUser("C:\\Test\\mic");
 		});
 		
 		String actualMessage = exception.getMessage(); 
@@ -35,7 +35,7 @@ public class NotifierTest {
 	@Test
 	void notifyUserCorrectPathTest() {
 		try {
-			Notifier.notifyUser("C:\\Users\\noNameForM3\\Test\\mickey.pdf");
+			Notifier.notifyUser("C:\\Test\\mickey.pdf");
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			assertTrue(false);
 		}
