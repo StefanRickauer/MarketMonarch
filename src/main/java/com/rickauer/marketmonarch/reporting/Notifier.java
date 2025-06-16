@@ -23,7 +23,7 @@ import jakarta.mail.internet.MimeMultipart;
 
 public final class Notifier {
 	
-	public static final String MAILTRAP = "mailtrap@demomailtrap.com";
+	public static final String SENDER = "sessionfeed@neurotrace.one";
 	public static final String RECIPIENT = "stefanrickauer@gmail.com";
 	
 	public static void notifyUser(String pdfPath) throws UnsupportedEncodingException, MessagingException {
@@ -40,7 +40,7 @@ public final class Notifier {
 		});
 		
 		MimeMessage message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(MAILTRAP, MarketMonarch.PROGRAM_AND_VERSION));
+		message.setFrom(new InternetAddress(SENDER, MarketMonarch.PROGRAM_AND_VERSION));
 		message.addRecipient(Message.RecipientType.TO, new InternetAddress(RECIPIENT));
 		message.setSubject(createSubject());
 		
