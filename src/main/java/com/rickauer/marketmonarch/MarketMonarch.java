@@ -122,6 +122,8 @@ public final class MarketMonarch {
 				}				
 				
 				_tradingContext.setState(new TradeInactiveState(_tradingContext));
+				
+				_preTradeContext.clearDataForNextRun();
 				_preTradeContext.setState(new AccountValidationState(_preTradeContext));				
 				
 				

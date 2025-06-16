@@ -125,4 +125,11 @@ public class PreTradeContext {
 	public Map<Integer, StockMetrics> getHistoricalData() {
 		return _historicalData;
 	}
+	
+	public void clearDataForNextRun() {
+		_accountSummary.clear();
+		_allCompanyFloats.clear();
+		_scanResult.clear();
+		_historicalData.clear();
+	}
 }
