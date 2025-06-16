@@ -70,9 +70,7 @@ public class SessionStoringState extends TradeState {
 		
 		_sessionStoringLogger.info("Session Notification State currently disabled.");
 		
-		_context.setState(new TradeInactiveState(_context));
-		
-//		_context.setState(new SessionNotificationState(_context, session));
+		_context.setState(new SessionNotificationState(_context, session));
 	}
 
 	@Override
