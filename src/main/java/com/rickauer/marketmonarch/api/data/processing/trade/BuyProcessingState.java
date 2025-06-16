@@ -38,7 +38,7 @@ public class BuyProcessingState extends TradeState {
 		String orderType = TradingOrderType.LMT.getCode();
 		
 //		_context.setQuantity(StockUtils.calculateQuantity(MarketMonarch._preTradeContext.getTotalCash(), MarketMonarch._tradingContext.getEntryPrice()));
-		_context.setQuantity(StockUtils.calculateQuantity(1000.0, MarketMonarch._tradingContext.getEntryPrice()));			; // <========================================== LÖSCHEN
+		_context.setQuantity(StockUtils.calculateQuantity(1184.92, MarketMonarch._tradingContext.getEntryPrice()));			; // <========================================== LÖSCHEN
 		Decimal quantity = _context.getQuantity(); 
 		double limitPrice = _context.getEntryPrice();
 		
