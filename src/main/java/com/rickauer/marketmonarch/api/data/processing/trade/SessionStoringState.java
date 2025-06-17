@@ -38,7 +38,7 @@ public class SessionStoringState extends TradeState {
 		try {
 			BarSeries history = _context.getStockAnalysisManager().getExecutorBySymbol(_context.getContract().symbol()).getSeries();
 			
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmm");
 			String fileContent = convertToString(history);
 			String timeStamp = ZonedDateTime.now().format(formatter);
 			String sessionFileName = timeStamp + ".csv";
