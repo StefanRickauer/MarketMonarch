@@ -33,7 +33,7 @@ public final class ReportPdfCreator {
 		
 		_reportCreatorLogger.info("Createing PDF session report.");
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmm");
 		String timeStamp = ZonedDateTime.now().format(formatter);
 		String sessionFileName = timeStamp + ".pdf";
 		String sessionFolder = MarketMonarch.CURRENT_SESSION_STORAGE_FOLDER + "\\" + sessionFileName;

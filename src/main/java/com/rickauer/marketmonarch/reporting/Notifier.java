@@ -72,12 +72,26 @@ public final class Notifier {
 	}
 	
 	private static String createContent() {
-		String content = """
-				Guten Tag,
-				
-				das ist ein automatisch erzeugter Session Report.
-				Eine PDF-Datei mit allen Informationen befindet sich im Anhang.
-				""";
+		String content = String.format("""
+			Guten Tag,
+
+            dies ist ein automatisch erstellter Session-Report.
+            Eine PDF-Datei mit allen Informationen finden Sie im Anhang.
+
+            Für den Fall, dass die PDF-Erzeugung fehlgeschlagen ist, finden Sie nachfolgend die wichtigsten Trading-Daten:
+
+            Durchschnittlicher Kaufpreis:     %.2f
+            Durchschnittlicher Verkaufspreis: %.2f
+
+            P&L (Gewinn/Verlust):             %.2f
+
+            Mit freundlichen Grüßen
+            Ihr MarketMonarch System
+            """,
+            MarketMonarch._tradingContext.getAverageBuyFillPrice(),
+            MarketMonarch._tradingContext.getAverageSellFillPrice(),
+            (MarketMonarch._tradingContext.getAverageSellFillPrice() - MarketMonarch._tradingContext.getAverageBuyFillPrice()));
+		
 		return content;
 	}
 	

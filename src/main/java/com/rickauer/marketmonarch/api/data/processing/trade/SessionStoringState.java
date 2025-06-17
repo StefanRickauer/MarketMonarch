@@ -63,14 +63,19 @@ public class SessionStoringState extends TradeState {
 				MarketMonarch._tradingContext.getTakeProfitLimit()
 				);
 		
-		if (MarketMonarch._finAccess.insertRow(session) != 0) {
-			_sessionStoringLogger.info("Saved session metrics to database.");
-		} else {
-			_sessionStoringLogger.info("Failed to save session metrics to database.");
+		int result = 0; 
+		
+		try {
+			result = MarketMonarch._finAccess.insertRow(session);
+		} catch (Exception e) {
+			_sessionStoringLogger.error("Failed to save session metrics to database.", e);
 		}
 		
-		_sessionStoringLogger.info("Session Notification State currently disabled.");
+		if (result != 0) {
+			_sessionStoringLogger.info("Saved session metrics to database.");
+		} 
 		
+		_sessionStoringLogger.info("Changing state.");
 		_context.setState(new SessionNotificationState(_context, session));
 	}
 

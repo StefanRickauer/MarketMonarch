@@ -2,6 +2,10 @@ package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
@@ -73,7 +77,11 @@ public class SessionNotificationState extends TradeState{
 		if (!_hasReceivedApiResponse) {
 			_sessionNotificationLogger.warn("Did not fetch historical Data. Line chart won't be created.");
 		} else {
-			LineChartCreator.createLineGraphAndSaveFile(_series, _context.getStopLossAuxPrice(), _context.getEntryDetected(), _context.getAverageBuyFillPrice(), _context.getExitTriggered(), _context.getAverageSellFillPrice());
+			try {
+				LineChartCreator.createLineGraphAndSaveFile(_series, _context.getStopLossAuxPrice(), _context.getEntryDetected(), _context.getAverageBuyFillPrice(), _context.getExitTriggered(), _context.getAverageSellFillPrice());
+			} catch (Exception e) {
+				_sessionNotificationLogger.error("Error creating line chart.", e);
+			}
 		}
 		
 		String sessionReportFile = null;
@@ -81,7 +89,21 @@ public class SessionNotificationState extends TradeState{
 		try {
 			sessionReportFile = ReportPdfCreator.createSessionReport(_tradeReportData, LineChartCreator.LINECHART);
 		} catch (IOException e) {
-			_sessionNotificationLogger.error("Could not create PDF report.");
+			_sessionNotificationLogger.error("Could not create PDF report. Attaching dummy file instead.");
+			
+			; // sobald sicher ist, dass die PDF-Dateien korrekt erzeugt werden, diesen Code und die Dummy-Datei wegwerfen! 
+			
+			URL dummyResource = getClass().getClassLoader().getResource("dummyPDF.pdf");
+			
+			if (dummyResource != null) {
+				Path path;
+				try {
+					path = Paths.get(dummyResource.toURI());
+					sessionReportFile = path.toString();
+				} catch (URISyntaxException ex) {
+					_sessionNotificationLogger.error("Error loading dummy file.");
+				}
+			}
 		}
 		
 		try {
