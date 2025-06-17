@@ -57,8 +57,8 @@ public class SessionStoringState extends TradeState {
 				MarketMonarch._tradingContext.getAverageBuyFillPrice(),
 				MarketMonarch._tradingContext.getAverageSellFillPrice(),
 				MarketMonarch._tradingContext.getQuantityAsInteger(),
-				StockUtils.zonedDateTimeToLocalDateTime(MarketMonarch._tradingContext.getEntryDetected()),
-				StockUtils.zonedDateTimeToLocalDateTime(MarketMonarch._tradingContext.getExitTriggered()),
+				MarketMonarch._tradingContext.getEntryDetected().toLocalDateTime(),
+				MarketMonarch._tradingContext.getExitTriggered().toLocalDateTime(),
 				MarketMonarch._tradingContext.getStopLossLimit(),
 				MarketMonarch._tradingContext.getTakeProfitLimit()
 				);

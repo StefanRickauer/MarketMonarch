@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -25,8 +26,8 @@ public class FinancialDataDaoTest {
 	private static final double ENTRY_PRICE = 15.0;
 	private static final double EXIT_PRICE = 20.0;
 	private static final int QUANTITY = 100;
-	private static final LocalDateTime ENTRY_TIME = StockUtils.stringToLocalDateTime("20250423 21:16:35");
-	private static final LocalDateTime EXIT_TIME = StockUtils.stringToLocalDateTime("20250428 21:16:35");
+	private static final LocalDateTime ENTRY_TIME = ZonedDateTime.now().toLocalDateTime();
+	private static final LocalDateTime EXIT_TIME = ZonedDateTime.now().plusMinutes(5).toLocalDateTime();
 	private static final double STOP_LOSS = 12.0;
 	private static final double TAKE_PROFIT = 19.8;
 	private static final double ORDER_EFFICIENCY_RATIO = 0.1;

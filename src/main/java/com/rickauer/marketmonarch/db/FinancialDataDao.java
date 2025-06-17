@@ -3,6 +3,7 @@ package com.rickauer.marketmonarch.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -26,11 +27,26 @@ public final class FinancialDataDao extends DatabaseDao {
 	public int insertRow(TradeDto trade) {
 		String insertion = "INSERT INTO trade (symbol, entry_price, exit_price, quantity, entry_time, exit_time, stop_loss, take_profit, order_efficiency_ratio) VALUES('%s', %f, %f, %d, '%s', '%s', %f, %f, %f)";
 		
+		DateTimeFormatter sqlFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		
+		String formattedEntryTime = trade.getEntryTime().format(sqlFormatter);
+		String formattedExitTime = trade.getExitTime().format(sqlFormatter);
+		
 		// Locale.US is necessary, because otherwise double-values cause Exception: Guess because they are being turned into 1,0 whereas the ',' is interpreted 
 		// as a separator instead of a floating point!
-		String query = String.format(Locale.US, insertion, trade.getSymbol(), trade.getEntryPrice(), 
-				trade.getExitPrice(), trade.getQuantity(), trade.getEntryTime(), trade.getExitTime(), trade.getStopLoss(), 
-				trade.getTakeProfit(), trade.getOrderEfficiencyRatio()); 
+		String query = String.format(
+				Locale.US, 
+				insertion, 
+				trade.getSymbol(), 
+				trade.getEntryPrice(), 
+				trade.getExitPrice(), 
+				trade.getQuantity(), 
+				formattedEntryTime, 
+				formattedExitTime, 
+				trade.getStopLoss(), 
+				trade.getTakeProfit(), 
+				trade.getOrderEfficiencyRatio()
+				); 
 		
 		return executeSqlUpdate(query);
 	}
