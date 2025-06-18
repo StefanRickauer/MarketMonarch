@@ -6,10 +6,15 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.rickauer.marketmonarch.db.data.TradeDto;
 import com.rickauer.marketmonarch.utils.Visitor;
 
 public final class FinancialDataDao extends DatabaseDao {
+	
+	private static Logger _finDaoLogger = LogManager.getLogger(FinancialDataDao.class.getName());
 	
 	public FinancialDataDao(String dbUrl, String user, String password) {
 		super(dbUrl, user, password);
@@ -20,6 +25,7 @@ public final class FinancialDataDao extends DatabaseDao {
 		visitor.visit(this);
 	}
 	
+	@SuppressWarnings("resource")
 	public int insertRow(TradeDto trade) {
 		String sql = "INSERT INTO trade (symbol, entry_price, exit_price, quantity, entry_time, exit_time, stop_loss, take_profit, order_efficiency_ratio) " + 
 					 "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -39,7 +45,7 @@ public final class FinancialDataDao extends DatabaseDao {
 			
 			return statement.executeUpdate();
 		} catch (SQLException e) {
-			//
+			_finDaoLogger.error("Error inserting row.", e);
 		}
 		return 0;
 	}

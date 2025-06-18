@@ -1,6 +1,5 @@
 package com.rickauer.marketmonarch.api.data.processing.trade;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -21,10 +20,8 @@ import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
-import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.db.data.TradeDto;
-import com.rickauer.marketmonarch.db.data.TradeReportDto;
 import com.rickauer.marketmonarch.reporting.LineChartCreator;
 import com.rickauer.marketmonarch.reporting.Notifier;
 import com.rickauer.marketmonarch.reporting.ReportPdfCreator;
@@ -36,7 +33,7 @@ public class SessionNotificationState extends TradeState{
 	private static Logger _sessionNotificationLogger = LogManager.getLogger(SessionNotificationState.class.getName());
 	
 	TradeDto _sessionData;
-	TradeReportDto _tradeReportData;
+//	TradeReportDto _tradeReportData;
 	BarSeries _series;
 	Object _lock; 
 
@@ -47,15 +44,12 @@ public class SessionNotificationState extends TradeState{
 		_series = new BaseBarSeriesBuilder()
 				.withNumTypeOf(DecimalNum::valueOf)
 				.build();
-		_tradeReportData = null;
 	}
 
 	@Override
 	public void onEnter() {
 		_sessionNotificationLogger.info("Entered session notification state.");
 		_sessionNotificationLogger.info("Requesting historical data in order to create line chart.");
-		
-		_tradeReportData = new TradeReportDto(MarketMonarch._finAccess, _sessionData);
 		
 		_context.getController().getSocket().reqHistoricalData(
 				_context.getController().getNextRequestId(), 
@@ -87,8 +81,8 @@ public class SessionNotificationState extends TradeState{
 		String sessionReportFile = null;
 		
 		try {
-			sessionReportFile = ReportPdfCreator.createSessionReport(_tradeReportData, LineChartCreator.LINECHART);
-		} catch (IOException e) {
+			sessionReportFile = ReportPdfCreator.createSessionReport(LineChartCreator.LINECHART);
+		} catch (Exception e) {
 			_sessionNotificationLogger.error("Could not create PDF report. Attaching dummy file instead.");
 			
 			; // sobald sicher ist, dass die PDF-Dateien korrekt erzeugt werden, diesen Code und die Dummy-Datei wegwerfen! 

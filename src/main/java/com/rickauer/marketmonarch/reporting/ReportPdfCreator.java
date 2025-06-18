@@ -22,13 +22,12 @@ import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.rickauer.marketmonarch.MarketMonarch;
-import com.rickauer.marketmonarch.db.data.TradeReportDto;
 
 public final class ReportPdfCreator {
 	
 	private static Logger _reportCreatorLogger = LogManager.getLogger(ReportPdfCreator.class.getName());
 	
-	public static String createSessionReport(TradeReportDto reportData, String filePath) throws IOException {
+	public static String createSessionReport(String filePath) {
 		
 		_reportCreatorLogger.info("Createing PDF session report.");
 		
