@@ -1,7 +1,5 @@
 package com.rickauer.marketmonarch.api.request;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,12 +37,7 @@ import com.ib.client.SoftDollarTier;
 import com.ib.client.TickAttrib;
 import com.ib.client.TickAttribBidAsk;
 import com.ib.client.TickAttribLast;
-import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.MarketMonarch;
-import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
-import com.rickauer.marketmonarch.api.data.CandleStick;
-import com.rickauer.marketmonarch.api.data.processing.trade.TradeContext;
-import com.rickauer.marketmonarch.api.response.ScannerResponse;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
 public final class InteractiveBrokersApiRequestHandler implements EWrapper {

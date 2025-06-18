@@ -6,11 +6,9 @@ import java.io.File;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.rickauer.marketmonarch.utils.FileSupplier;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class FileSupplierTest {

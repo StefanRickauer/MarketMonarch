@@ -12,14 +12,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import com.rickauer.marketmonarch.MarketMonarch;
-import com.rickauer.marketmonarch.api.connect.FmpConnector;
-import com.rickauer.marketmonarch.api.controller.FmpRequestController;
-import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.api.enums.TradingTime;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.constants.TradingConstants;
-import com.rickauer.marketmonarch.db.ApiKeyDao;
 import com.rickauer.marketmonarch.db.data.TradeDto;
 
 public class StockUtilsTest {

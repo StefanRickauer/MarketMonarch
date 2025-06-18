@@ -13,24 +13,13 @@ import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseBar;
-import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.indicators.helpers.LowPriceIndicator;
 import org.ta4j.core.indicators.helpers.LowestValueIndicator;
-import org.ta4j.core.num.DecimalNum;
 
-import com.rickauer.marketmonarch.MarketMonarch;
-import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.enums.TradingTime;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.db.data.TradeDto;

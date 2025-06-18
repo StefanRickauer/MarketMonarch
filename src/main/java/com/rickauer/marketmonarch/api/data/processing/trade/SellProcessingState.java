@@ -8,17 +8,14 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ib.client.Bar;
 import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
-import com.ib.client.OrderType;
 import com.ib.client.Types.TimeInForce;
 import com.rickauer.marketmonarch.api.enums.OrderStatus;
 import com.rickauer.marketmonarch.api.enums.OrderTransactionType;
 import com.rickauer.marketmonarch.api.enums.TradingOrderType;
-import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class SellProcessingState extends TradeState {

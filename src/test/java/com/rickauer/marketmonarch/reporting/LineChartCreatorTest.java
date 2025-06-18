@@ -2,15 +2,10 @@ package com.rickauer.marketmonarch.reporting;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,10 +16,7 @@ import org.ta4j.core.BaseBar;
 import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.num.DecimalNum;
 
-import com.ib.client.Decimal;
-import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.utils.FileSupplier;
-import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class LineChartCreatorTest {
 

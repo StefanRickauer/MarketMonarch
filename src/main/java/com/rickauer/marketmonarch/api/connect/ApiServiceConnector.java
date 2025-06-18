@@ -1,8 +1,5 @@
 package com.rickauer.marketmonarch.api.connect;
 
-import java.sql.SQLException;
-
-import com.rickauer.marketmonarch.db.DatabaseDao;
 import com.rickauer.marketmonarch.utils.Verifyable;
 
 public abstract class ApiServiceConnector implements Verifyable {

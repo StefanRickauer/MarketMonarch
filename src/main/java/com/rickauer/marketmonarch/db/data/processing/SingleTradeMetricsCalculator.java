@@ -1,6 +1,5 @@
 package com.rickauer.marketmonarch.db.data.processing;
 
-import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
 import com.rickauer.marketmonarch.db.data.TradeDto;

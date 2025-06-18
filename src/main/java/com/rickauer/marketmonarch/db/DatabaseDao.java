@@ -2,7 +2,6 @@ package com.rickauer.marketmonarch.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,9 +9,7 @@ import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rickauer.marketmonarch.HealthChecker;
 import com.rickauer.marketmonarch.utils.Verifyable;
-import com.rickauer.marketmonarch.utils.Visitor;
 
 public abstract class DatabaseDao implements Verifyable {
 

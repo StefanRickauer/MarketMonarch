@@ -1,8 +1,5 @@
 package com.rickauer.marketmonarch.api.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.DateTime;
 
 import com.ib.client.Contract;

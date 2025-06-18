@@ -10,9 +10,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ta4j.core.Bar;
-import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBar;
-import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.num.DecimalNum;
 
 import com.ib.client.Contract;
@@ -20,10 +18,7 @@ import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
 import com.rickauer.marketmonarch.MarketMonarch;
-import com.rickauer.marketmonarch.api.data.CandleStick;
-import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
-import com.rickauer.marketmonarch.api.data.processing.pretrade.AccountValidationState;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
 public class EntryScanningState extends TradeState {

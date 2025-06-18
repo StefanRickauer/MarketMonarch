@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import com.ib.client.Bar;
 import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
-import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.constants.TradingConstants;

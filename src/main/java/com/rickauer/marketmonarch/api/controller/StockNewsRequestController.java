@@ -5,11 +5,9 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import com.rickauer.marketmonarch.api.enums.SentimentFilterPeriod;
 import com.rickauer.marketmonarch.api.enums.StockNewsServiceSentimentRequest;
-import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
 import com.rickauer.marketmonarch.api.request.RequestHandler;
 
 public final class StockNewsRequestController {

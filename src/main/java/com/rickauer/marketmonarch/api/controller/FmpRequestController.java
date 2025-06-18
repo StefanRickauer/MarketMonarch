@@ -1,8 +1,5 @@
 package com.rickauer.marketmonarch.api.controller;
 
-import java.io.Reader;
-import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 

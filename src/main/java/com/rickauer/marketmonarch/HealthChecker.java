@@ -2,19 +2,14 @@ package com.rickauer.marketmonarch;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-import com.rickauer.marketmonarch.configuration.DatabaseConnector;
-import com.rickauer.marketmonarch.db.ApiKeyDao;
-import com.rickauer.marketmonarch.db.FinancialDataDao;
 import com.rickauer.marketmonarch.utils.IsCoreTypeCheckVisitor;
 import com.rickauer.marketmonarch.utils.OperationalCheckVisitor;
 import com.rickauer.marketmonarch.utils.Verifyable;
-import com.rickauer.marketmonarch.utils.Visitor;
 
 public final class HealthChecker {
 	

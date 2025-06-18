@@ -2,8 +2,6 @@ package com.rickauer.marketmonarch.data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.math.BigDecimal;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +9,6 @@ import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.rickauer.marketmonarch.api.data.CandleStick;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
-import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class StockMetricsTest {
 

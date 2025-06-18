@@ -1,6 +1,5 @@
 package com.rickauer.marketmonarch.db;
 
-import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.utils.Visitor;
 
 public final class ApiKeyDao extends DatabaseDao {

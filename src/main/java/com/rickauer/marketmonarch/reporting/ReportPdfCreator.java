@@ -22,7 +22,6 @@ import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.rickauer.marketmonarch.MarketMonarch;
-import com.rickauer.marketmonarch.api.data.processing.trade.SessionNotificationState;
 import com.rickauer.marketmonarch.db.data.TradeReportDto;
 
 public final class ReportPdfCreator {

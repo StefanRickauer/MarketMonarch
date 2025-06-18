@@ -3,17 +3,11 @@ package com.rickauer.marketmonarch.api.data.processing.trade;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.ta4j.core.BarSeries;
 
 import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
-import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.data.processing.StockAnalysisManager;
-import com.rickauer.marketmonarch.api.data.processing.StrategyExecutor;
 
 public class TradeContext {
 	

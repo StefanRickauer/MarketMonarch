@@ -7,22 +7,11 @@ import com.ib.client.Contract;
 import com.ib.client.EClientSocket;
 import com.ib.client.EReader;
 import com.ib.client.Order;
-import com.ib.client.ScannerSubscription;
-import com.ib.client.TagValue;
-import com.rickauer.marketmonarch.MarketMonarch;
-import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
-import com.rickauer.marketmonarch.api.data.CandleSeries;
-import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler;
-import com.rickauer.marketmonarch.api.response.ScannerResponse;
-import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.utils.Verifyable;
 import com.rickauer.marketmonarch.utils.Visitor;
 
 import static com.rickauer.marketmonarch.MarketMonarch.PROGRAM;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public final class InteractiveBrokersApiController implements Verifyable {
 

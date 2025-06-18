@@ -5,18 +5,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Locale;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.data.TradeDto;
-import com.rickauer.marketmonarch.utils.StockUtils;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class FinancialDataDaoTest {

@@ -5,8 +5,6 @@ import java.time.format.DateTimeFormatter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 
@@ -16,9 +14,7 @@ import com.ib.client.Order;
 import com.ib.client.OrderState;
 import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.db.data.TradeDto;
-import com.rickauer.marketmonarch.reporting.LineChartCreator;
 import com.rickauer.marketmonarch.utils.FileSupplier;
-import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class SessionStoringState extends TradeState {
 

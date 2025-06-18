@@ -1,10 +1,8 @@
 package com.rickauer.marketmonarch.db.data.processing;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.rickauer.marketmonarch.db.data.TradeDto;
-import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class AggregateTradeMetricsCalculator {
 

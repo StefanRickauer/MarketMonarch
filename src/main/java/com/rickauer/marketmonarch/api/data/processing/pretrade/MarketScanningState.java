@@ -10,7 +10,6 @@ import com.ib.client.Bar;
 import com.ib.client.ContractDetails;
 import com.ib.client.ScannerSubscription;
 import com.ib.client.TagValue;
-import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 
 public class MarketScanningState extends PreTradeState {

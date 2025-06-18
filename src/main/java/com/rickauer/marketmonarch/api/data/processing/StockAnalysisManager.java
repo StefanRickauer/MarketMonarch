@@ -7,8 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ta4j.core.Bar;
 
-import com.rickauer.marketmonarch.api.data.processing.trade.EntryScanningState;
-
 public class StockAnalysisManager {
 
 	private static Logger _analysisLogger = LogManager.getLogger(StockAnalysisManager.class.getName());

@@ -2,7 +2,6 @@ package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import java.time.ZonedDateTime;
 
-import com.ib.client.Bar;
 import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.ib.client.Order;

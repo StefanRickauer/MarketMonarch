@@ -9,7 +9,6 @@ import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
 import com.rickauer.marketmonarch.api.enums.SentimentFilterPeriod;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.ApiKeyDao;
-import com.rickauer.marketmonarch.utils.FileSupplier;
 
 public class StockNewsRequestControllerTest {
 

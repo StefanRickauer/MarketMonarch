@@ -1,7 +1,6 @@
 package com.rickauer.marketmonarch.db.data;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import com.rickauer.marketmonarch.utils.StockUtils;
 

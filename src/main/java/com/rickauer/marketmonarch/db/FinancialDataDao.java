@@ -1,14 +1,11 @@
 package com.rickauer.marketmonarch.db;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.data.TradeDto;
 import com.rickauer.marketmonarch.utils.StockUtils;
 import com.rickauer.marketmonarch.utils.Visitor;
