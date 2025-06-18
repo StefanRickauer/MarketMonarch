@@ -14,6 +14,7 @@ import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.api.enums.OrderStatus;
 import com.rickauer.marketmonarch.api.enums.OrderTransactionType;
 import com.rickauer.marketmonarch.api.enums.TradingOrderType;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class BuyProcessingState extends TradeState {
@@ -36,8 +37,12 @@ public class BuyProcessingState extends TradeState {
 		String action = OrderTransactionType.BUY.getAction();
 		String orderType = TradingOrderType.LMT.getCode();
 		
-//		_context.setQuantity(StockUtils.calculateQuantity(MarketMonarch._preTradeContext.getTotalCash(), MarketMonarch._tradingContext.getEntryPrice()));
-		_context.setQuantity(StockUtils.calculateQuantity(1184.92, MarketMonarch._tradingContext.getEntryPrice()));			; // <========================================== LÖSCHEN
+		if (_context.getController().getPortNumber() == TradingConstants.REAL_MONEY_TRADING_PORT_NUMBER) {
+			_context.setQuantity(StockUtils.calculateQuantity(MarketMonarch._preTradeContext.getTotalCash(), MarketMonarch._tradingContext.getEntryPrice()));			
+		} else {
+			_context.setQuantity(StockUtils.calculateQuantity(1184.92, MarketMonarch._tradingContext.getEntryPrice()));						
+		}
+		
 		Decimal quantity = _context.getQuantity(); 
 		double limitPrice = _context.getEntryPrice();
 		

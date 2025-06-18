@@ -64,6 +64,10 @@ public final class InteractiveBrokersApiController implements Verifyable {
 		}).start();
 	}
 
+	public int getPortNumber() {
+		return _port;
+	}
+	
 	public int getRequestId() {
 		return _requestHandler.getRequestId();
 	}
