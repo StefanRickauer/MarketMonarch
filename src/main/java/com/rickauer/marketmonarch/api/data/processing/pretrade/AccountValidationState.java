@@ -26,7 +26,7 @@ public class AccountValidationState extends PreTradeState {
 		synchronized (_context.getAccountDetails()) {
 			try {
 				_context.getIbController().getSocket().reqAccountSummary(requestId, TradingConstants.ACCOUNT_SUMMARY_GROUP, TradingConstants.ACCOUNT_SUMMARY_TAGS); 			
-				_context.getAccountDetails().wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
+				_context.getAccountDetails().wait(TradingConstants.ONE_MINUTE_TIMEOUT_MS);
 			} catch (InterruptedException e) {
 				throw new RuntimeException("Error fetching account summary.");
 			}
