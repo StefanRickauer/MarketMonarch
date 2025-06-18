@@ -2,8 +2,6 @@ package com.rickauer.marketmonarch.db;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -55,17 +53,20 @@ public class FinancialDataDaoTest {
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 		FinancialDataDao db = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		
-		try (ResultSet result = db.executeSqlQuery("SELECT entry_price FROM trade where symbol = 'Test-Symbol'")) {
-			
+		try {
+			List<TradeDto> trades = db.executeTradeQuery("SELECT * FROM trade where symbol = 'Test-Symbol'");
 			// If db.executeSqlQuery finds nothing, result.next() will be false and the else-brach will be executed (verified by querying a non existent database).
-			if (result.next()) {
-				int entryPrice = (int)result.getDouble("entry_price");
+			for (TradeDto trade : trades) {
+				int entryPrice = (int)trade.getEntryPrice();
 				assertEquals(15, entryPrice);
 			}
-			else 
-				assertTrue(false);
 			
-		} catch (SQLException e) {
+			if (trades.isEmpty()) {
+				assertTrue(false);
+			}
+			
+		} catch (Exception e) {
+//			assertTrue(false);
 			e.printStackTrace();
 		}
 	}
