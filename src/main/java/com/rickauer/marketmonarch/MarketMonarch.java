@@ -16,6 +16,7 @@ import com.rickauer.marketmonarch.api.data.processing.trade.TradeInactiveState;
 import com.rickauer.marketmonarch.api.data.processing.trade.TradeContext;
 import com.rickauer.marketmonarch.api.enums.FmpServiceRequest;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.db.ApiKeyDao;
 import com.rickauer.marketmonarch.db.FinancialDataDao;
 import com.rickauer.marketmonarch.utils.FileSupplier;
@@ -52,7 +53,7 @@ public final class MarketMonarch {
 	public static TradeContext _tradingContext;
 
 	static {
-		_interactiveBrokersController = new InteractiveBrokersApiController();
+		_interactiveBrokersController = new InteractiveBrokersApiController(TradingConstants.SIMULATED_TRADING_PORT_NUMBER);
 
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 
@@ -73,6 +74,7 @@ public final class MarketMonarch {
 		try {
 			Thread.currentThread().setName(PROGRAM + " -> Main Thread");
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
+			_marketMonarchLogger.info( (_interactiveBrokersController.getPortNumber() == TradingConstants.SIMULATED_TRADING_PORT_NUMBER) ? "This is a simulated trading session." : "This is a real money trading session." );
 			
 			ensureOperationalReadiness();
 			setUpWorkingEnvironment();
