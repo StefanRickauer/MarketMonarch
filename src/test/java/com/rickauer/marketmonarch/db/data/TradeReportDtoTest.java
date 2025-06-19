@@ -14,7 +14,6 @@ import com.rickauer.marketmonarch.db.FinancialDataDao;
 
 public class TradeReportDtoTest {
 
-	private static final int ID = 1;
 	private static final String SYMBOL = "Test-Symbol";
 	private static final double ENTRY_PRICE = 15.0;
 	private static final double EXIT_PRICE = 20.0;

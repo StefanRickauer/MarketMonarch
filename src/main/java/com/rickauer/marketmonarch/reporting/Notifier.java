@@ -40,7 +40,7 @@ public final class Notifier {
 		});
 		
 		MimeMessage message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(SENDER, MarketMonarch.PROGRAM_AND_VERSION));
+		message.setFrom(new InternetAddress(SENDER, MarketMonarch.PROGRAM));
 		message.addRecipient(Message.RecipientType.TO, new InternetAddress(RECIPIENT));
 		message.setSubject(createSubject());
 		
@@ -74,14 +74,14 @@ public final class Notifier {
 	private static String createContent() {
 		String content = String.format(
 			"Guten Tag," +
-            "\n\ndies ist ein automatisch erstellter Session-Report." +
-            "\nEine PDF-Datei mit allen Informationen finden Sie im Anhang." +
-            "\n\nFür den Fall, dass die PDF-Erzeugung fehlgeschlagen ist, finden Sie nachfolgend die wichtigsten Trading-Daten:" +
+            "\n\ndies ist ein automatisch generierter Session-Report." +
+            "\nDie vollständigen Informationen finden Sie in der beigefügten PDF-Datei." +
+            "\n\nFalls die PDF-Erzeugung fehlgeschlagen sein sollte, finden Sie nachfolgend die wichtigsten Trading-Daten:" +
             "\n\nDurchschnittlicher Kaufpreis:     %.2f" +
             "\nDurchschnittlicher Verkaufspreis: %.2f" +
             "\nP&L (Gewinn/Verlust):             %.2f" +
-            "\n\nMit freundlichen Grüßen" +
-            "\nIhr MarketMonarch System",
+            "\n\nSession complete. Stay sharp!" +
+            "\n" + MarketMonarch.PROGRAM + " v" + MarketMonarch.VERSION,
             MarketMonarch._tradingContext.getAverageBuyFillPrice(),
             MarketMonarch._tradingContext.getAverageSellFillPrice(),
             (MarketMonarch._tradingContext.getAverageSellFillPrice() - MarketMonarch._tradingContext.getAverageBuyFillPrice()));
