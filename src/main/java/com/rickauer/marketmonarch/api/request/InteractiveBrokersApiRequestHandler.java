@@ -38,14 +38,13 @@ import com.ib.client.TickAttrib;
 import com.ib.client.TickAttribBidAsk;
 import com.ib.client.TickAttribLast;
 import com.rickauer.marketmonarch.MarketMonarch;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
 public final class InteractiveBrokersApiRequestHandler implements EWrapper {
 
 	private static Logger _ibRequestHandlerLogger = LogManager
 			.getLogger(InteractiveBrokersApiRequestHandler.class.getName());
-	
-	private final static long TWO_MINUTES_IN_MILLIS = 120000L;
 	
 	private final Object lock = new Object();
 	
@@ -169,7 +168,7 @@ public final class InteractiveBrokersApiRequestHandler implements EWrapper {
         synchronized (lock) {
             _clientSocket.reqIds(-1); 
             try {
-				lock.wait(TWO_MINUTES_IN_MILLIS);
+				lock.wait(TradingConstants.ONE_MINUTE_TIMEOUT_MS);
 			} catch (InterruptedException e) {
 				_ibRequestHandlerLogger.error("Timeout reached. Error requesting order ID.");
 			} 
