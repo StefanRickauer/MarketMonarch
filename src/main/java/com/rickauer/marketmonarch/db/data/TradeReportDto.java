@@ -33,9 +33,8 @@ public class TradeReportDto {
 	double _sortinoRatio;
 	
 	; // overall profit -> implement in AggregateTradeMetricsCalculator and create new DB only for account balances!
-	; // Database call from constructor is a bad idea! Use in createSessionReport (this class!)
-	public TradeReportDto(FinancialDataDao db, TradeDto tradingData) {
-		_allTrades = db.getAllTrades();
+	public TradeReportDto(List<TradeDto> allTrades, TradeDto tradingData) {
+		_allTrades = allTrades;
 		_tradingData = tradingData;
 		_profitPerStock = SingleTradeMetricsCalculator.calculateProfitPerStock(tradingData);
 		_profitPercentage = SingleTradeMetricsCalculator.calculateProfitPercentage(tradingData);
