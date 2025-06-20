@@ -1,8 +1,9 @@
 package com.rickauer.marketmonarch.configuration;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +16,8 @@ import com.rickauer.marketmonarch.utils.Visitor;
 public enum DatabaseConnector implements Verifyable {
 	INSTANCE;
 	
-	private static final String SOURCE_FILE = "./src/main/resources/Configuration.json";
+	private static final String CONFIGURATION_FILE = "Configuration.json";
+	
 	private Logger databaseConnectorLogger = LogManager.getLogger(DatabaseConnector.class.getName());
 	
 	private String urlTestDB;
@@ -25,11 +27,11 @@ public enum DatabaseConnector implements Verifyable {
 	private String password;
 
 	public boolean isSourceFilePresent() {
-		return new File(SOURCE_FILE).exists();
+		return DatabaseConnector.class.getClassLoader().getResource("Configuration.json") != null;
 	}
 	
 	public String getSourceFile() {
-		return SOURCE_FILE;
+		return CONFIGURATION_FILE;
 	}
 	
 	public String getUrlTestDB() {
@@ -67,8 +69,8 @@ public enum DatabaseConnector implements Verifyable {
 
 	private void readDatabaseConnectionEssentials() {
 
-		String srcFile = SOURCE_FILE;
-		try (Reader reader = new FileReader(srcFile);) {
+		try (InputStream in = DatabaseConnector.class.getClassLoader().getResourceAsStream(CONFIGURATION_FILE);
+			 Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8);) {
 
 			JSONParser parser = new JSONParser();
 

@@ -2,7 +2,6 @@ package com.rickauer.marketmonarch.db.data;
 
 import java.util.List;
 
-import com.rickauer.marketmonarch.db.FinancialDataDao;
 import com.rickauer.marketmonarch.db.data.processing.AggregateTradeMetricsCalculator;
 import com.rickauer.marketmonarch.db.data.processing.SingleTradeMetricsCalculator;
 
