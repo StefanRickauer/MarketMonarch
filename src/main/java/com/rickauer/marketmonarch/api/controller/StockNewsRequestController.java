@@ -10,6 +10,7 @@ import com.rickauer.marketmonarch.api.enums.SentimentFilterPeriod;
 import com.rickauer.marketmonarch.api.enums.StockNewsServiceSentimentRequest;
 import com.rickauer.marketmonarch.api.request.RequestHandler;
 
+@Deprecated
 public final class StockNewsRequestController {
 	
 	private static Logger _stockNewsRequestControllerLogger = LogManager.getLogger(StockNewsRequestController.class.getName());

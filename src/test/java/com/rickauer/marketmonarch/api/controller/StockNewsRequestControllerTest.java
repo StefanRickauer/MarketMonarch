@@ -3,6 +3,7 @@ package com.rickauer.marketmonarch.api.controller;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.rickauer.marketmonarch.api.connect.StockNewsConnector;
@@ -10,6 +11,7 @@ import com.rickauer.marketmonarch.api.enums.SentimentFilterPeriod;
 import com.rickauer.marketmonarch.configuration.DatabaseConnector;
 import com.rickauer.marketmonarch.db.ApiKeyDao;
 
+@Disabled("Alle Tests in dieser Klasse deaktiviert: Account nicht mehr vorhanden. Abfragen schlagen fehl.")
 public class StockNewsRequestControllerTest {
 
 	// StockNews-API key and account were deleted. Refresh to use the StockNews-API. Until then, all tests will fail.
@@ -29,7 +31,7 @@ public class StockNewsRequestControllerTest {
 	
 	@Test
 	void requestSentimentScoreWithDataTest() {
-		assertTrue(_controller.requestSentimentScore("AAPL", SentimentFilterPeriod.TODAY) != 0.0);
+		assertTrue(_controller.requestSentimentScore("TSLA", SentimentFilterPeriod.TODAY) != 0.0);
 	}
 
 	// In case this test fails, that just means that data was received. I used 'XXXXX' but after a few successful tries received a ConnectionException. So I thought it was better to use something else.
