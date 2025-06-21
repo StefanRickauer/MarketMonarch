@@ -10,12 +10,16 @@
 		defined trading strategy.</description>
 
 	<properties>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 		<main.class>com.rickauer.marketmonarch.MarketMonarch</main.class>
 	</properties>
 
 	<build>
 		<plugins>
-			<!-- Build-Prozess: Rechtsklick auf Projekt: Run as -> Maven build... -> Bei Goals: "clean verify" eingeben -> Run -->
+			<!-- Build-Prozess: Rechtsklick auf Projekt: Run as -> Maven
+			build... -> Bei Goals: "clean verify" eingeben -> Run -->
 			<!-- 1. Schritt: Fat JAR erstellen -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -40,7 +44,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<!-- 2. Schritt: JAR als EXE verpacken -->
 			<plugin>
 				<groupId>com.akathist.maven.plugins.launch4j</groupId>
