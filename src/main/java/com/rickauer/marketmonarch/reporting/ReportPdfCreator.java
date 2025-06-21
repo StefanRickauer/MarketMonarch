@@ -45,9 +45,7 @@ public final class ReportPdfCreator {
 		double winLossTotal = exit - entry;
 		double winLossPercent = winLossTotal * 100 / entry;
 
-		try {
-			// Create document
-			PDDocument document = new PDDocument();
+		try (PDDocument document = new PDDocument()) {
 			
 			// Create pages
 			PDPage pageWithStats = new PDPage(PDRectangle.A4);
@@ -57,86 +55,89 @@ public final class ReportPdfCreator {
 			document.addPage(pageWithStats);
 			document.addPage(pageWithDiagram);
 			
-			// Page 1 ==============================================================
+			
 			// Add content to page
-			PDPageContentStream contentStreamPageOne = new PDPageContentStream(document, pageWithStats);
-			float textMargin = 50;
-			float yStart = pageWithStats.getMediaBox().getHeight() - textMargin;
-			float leading = 20;
-			float pageWidth = pageWithStats.getMediaBox().getWidth();
-			
-			// Text start
-			contentStreamPageOne.beginText();
-			
-			String title = "Trade-Kennzahlen";
-			float fontSize = 24.0f;
-			PDFont font = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-			float titleWidth = font.getStringWidth(title) / 1000 * fontSize;
-			float titleX = (pageWidth - titleWidth) / 2;
-			contentStreamPageOne.setFont(font, fontSize);
-			contentStreamPageOne.setNonStrokingColor(new Color(100, 149, 237));
-			contentStreamPageOne.newLineAtOffset(titleX, yStart);
-			contentStreamPageOne.showText(title);
-			contentStreamPageOne.endText();
-			
-			contentStreamPageOne.setNonStrokingColor(Color.BLACK);
-			contentStreamPageOne.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
-			
-			float labelX = textMargin;
-			float valueX = pageWidth / 2;
-			float textY = yStart - 80; // yStart - leading * 2;
-			
-			String[][] rows = { 
-					{ "Symbol:", MarketMonarch._tradingContext.getContract().symbol() },
-					{ "Positionsgröße:", volume + " Einheiten" },
-					{ "Einstandspreis pro Aktie:", String.format("%.2f €", entry) },
-					{ "Einstandspreis total:", String.format("%.2f €", entry * volume) },
-					{ "Verkaufspreis pro Aktie:", String.format("%.2f €", exit) },
-					{ "Verkaufspreis total:", String.format("%.2f €", exit * volume) },
-					{ "Stop Loss:", String.format("%.2f", stopLoss) },
-					{ "Erwartetes Risiko", String.format("%.2f %%", riskPercent) },
-					{ "Risikobetrag:", String.format("%.2f €", riskValue) },
-					{ "Gewinn/Verlust pro Aktie (Euro):", String.format("%.2f €", winLossTotal) },
-					{ "Gewinn/Verlust gesamt (Euro):", String.format("%.2f €", winLossTotal * volume) },
-					{ "Gewinn/Verlust (Prozent):", String.format("%.2f %%", winLossPercent) } };
-			
-			for (String[] row : rows) {
+			try (PDPageContentStream contentStreamPageOne = new PDPageContentStream(document, pageWithStats)){
+				
+				float textMargin = 50;
+				float yStart = pageWithStats.getMediaBox().getHeight() - textMargin;
+				float leading = 20;
+				float pageWidth = pageWithStats.getMediaBox().getWidth();
+				
+				// Text start
 				contentStreamPageOne.beginText();
-				contentStreamPageOne.newLineAtOffset(labelX, textY);
-				contentStreamPageOne.showText(row[0]);
+				
+				String title = "Trade-Kennzahlen";
+				float fontSize = 24.0f;
+				PDFont font = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+				float titleWidth = font.getStringWidth(title) / 1000 * fontSize;
+				float titleX = (pageWidth - titleWidth) / 2;
+				contentStreamPageOne.setFont(font, fontSize);
+				contentStreamPageOne.setNonStrokingColor(new Color(100, 149, 237));
+				contentStreamPageOne.newLineAtOffset(titleX, yStart);
+				contentStreamPageOne.showText(title);
 				contentStreamPageOne.endText();
 				
-				contentStreamPageOne.beginText();
-				contentStreamPageOne.newLineAtOffset(valueX, textY);
-				contentStreamPageOne.showText(row[1]);
-				contentStreamPageOne.endText();
+				contentStreamPageOne.setNonStrokingColor(Color.BLACK);
+				contentStreamPageOne.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
 				
-				textY -= leading;
+				float labelX = textMargin;
+				float valueX = pageWidth / 2;
+				float textY = yStart - 80; // yStart - leading * 2;
+				
+				String[][] rows = { 
+						{ "Symbol:", MarketMonarch._tradingContext.getContract().symbol() },
+						{ "Positionsgröße:", volume + " Einheiten" },
+						{ "Einstandspreis pro Aktie:", String.format("%.2f €", entry) },
+						{ "Einstandspreis total:", String.format("%.2f €", entry * volume) },
+						{ "Verkaufspreis pro Aktie:", String.format("%.2f €", exit) },
+						{ "Verkaufspreis total:", String.format("%.2f €", exit * volume) },
+						{ "Stop Loss:", String.format("%.2f", stopLoss) },
+						{ "Erwartetes Risiko", String.format("%.2f %%", riskPercent) },
+						{ "Risikobetrag:", String.format("%.2f €", riskValue) },
+						{ "Gewinn/Verlust pro Aktie (Euro):", String.format("%.2f €", winLossTotal) },
+						{ "Gewinn/Verlust gesamt (Euro):", String.format("%.2f €", winLossTotal * volume) },
+						{ "Gewinn/Verlust (Prozent):", String.format("%.2f %%", winLossPercent) } };
+				
+				for (String[] row : rows) {
+					contentStreamPageOne.beginText();
+					contentStreamPageOne.newLineAtOffset(labelX, textY);
+					contentStreamPageOne.showText(row[0]);
+					contentStreamPageOne.endText();
+					
+					contentStreamPageOne.beginText();
+					contentStreamPageOne.newLineAtOffset(valueX, textY);
+					contentStreamPageOne.showText(row[1]);
+					contentStreamPageOne.endText();
+					
+					textY -= leading;
+				}
 			}
 			
-			contentStreamPageOne.close();
 			
-			// Page 2 ==============================================================
+			
+			
 			// Create Image Object
 			PDImageXObject pdImage = PDImageXObject.createFromFile(filePath, document);
 			// Prepare Content Stream
-			PDPageContentStream contentStreamPageTwo = new PDPageContentStream(document, pageWithDiagram);
-			// Size of the diagram
-			float imageWidth = pdImage.getWidth();
-			float imageHeight = pdImage.getHeight();
-			// Target size for PDF
-			float targetWidth = 500;
-			float scale = targetWidth / imageWidth;
-			float targetHeight = imageHeight * scale;
-			// Position of image
-			float x = 50;
-			float pageHeight = PDRectangle.A4.getHeight();
-			float topMargin = 50;
-			float y = pageHeight - topMargin - targetHeight;
-			// Draw Image in the PDF document at position
-			contentStreamPageTwo.drawImage(pdImage, x, y, targetWidth, targetHeight);
-			// Close Content Stream
-			contentStreamPageTwo.close();
+			try (PDPageContentStream contentStreamPageTwo = new PDPageContentStream(document, pageWithDiagram)) {				
+				// Size of the diagram
+				float imageWidth = pdImage.getWidth();
+				float imageHeight = pdImage.getHeight();
+				// Target size for PDF
+				float targetWidth = 500;
+				float scale = targetWidth / imageWidth;
+				float targetHeight = imageHeight * scale;
+				// Position of image
+				float x = 50;
+				float pageHeight = PDRectangle.A4.getHeight();
+				float topMargin = 50;
+				float y = pageHeight - topMargin - targetHeight;
+				// Draw Image in the PDF document at position
+				contentStreamPageTwo.drawImage(pdImage, x, y, targetWidth, targetHeight);
+			}
+			
+			
 			
 			// Set document properties ===================================
 			PDDocumentInformation pdd = document.getDocumentInformation();
@@ -170,8 +171,6 @@ public final class ReportPdfCreator {
 			// Save document
 			document.save(sessionFolder);
 
-			// Close document
-			document.close();
 		} catch (IOException e) {
 			_reportCreatorLogger.error("Error creating session report.");
 		}
