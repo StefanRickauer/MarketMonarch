@@ -18,8 +18,10 @@ public class StockNewsRequestControllerTest {
 	
 	private static ApiKeyDao _apiAccess;
 	private static StockNewsConnector _stockNewsConnector;
+	@SuppressWarnings("deprecation")
 	private static StockNewsRequestController _controller;
 	
+	@SuppressWarnings("deprecation")
 	@BeforeAll
 	public static void initializeTestData() {
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
@@ -29,12 +31,14 @@ public class StockNewsRequestControllerTest {
 		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	void requestSentimentScoreWithDataTest() {
 		assertTrue(_controller.requestSentimentScore("TSLA", SentimentFilterPeriod.TODAY) != 0.0);
 	}
 
 	// In case this test fails, that just means that data was received. I used 'XXXXX' but after a few successful tries received a ConnectionException. So I thought it was better to use something else.
+	@SuppressWarnings("deprecation")
 	@Test
 	void requestSentimentScoreEmptyResponseTest() {
 		assertTrue(_controller.requestSentimentScore("HMBL", SentimentFilterPeriod.TODAY) == 0.0);
