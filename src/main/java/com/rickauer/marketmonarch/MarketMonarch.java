@@ -52,26 +52,13 @@ public final class MarketMonarch {
 	public static PreTradeContext _preTradeContext;
 	public static TradeContext _tradingContext;
 
-	static {
-		_interactiveBrokersController = new InteractiveBrokersApiController(TradingConstants.SIMULATED_TRADING_PORT_NUMBER);
-
-		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
-
-		_apiAccess = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
-		_finAccess = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
-		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
-		_fmpConnector = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
-		_financialModellingPrepController = new FmpRequestController(_fmpConnector.getToken(), FmpServiceRequest.ALL_SHARES_FLOAT);
-		_alphaVantage = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
-		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
-
-		_preTradeContext = new PreTradeContext(_interactiveBrokersController, _financialModellingPrepController);
-		_tradingContext = new TradeContext(_interactiveBrokersController);
-	}
-
 	
 	public static void main(String[] args) {
+		
+		
 		try {
+			initializeDataStructures();
+			
 			Thread.currentThread().setName(PROGRAM + " -> Main Thread");
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
 			_marketMonarchLogger.info( (_interactiveBrokersController.getPortNumber() == TradingConstants.SIMULATED_TRADING_PORT_NUMBER) ? "This is a simulated trading session." : "This is a real money trading session." );
@@ -123,6 +110,24 @@ public final class MarketMonarch {
 		}
 	}
 
+	
+	private static void initializeDataStructures() {
+		; // so überarbeiten, dass Port beim Programmstart übergeben werden kann
+		_interactiveBrokersController = new InteractiveBrokersApiController(TradingConstants.SIMULATED_TRADING_PORT_NUMBER);
+
+		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
+
+		_apiAccess = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		_finAccess = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
+		_fmpConnector = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
+		_financialModellingPrepController = new FmpRequestController(_fmpConnector.getToken(), FmpServiceRequest.ALL_SHARES_FLOAT);
+		_alphaVantage = new AlphaVantageConnector("alphavantageapi", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'alphavantage'", "token"));
+		DatabaseConnector.INSTANCE.flushDatabaseConnectionEssentials();
+
+		_preTradeContext = new PreTradeContext(_interactiveBrokersController, _financialModellingPrepController);
+		_tradingContext = new TradeContext(_interactiveBrokersController);
+	}
 	
 	private static void ensureOperationalReadiness() {
 		_marketMonarchLogger.info("Preparing for operational readiness check...");
