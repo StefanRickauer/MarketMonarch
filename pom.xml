@@ -20,6 +20,7 @@
 		<plugins>
 			<!-- Build-Prozess: Rechtsklick auf Projekt: Run as -> Maven
 			build... -> Bei Goals: "clean verify" eingeben -> Run -->
+			
 			<!-- 1. Schritt: Fat JAR erstellen -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -71,6 +72,29 @@
 					</classPath>
 					<icon>src/main/resources/icon.ico</icon> <!-- Optional -->
 				</configuration>
+			</plugin>
+			
+			<!-- 3. Schritt: NSIS-Installer erstellen -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>create-nsis-installer</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<!-- Pfad zu makensis.exe, falls nicht im PATH -->
+							<executable>C:/Program Files (x86)/NSIS/makensis.exe</executable>
+							<arguments>
+								<argument>src/main/installer/installer.nsi</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
