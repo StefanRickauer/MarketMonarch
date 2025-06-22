@@ -57,7 +57,9 @@ public final class MarketMonarch {
 		
 		
 		try {
-			initializeDataStructures();
+			
+			int port = processCommandLineArgs(args);
+			initializeDataStructures(port);
 			
 			Thread.currentThread().setName(PROGRAM + " -> Main Thread");
 			_marketMonarchLogger.info("Starting " + PROGRAM + " (version " + VERSION + ").");
@@ -110,10 +112,34 @@ public final class MarketMonarch {
 		}
 	}
 
+	private static int processCommandLineArgs(String[] args) {
+		
+		int port = TradingConstants.SIMULATED_TRADING_PORT_NUMBER;
+		
+		if (args.length == 1) {
+			try {
+				
+				port = Integer.parseInt(args[0]);
+
+				if (port == 4001) {
+					port = TradingConstants.REAL_MONEY_TRADING_PORT_NUMBER;
+					_marketMonarchLogger.info("Real money trading mode has been successfully enabled.");
+				} else {
+					_marketMonarchLogger.info("Real money trading not configured. Switching to simulated trading mode.");
+				}
+			} catch (Exception e) {
+				_marketMonarchLogger.error("Error parsing command line argument. Defaulting to simulated trading mode.");
+			}
+		} else {
+			_marketMonarchLogger.info("Real money trading not configured. Switching to simulated trading mode.");
+		}
+		
+		return port;
+	}
 	
-	private static void initializeDataStructures() {
-		; // so überarbeiten, dass Port beim Programmstart übergeben werden kann
-		_interactiveBrokersController = new InteractiveBrokersApiController(TradingConstants.SIMULATED_TRADING_PORT_NUMBER);
+	private static void initializeDataStructures(int port) {
+		
+		_interactiveBrokersController = new InteractiveBrokersApiController(port);
 
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 
