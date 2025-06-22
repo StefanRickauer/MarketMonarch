@@ -20,6 +20,7 @@ import com.ib.client.Contract;
 import com.ib.client.Decimal;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
+import com.rickauer.marketmonarch.MarketMonarch;
 import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.db.data.TradeDto;
 import com.rickauer.marketmonarch.reporting.LineChartCreator;
@@ -101,7 +102,7 @@ public class SessionNotificationState extends TradeState{
 		}
 		
 		try {
-			Notifier.notifyUser(sessionReportFile);
+			Notifier.notifyUser(sessionReportFile, MarketMonarch._mailtrapService.getToken());
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			_sessionNotificationLogger.error("Failed to notify user.");
 		} 

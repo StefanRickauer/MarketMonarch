@@ -26,7 +26,7 @@ public final class Notifier {
 	public static final String SENDER = "sessionfeed@neurotrace.one";
 	public static final String RECIPIENT = "stefanrickauer@gmail.com";
 	
-	public static void notifyUser(String pdfPath) throws UnsupportedEncodingException, MessagingException {
+	public static void notifyUser(String pdfPath, String token) throws UnsupportedEncodingException, MessagingException {
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
@@ -35,7 +35,7 @@ public final class Notifier {
 		
 		Session session = Session.getInstance(props, new Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("api", MarketMonarch._mailtrapService.getToken()); 	
+				return new PasswordAuthentication("api", token); 	
 			}
 		});
 		
