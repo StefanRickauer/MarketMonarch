@@ -31,7 +31,7 @@ import org.apache.commons.lang3.exception.*;
 public final class MarketMonarch {
 
 	public static final String PROGRAM = "MarketMonarch";
-	public static final String VERSION = "0.96";
+	public static final String VERSION = "0.965";
 	public static final String PROGRAM_AND_VERSION = PROGRAM + " " + VERSION;
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
