@@ -34,6 +34,7 @@ public class SessionNotificationState extends TradeState{
 	private static Logger _sessionNotificationLogger = LogManager.getLogger(SessionNotificationState.class.getName());
 	
 	TradeDto _sessionData;
+	; // TradeReportDto verwenden, sobald erfolgreich getestet
 //	TradeReportDto _tradeReportData;
 	BarSeries _series;
 	Object _lock; 
@@ -102,7 +103,7 @@ public class SessionNotificationState extends TradeState{
 		}
 		
 		try {
-			Notifier.notifyUser(sessionReportFile, MarketMonarch._mailtrapService.getToken());
+			Notifier.notifyUser(sessionReportFile, MarketMonarch._mailtrapService.getToken(), _context.getAverageBuyFillPrice(), _context.getAverageSellFillPrice());
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			_sessionNotificationLogger.error("Failed to notify user.");
 		} 

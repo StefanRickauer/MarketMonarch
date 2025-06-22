@@ -26,7 +26,7 @@ public final class Notifier {
 	public static final String SENDER = "sessionfeed@neurotrace.one";
 	public static final String RECIPIENT = "stefanrickauer@gmail.com";
 	
-	public static void notifyUser(String pdfPath, String token) throws UnsupportedEncodingException, MessagingException {
+	public static void notifyUser(String pdfPath, String token, double buy, double sell) throws UnsupportedEncodingException, MessagingException {
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
@@ -45,7 +45,7 @@ public final class Notifier {
 		message.setSubject(createSubject());
 		
 		MimeBodyPart messageBodyPart = new MimeBodyPart();
-		messageBodyPart.setText(createContent());
+		messageBodyPart.setText(createContent(buy, sell));
 		MimeMultipart multipart = new MimeMultipart();
 		multipart.addBodyPart(messageBodyPart);
 		
@@ -71,7 +71,7 @@ public final class Notifier {
 		return subject;
 	}
 	
-	private static String createContent() {
+	private static String createContent(double buy, double sell) {
 		String content = String.format(
 			"Guten Tag," +
             "\n\ndies ist ein automatisch generierter Session-Report." +
@@ -82,9 +82,7 @@ public final class Notifier {
             "\nP&L (Gewinn/Verlust):             %.2f" +
             "\n\nSession complete. Stay sharp!" +
             "\n" + MarketMonarch.PROGRAM + " v" + MarketMonarch.VERSION,
-            MarketMonarch._tradingContext.getAverageBuyFillPrice(),
-            MarketMonarch._tradingContext.getAverageSellFillPrice(),
-            (MarketMonarch._tradingContext.getAverageSellFillPrice() - MarketMonarch._tradingContext.getAverageBuyFillPrice()));
+            buy, sell, (sell - buy));
 		
 		return content;
 	}

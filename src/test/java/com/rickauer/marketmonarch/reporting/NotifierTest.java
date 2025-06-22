@@ -34,7 +34,7 @@ public class NotifierTest {
 	@Test
 	void notifyUserInCorrectPathTest() {
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			Notifier.notifyUser("C:\\Test\\mic", _mailtrapService.getToken());
+			Notifier.notifyUser("C:\\Test\\mic", _mailtrapService.getToken(), 2.5, 1.5);
 		});
 		
 		String actualMessage = exception.getMessage(); 
@@ -44,7 +44,7 @@ public class NotifierTest {
 	@Test
 	void notifyUserNullPathTest() {
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			Notifier.notifyUser(null, _mailtrapService.getToken());
+			Notifier.notifyUser(null, _mailtrapService.getToken(), 2.5, 1.5);
 		});
 		
 		String actualMessage = exception.getMessage(); 
@@ -54,7 +54,7 @@ public class NotifierTest {
 	@Test
 	void notifyUserCorrectPathTest() {
 		try {
-			Notifier.notifyUser("C:\\Test\\mickey.pdf", _mailtrapService.getToken());
+			Notifier.notifyUser("C:\\Test\\mickey.pdf", _mailtrapService.getToken(), 2.5, 1.5);
 		} catch (UnsupportedEncodingException | MessagingException e) {
 			assertTrue(false);
 		}
