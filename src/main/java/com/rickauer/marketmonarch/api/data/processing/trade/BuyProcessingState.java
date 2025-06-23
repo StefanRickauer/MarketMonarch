@@ -42,7 +42,8 @@ public class BuyProcessingState extends TradeState {
 			; // löschen, wenn es funktioniert
 			_buyOrderLogger.debug("This should be executed during real money sessions.");
 		} else {
-			_context.setQuantity(StockUtils.calculateQuantity(1184.92, MarketMonarch._tradingContext.getEntryPrice()));						
+			_context.setQuantity(StockUtils.calculateQuantity(1080.0, MarketMonarch._tradingContext.getEntryPrice()));	
+			_buyOrderLogger.debug("This should not be executed during real money sessions.");
 		}
 		
 		Decimal quantity = _context.getQuantity(); 
