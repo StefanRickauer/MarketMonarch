@@ -66,7 +66,9 @@ public class SessionNotificationState extends TradeState{
 				null
 				);
 		try {
-			_lock.wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
+			synchronized (_lock) {
+				_lock.wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
+			}
 		} catch (InterruptedException e) {
 			_sessionNotificationLogger.error("Error waiting for lock to be released.");
 		}
