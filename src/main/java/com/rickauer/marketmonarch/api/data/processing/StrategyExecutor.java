@@ -19,7 +19,6 @@ import org.ta4j.core.num.DecimalNum;
 import org.ta4j.core.num.Num;
 import org.ta4j.core.rules.OverIndicatorRule;
 import org.ta4j.core.rules.StopLossRule;
-import org.ta4j.core.rules.UnderIndicatorRule;
 
 import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.utils.StockUtils;
@@ -49,9 +48,9 @@ public class StrategyExecutor {
 	private final Strategy buildStrategy(BarSeries series) {
 		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
 		VolumeIndicator volume = new VolumeIndicator(series);
+		SMAIndicator sma60 = new SMAIndicator(closePrice, 60);
 		SMAIndicator sma240 = new SMAIndicator(closePrice, 240);
 		SMAIndicator sma600 = new SMAIndicator(closePrice, 600);
-		SMAIndicator sma2400 =new SMAIndicator(closePrice, 2400);
 		RSIIndicator rsi = new RSIIndicator(closePrice, 168);
 		SMAIndicator avgVolume = new SMAIndicator(volume, 360);
 		
@@ -68,19 +67,18 @@ public class StrategyExecutor {
 			
 			@Override
 			public Num numOf(Number number) {
-				return null;
+				return series.numOf(number);
 			}
 		};
 		
-		Rule trendRule = new OverIndicatorRule(sma600, sma2400);
-		Rule pullbackRule = new UnderIndicatorRule(closePrice, sma240);
+		Rule trendRule = new OverIndicatorRule(sma60, sma240).and(new OverIndicatorRule(sma240, sma600));
 		Rule rsiRule = new OverIndicatorRule(rsi, series.numOf(50));
 		Rule volumeSpikeRule = new OverIndicatorRule(volume, volumeThreshold);
 		
-		Rule entryRule = trendRule.and(pullbackRule).and(rsiRule).and(volumeSpikeRule);
-		Rule exitRule = new StopLossRule(closePrice, series.numOf(20));		
+		Rule entryRule = trendRule.and(rsiRule).and(volumeSpikeRule);
+		Rule dummyExitRule = new StopLossRule(closePrice, series.numOf(20));		
 		
-		return new BaseStrategy("AlphaEntry", entryRule, exitRule);
+		return new BaseStrategy("IntradayBreakout", entryRule, dummyExitRule);
 	}
 	
 	public void onHistoricalBar(Bar bar) {
