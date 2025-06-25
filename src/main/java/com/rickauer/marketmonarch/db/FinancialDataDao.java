@@ -16,8 +16,15 @@ public final class FinancialDataDao extends DatabaseDao {
 	
 	private static Logger _finDaoLogger = LogManager.getLogger(FinancialDataDao.class.getName());
 	
+	private String _url;
+	private String _user;
+	private String _password;
+	
 	public FinancialDataDao(String dbUrl, String user, String password) {
 		super(dbUrl, user, password);
+		_url = dbUrl;
+		_user = user;
+		_password = password;
 	}
 
 	@Override
@@ -30,7 +37,7 @@ public final class FinancialDataDao extends DatabaseDao {
 		String sql = "INSERT INTO trade (symbol, entry_price, exit_price, quantity, entry_time, exit_time, stop_loss, take_profit, order_efficiency_ratio) " + 
 					 "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
-		Connection conn = getConnection();
+		Connection conn = getConnection(_url, _user, _password);
 		
 		try (PreparedStatement statement = conn.prepareStatement(sql)) {
 			statement.setString(1, trade.getSymbol());

@@ -20,36 +20,26 @@ public abstract class DatabaseDao implements Verifyable {
 	private static Logger _dbLogger = LogManager.getLogger(DatabaseDao.class.getName()); 
 	
 	private Connection _connect;
-	private String _dbUrl;
-	private String _user;
-	private String _password;
 	
 	public DatabaseDao() {
 		_connect = null;
-		_dbUrl = "";
-		_user = "";
-		_password = "";
 	}
 	
 	public DatabaseDao(final String dbUrl, final String user, final String password) {
 		
-		_dbUrl = dbUrl;
-		_user = user;
-		_password = password;
-		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			_connect = DriverManager.getConnection(_dbUrl, _user, _password);
+			_connect = DriverManager.getConnection(dbUrl, user, password);
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new RuntimeException("Error creating object.", e);
 		}
 	}
 	
-	public Connection getConnection() {
+	public Connection getConnection(String url, String user, String password) {
 		try {
 			if (_connect == null || _connect.isClosed() || !_connect.isValid(2)) {
 				_dbLogger.warn("Connection is invalid. Reconnecting...");
-				_connect = DriverManager.getConnection(_dbUrl, _user, _password);
+				_connect = DriverManager.getConnection(url, user, password);
 			}
 		} catch (Exception e) {
 			_dbLogger.error("Could not establish connection.", e);
@@ -139,10 +129,5 @@ public abstract class DatabaseDao implements Verifyable {
 		} finally { 
 			try { if (_connect != null) _connect.close(); } catch (Exception e) { /*Ignore*/ } 
 		}
-	}
-	
-	@Override
-	public String toString() {
-		return "DatabaseDao[url='" + _dbUrl + "', username='" + _user + "', password='***']";
 	}
 }
