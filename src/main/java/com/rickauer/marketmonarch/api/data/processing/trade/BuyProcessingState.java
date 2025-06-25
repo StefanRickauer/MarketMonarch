@@ -39,11 +39,8 @@ public class BuyProcessingState extends TradeState {
 		
 		if (_context.getController().getPortNumber() == TradingConstants.REAL_MONEY_TRADING_PORT_NUMBER) {
 			_context.setQuantity(StockUtils.calculateQuantity(MarketMonarch._preTradeContext.getTotalCash(), MarketMonarch._tradingContext.getEntryPrice()));	
-			; // löschen, wenn es funktioniert
-			_buyOrderLogger.debug("This should be executed during real money sessions.");
 		} else {
 			_context.setQuantity(StockUtils.calculateQuantity(1080.0, MarketMonarch._tradingContext.getEntryPrice()));	
-			_buyOrderLogger.debug("This should not be executed during real money sessions.");
 		}
 		
 		Decimal quantity = _context.getQuantity(); 
