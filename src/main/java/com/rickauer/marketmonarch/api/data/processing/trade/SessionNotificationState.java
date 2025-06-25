@@ -6,6 +6,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import org.apache.logging.log4j.LogManager;
@@ -126,17 +127,23 @@ public class SessionNotificationState extends TradeState{
 	@Override
 	public void processHistoricalData(int reqId, ZonedDateTime time, double open, double high, double low, double close, double volume) {
 		
-		Bar baseBar = new BaseBar(
-				Duration.ofMillis(5), 
-				time, 
-				DecimalNum.valueOf(open), 
-				DecimalNum.valueOf(high),
-				DecimalNum.valueOf(low), 
-				DecimalNum.valueOf(close), 
-				DecimalNum.valueOf(volume),
-				DecimalNum.valueOf(0));
+		LocalDate barDate = time.toLocalDate();
+		LocalDate today = ZonedDateTime.now(time.getZone()).toLocalDate();
 		
-		_series.addBar(baseBar);
+		if (barDate.equals(today)) {			
+			
+			Bar baseBar = new BaseBar(
+					Duration.ofMillis(5), 
+					time, 
+					DecimalNum.valueOf(open), 
+					DecimalNum.valueOf(high),
+					DecimalNum.valueOf(low), 
+					DecimalNum.valueOf(close), 
+					DecimalNum.valueOf(volume),
+					DecimalNum.valueOf(0));
+			
+			_series.addBar(baseBar);
+		}
 	}
 
 	@Override
