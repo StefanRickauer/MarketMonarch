@@ -20,7 +20,7 @@
 		<plugins>
 			<!-- Build-Prozess: Rechtsklick auf Projekt: Run as -> Maven
 			build... -> Bei Goals: "clean verify" eingeben -> Run -->
-			
+
 			<!-- 1. Schritt: Fat JAR erstellen -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -73,7 +73,7 @@
 					<icon>src/main/resources/icon.ico</icon> <!-- Optional -->
 				</configuration>
 			</plugin>
-			
+
 			<!-- 3. Schritt: NSIS-Installer erstellen -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -105,15 +105,19 @@
 			<artifactId>tws-api</artifactId>
 			<version>9.73.01-SNAPSHOT</version>
 		</dependency>
+		<!--
+		https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>2.3.2</version>
+			<version>2.20.0</version>
 		</dependency>
+		<!--
+		https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.3.2</version>
+			<version>2.20.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
