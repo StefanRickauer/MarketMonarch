@@ -135,7 +135,7 @@ public class StockUtils {
 		return quantity.doubleValue();
 	}
 	
-	public static double roundPrice(double rawPrice) {
+	public static double roundValue(double rawPrice) {
 		return BigDecimal.valueOf(rawPrice).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 	

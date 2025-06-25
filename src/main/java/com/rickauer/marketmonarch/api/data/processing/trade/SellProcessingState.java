@@ -100,9 +100,11 @@ public class SellProcessingState extends TradeState {
 
 				double plPerShareRaw = (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice());
 				double plInTotalRaw = ((_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()) * _context.getQuantityAsInteger());
+				double plInPercent = ((plPerShareRaw * 100) / _context.getAverageBuyFillPrice());
 				
-				double plPerShareRounded = StockUtils.roundPrice(plPerShareRaw);
-				double plInTotalRounded = StockUtils.roundPrice(plInTotalRaw);
+				double plPerShareRounded = StockUtils.roundValue(plPerShareRaw);
+				double plInTotalRounded = StockUtils.roundValue(plInTotalRaw);
+				double plInPercentRounded = StockUtils.roundValue(plInPercent);
 				
 				_sellProcessingLogger.info("Order Filled: " + 
 						"\n\t| SELL @ " + _context.getContract().symbol() + 
@@ -110,7 +112,8 @@ public class SellProcessingState extends TradeState {
 						"\n\t| Average Fill Price (BUY): " + _context.getAverageBuyFillPrice() + "$" + 
 						"\n\t| Average Fill Price (SELL): " + _context.getAverageSellFillPrice() + "$" + 
 						"\n\t| P&L Per Share: " + plPerShareRounded + "$" +
-						"\n\t| P&L In Total: " + plInTotalRounded + "$");
+						"\n\t| P&L In Total: " + plInTotalRounded + "$" +
+						"\n\t| P&L In Percent: " + plInPercentRounded + "%");
 				
 				_context.setExitTime(ZonedDateTime.now(ZoneId.of("US/Eastern")).withNano(0));
 				
