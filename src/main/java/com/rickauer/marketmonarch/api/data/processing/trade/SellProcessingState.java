@@ -98,8 +98,8 @@ public class SellProcessingState extends TradeState {
 			if (status.equals(OrderStatus.FILLED.getOrderStatus())) {
 				_context.setAverageSellFillPrice(avgFillPrice);
 
-				double plPerShareRaw = _context.getAverageSellFillPrice() + (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice());
-				double plInTotalRaw = _context.getAverageSellFillPrice() + ((_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()) * _context.getQuantityAsInteger());
+				double plPerShareRaw = (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice());
+				double plInTotalRaw = ((_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()) * _context.getQuantityAsInteger());
 				
 				double plPerShareRounded = StockUtils.roundPrice(plPerShareRaw);
 				double plInTotalRounded = StockUtils.roundPrice(plInTotalRaw);
