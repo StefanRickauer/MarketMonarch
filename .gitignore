@@ -39,3 +39,6 @@ java/build/**
 
 # Backups
 backup/**
+
+# Session data
+sessions/**
