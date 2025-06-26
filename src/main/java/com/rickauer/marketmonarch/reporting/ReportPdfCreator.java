@@ -34,7 +34,7 @@ public final class ReportPdfCreator {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmm");
 		String timeStamp = ZonedDateTime.now().format(formatter);
 		String sessionFileName = timeStamp + ".pdf";
-		String sessionFolder = MarketMonarch.CURRENT_SESSION_STORAGE_FOLDER + "\\" + sessionFileName;
+		String sessionFilePath = MarketMonarch.CURRENT_SESSION_STORAGE_FOLDER + "\\" + sessionFileName;
 
 		double entry = MarketMonarch._tradingContext.getAverageBuyFillPrice();
 		double exit = MarketMonarch._tradingContext.getAverageSellFillPrice();
@@ -88,15 +88,15 @@ public final class ReportPdfCreator {
 				String[][] rows = { 
 						{ "Symbol:", MarketMonarch._tradingContext.getContract().symbol() },
 						{ "Positionsgröße:", volume + " Einheiten" },
-						{ "Einstandspreis pro Aktie:", String.format("%.2f €", entry) },
-						{ "Einstandspreis total:", String.format("%.2f €", entry * volume) },
-						{ "Verkaufspreis pro Aktie:", String.format("%.2f €", exit) },
-						{ "Verkaufspreis total:", String.format("%.2f €", exit * volume) },
-						{ "Stop Loss:", String.format("%.2f", stopLoss) },
+						{ "Einstandspreis pro Aktie:", String.format("%.2f $", entry) },
+						{ "Einstandspreis total:", String.format("%.2f $", entry * volume) },
+						{ "Verkaufspreis pro Aktie:", String.format("%.2f $", exit) },
+						{ "Verkaufspreis total:", String.format("%.2f $", exit * volume) },
+						{ "Stop Loss:", String.format("%.2f $", stopLoss) },
 						{ "Erwartetes Risiko", String.format("%.2f %%", riskPercent) },
-						{ "Risikobetrag:", String.format("%.2f €", riskValue) },
-						{ "Gewinn/Verlust pro Aktie (Euro):", String.format("%.2f €", winLossTotal) },
-						{ "Gewinn/Verlust gesamt (Euro):", String.format("%.2f €", winLossTotal * volume) },
+						{ "Risikobetrag:", String.format("%.2f $", riskValue) },
+						{ "Gewinn/Verlust pro Aktie (Euro):", String.format("%.2f $", winLossTotal) },
+						{ "Gewinn/Verlust gesamt (Euro):", String.format("%.2f $", winLossTotal * volume) },
 						{ "Gewinn/Verlust (Prozent):", String.format("%.2f %%", winLossPercent) } };
 				
 				for (String[] row : rows) {
@@ -169,14 +169,14 @@ public final class ReportPdfCreator {
 			// protect document
 			document.protect(spp);
 			// Save document
-			document.save(sessionFolder);
+			document.save(sessionFilePath);
 
 		} catch (IOException e) {
 			_reportCreatorLogger.error("Error creating session report.");
 		}
 
-		_reportCreatorLogger.info("Saved Session Report to: " + sessionFolder);
+		_reportCreatorLogger.info("Saved Session Report to: " + sessionFilePath);
 		
-		return sessionFileName;
+		return sessionFilePath;
 	}
 }
