@@ -53,7 +53,7 @@ public final class Notifier {
 		FileDataSource source = createFileDataSource(pdfPath);
 		
 		if (source == null) {
-			throw new IllegalArgumentException("The path provided returned null object. Could not notify user.");
+			throw new IllegalArgumentException("The path provided returned null object. Could not notify user. Provided path: '" + pdfPath + "'.");
 		}
 		messageBodyPart = new MimeBodyPart();
 		messageBodyPart.setDataHandler(new DataHandler(source));
