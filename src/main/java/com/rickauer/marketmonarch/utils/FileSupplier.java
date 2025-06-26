@@ -22,15 +22,15 @@ public final class FileSupplier {
 	}
 
 	public static String getTemporaryFolder() {
-		return getWorkingDirectory() + "/temp";
+		return getWorkingDirectory() + "\\temp";
 	}
 
 	public static String getBackupFolder() {
-		return getWorkingDirectory() + "/backup";
+		return getWorkingDirectory() + "\\backup";
 	}
 	
 	public static String getSessionFolder() {
-		return getWorkingDirectory() + "/sessions";
+		return getWorkingDirectory() + "\\sessions";
 	}
 	
 	public static void createFolder(String folder) {
