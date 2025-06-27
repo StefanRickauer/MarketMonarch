@@ -1,166 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
-	<Appenders>
-		<Console name="ConsoleAppender" target="SYSTEM_OUT">
-			<PatternLayout
-				pattern="%d{HH:mm:ss.SSS} [%t] %-5level %c{1} - %msg%n" />
-		</Console>
-		<File name="FileAppender"
-			fileName="./logs/MarketMonarch-${date:yyyyMMdd}.log"
-			immediateFlush="true" append="true">
-			<PatternLayout
-				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
-		</File>
-	</Appenders>
-	<Loggers>
-		<Logger name="com.rickauer.marketmonarch.MarketMonarch" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.configuration.ConfigReader" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.configuration.FileSupplier" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.reporting.LineGraphCreator" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.reporting.HealthChecker" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>	
-		<Logger name="com.rickauer.marketmonarch.api.request.InteractiveBrokersApiRequestHandler" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiControllerr" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.controller.StockNewsRequestController" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.controller.AlphaVantageRequestController" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.controller.FmpRequestController" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>		
-		<Logger name="com.rickauer.marketmonarch.db.FinancialDataDao" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>		
-		<Logger name="com.rickauer.marketmonarch.api.request.RequestHandler" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.db.DBAccess" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.StockAnalysisManager" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.StrategyExecutor" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.AccountValidationState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.DataFetchingState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.MarketScanningState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.FilterByFloatState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.RequestHistoricalDataState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.FilterByProfitLossState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.pretrade.ReduceToNState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.EntryScanningState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.BuyProcessingState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.SellExitCalculationState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.SellProcessingState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.SessionStoringState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.api.data.processing.trade.SessionNotificationState" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Logger name="com.rickauer.marketmonarch.reporting.ReportPdfCreator" level="trace"
-			additivity="false">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Logger>
-		<Root level="trace">
-			<AppenderRef ref="ConsoleAppender" />
-			<AppenderRef ref="FileAppender" />
-		</Root>
-	</Loggers>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %c{1} - %msg%n" />
+        </Console>
+        <File name="FileAppender"
+              fileName="./logs/MarketMonarch-${date:yyyyMMdd}.log"
+              immediateFlush="true" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <!-- 🛑 PDFBox & FontBox komplett deaktivieren -->
+        <Logger name="org.apache.pdfbox" level="off" additivity="false" />
+        <Logger name="org.apache.fontbox" level="off" additivity="false" />
+
+        <!-- 📦 Projektinterne Logger -->
+        <Logger name="com.rickauer.marketmonarch" level="trace" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="FileAppender" />
+        </Logger>
+
+        <!-- 🧱 Root logger (für alle nicht explizit gesetzten) -->
+        <Root level="trace">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="FileAppender" />
+        </Root>
+    </Loggers>
 </Configuration>
