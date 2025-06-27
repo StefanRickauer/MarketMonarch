@@ -31,7 +31,7 @@ import org.apache.commons.lang3.exception.*;
 public final class MarketMonarch {
 
 	public static final String PROGRAM = "MarketMonarch";
-	public static final String VERSION = "0.985";
+	public static final String VERSION = "1.0";
 	public static final String PROGRAM_AND_VERSION = PROGRAM + " " + VERSION;
 
 	private static Logger _marketMonarchLogger = LogManager.getLogger(MarketMonarch.class.getName());
@@ -98,7 +98,7 @@ public final class MarketMonarch {
 				_tradingContext.setState(new EntryScanningState(_tradingContext));
 			}
 			
-			_marketMonarchLogger.info("Done trading. Add code to save data to database. Create report and send via mail");
+			_marketMonarchLogger.info("Done trading.");
 			_marketMonarchLogger.info("Goodbye!");
 			System.exit(0);
 			
@@ -144,7 +144,7 @@ public final class MarketMonarch {
 		DatabaseConnector.INSTANCE.initializeDatabaseConnector();
 
 		_apiAccess = new ApiKeyDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
-		_finAccess = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlAPIKey(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
+		_finAccess = new FinancialDataDao(DatabaseConnector.INSTANCE.getUrlFinancialData(), DatabaseConnector.INSTANCE.getUsername(), DatabaseConnector.INSTANCE.getPassword());
 		_mailtrapService = new MailtrapServiceConnector("mailtrap", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'mailtrap'", "token"));
 		_fmpConnector = new FmpConnector("fmp", _apiAccess.executeSqlQueryAndGetFirstResultAsString("SELECT token FROM credentials where provider = 'FMP'", "token"));
 		_financialModellingPrepController = new FmpRequestController(_fmpConnector.getToken(), FmpServiceRequest.ALL_SHARES_FLOAT);
