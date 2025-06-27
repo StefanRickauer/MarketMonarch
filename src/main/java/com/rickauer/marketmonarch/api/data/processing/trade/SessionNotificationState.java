@@ -1,10 +1,6 @@
 package com.rickauer.marketmonarch.api.data.processing.trade;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -89,20 +85,6 @@ public class SessionNotificationState extends TradeState{
 			sessionReportFile = ReportPdfCreator.createSessionReport(LineChartCreator.LINECHART);
 		} catch (Exception e) {
 			_sessionNotificationLogger.error("Could not create PDF report. Attaching dummy file instead.");
-			
-			; // sobald sicher ist, dass die PDF-Dateien korrekt erzeugt werden, diesen Code und die Dummy-Datei wegwerfen! 
-			
-			URL dummyResource = getClass().getClassLoader().getResource("dummyPDF.pdf");
-			
-			if (dummyResource != null) {
-				Path path;
-				try {
-					path = Paths.get(dummyResource.toURI());
-					sessionReportFile = path.toString();
-				} catch (URISyntaxException ex) {
-					_sessionNotificationLogger.error("Error loading dummy file.");
-				}
-			}
 		}
 		
 		try {
