@@ -15,8 +15,6 @@ import jakarta.mail.MessagingException;
 
 public class NotifierTest {
 
-	public static final String EXPECTED_MESSAGE = "The path provided returned null object. Could not notify user.";
-	
 	private static ApiKeyDao _apiAccess;
 	public static MailtrapServiceConnector _mailtrapService;
 	
@@ -35,7 +33,7 @@ public class NotifierTest {
 		});
 		
 		String actualMessage = exception.getMessage(); 
-		assertEquals(EXPECTED_MESSAGE, actualMessage);
+		assertEquals("The path provided returned null object. Could not notify user. Provided path: 'C:\\Test\\mic'.", actualMessage);
 	}
 	
 	@Test
@@ -45,7 +43,7 @@ public class NotifierTest {
 		});
 		
 		String actualMessage = exception.getMessage(); 
-		assertEquals(EXPECTED_MESSAGE, actualMessage);
+		assertEquals("The path provided returned null object. Could not notify user. Provided path: 'null'.", actualMessage);
 	}
 	
 	@Test
