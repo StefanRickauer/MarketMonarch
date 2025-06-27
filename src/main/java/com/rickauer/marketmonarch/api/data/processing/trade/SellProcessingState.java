@@ -100,11 +100,11 @@ public class SellProcessingState extends TradeState {
 
 				double plPerShareRaw = (_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice());
 				double plInTotalRaw = ((_context.getAverageSellFillPrice() - _context.getAverageBuyFillPrice()) * _context.getQuantityAsInteger());
-				double plInPercent = ((plPerShareRaw * 100) / _context.getAverageBuyFillPrice());
+				double plInPercentRaw = ((plPerShareRaw * 100) / _context.getAverageBuyFillPrice());
 				
 				double plPerShareRounded = StockUtils.roundValue(plPerShareRaw);
 				double plInTotalRounded = StockUtils.roundValue(plInTotalRaw);
-				double plInPercentRounded = StockUtils.roundValue(plInPercent);
+				double plInPercentRounded = StockUtils.roundValue(plInPercentRaw);
 				
 				_sellProcessingLogger.info("Order Filled: " + 
 						"\n\t| SELL @ " + _context.getContract().symbol() + 
