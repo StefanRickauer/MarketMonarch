@@ -11,6 +11,7 @@ import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
+import com.rickauer.marketmonarch.constants.TradingConstants;
 import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class PreTradeContext {
@@ -65,7 +66,7 @@ public class PreTradeContext {
 	}
 	
 	public double getTotalCashInUsd() {
-		return StockUtils.roundValueDown(getTotalCash() * getExchangeRate());
+		return StockUtils.roundValueDown((getTotalCash() - TradingConstants.BALANCE_IN_EUR_PUFFER) * getExchangeRate()); 
 	}
 	
 	public double getNetLiquidation() {

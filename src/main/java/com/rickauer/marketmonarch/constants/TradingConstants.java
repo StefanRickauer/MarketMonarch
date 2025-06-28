@@ -21,6 +21,7 @@ public class TradingConstants {
 	public static final int MAXIMUM_NUMBER_OF_SCAN_RESULTS = 1;
 	
 	public static final double EXCHANGE_PUFFER = 0.01;
+	public static final double BALANCE_IN_EUR_PUFFER = 50.0;
 	public static final double BUY_LIMIT_PUFFER = 1.02;
 	public static final double PUFFER_FACTOR = 0.98;							// number * PUFFER = 2%
 	public static final double TAKE_PROFIT_FACTOR = 1.05;						// number * TAKE_PROFIT = 5%
