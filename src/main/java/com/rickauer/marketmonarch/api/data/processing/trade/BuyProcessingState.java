@@ -38,7 +38,7 @@ public class BuyProcessingState extends TradeState {
 		String orderType = TradingOrderType.LMT.getCode();
 		
 		if (_context.getController().getPortNumber() == TradingConstants.REAL_MONEY_TRADING_PORT_NUMBER) {
-			_context.setQuantity(StockUtils.calculateQuantity(MarketMonarch._preTradeContext.getTotalCash(), MarketMonarch._tradingContext.getEntryPrice()));	
+			_context.setQuantity(StockUtils.calculateQuantity(MarketMonarch._preTradeContext.getTotalCashInUsd(), MarketMonarch._tradingContext.getEntryPrice()));	
 		} else {
 			_context.setQuantity(StockUtils.calculateQuantity(1080.0, MarketMonarch._tradingContext.getEntryPrice()));	
 		}
