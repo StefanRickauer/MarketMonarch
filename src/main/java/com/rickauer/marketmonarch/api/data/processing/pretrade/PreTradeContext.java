@@ -11,6 +11,7 @@ import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
 import com.rickauer.marketmonarch.api.data.AccountSummaryItem;
 import com.rickauer.marketmonarch.api.data.StockMetrics;
+import com.rickauer.marketmonarch.utils.StockUtils;
 
 public class PreTradeContext {
 
@@ -21,6 +22,7 @@ public class PreTradeContext {
 	private Map<String, Long> _allCompanyFloats;
 	private Map<Integer, Contract> _scanResult;
 	private Map<Integer, StockMetrics> _historicalData;		
+	private double _exchangeRateEurToUsd;
 	
 	public PreTradeContext(InteractiveBrokersApiController ibController, FmpRequestController fmpController) {
 		_ibController = ibController;
@@ -29,6 +31,7 @@ public class PreTradeContext {
 		_allCompanyFloats = new HashMap<>();
 		_scanResult = new TreeMap<>();
 		_historicalData = new HashMap<>();
+		_exchangeRateEurToUsd = 0;
 	}
 	
 	public InteractiveBrokersApiController getIbController() {
@@ -59,6 +62,10 @@ public class PreTradeContext {
 			}
 		}
 		return -1.0;
+	}
+	
+	public double getTotalCashInUsd() {
+		return StockUtils.roundValueDown(getTotalCash() * getExchangeRate());
 	}
 	
 	public double getNetLiquidation() {
@@ -126,10 +133,19 @@ public class PreTradeContext {
 		return _historicalData;
 	}
 	
+	public void setExchangeRate(double rate) {
+		_exchangeRateEurToUsd = rate;
+	}
+	
+	public double getExchangeRate() {
+		return _exchangeRateEurToUsd;
+	}
+	
 	public void clearDataForNextRun() {
 		_accountSummary.clear();
 		_allCompanyFloats.clear();
 		_scanResult.clear();
 		_historicalData.clear();
+		_exchangeRateEurToUsd = 0;
 	}
 }

@@ -138,6 +138,10 @@ public class StockUtils {
 	public static double roundValue(double rawPrice) {
 		return BigDecimal.valueOf(rawPrice).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
+
+	public static double roundValueDown(double rawPrice) {
+		return BigDecimal.valueOf(rawPrice).setScale(2, RoundingMode.FLOOR).doubleValue();
+	}
 	
 	public static LocalDateTime timestampToLocalDateTime(Timestamp time) {
 		return time.toLocalDateTime();
