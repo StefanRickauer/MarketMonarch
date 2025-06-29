@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +53,7 @@ public final class LineChartCreator {
 		XYSeriesCollection dataset = new XYSeriesCollection(series);
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(
 				"Linienchart - 5 Sekunden Zeitintervall",
-				"Zeit",
+				"Zeit (New York)",
 				"Preis pro Aktie",
 				dataset,
 				false, true, false
@@ -61,7 +62,10 @@ public final class LineChartCreator {
 		XYPlot plot = chart.getXYPlot();
 		
 		DateAxis axis = (DateAxis) plot.getDomainAxis();
-		axis.setDateFormatOverride(new SimpleDateFormat("HH:mm:ss"));
+		axis.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+		axis.setDateFormatOverride(sdf);
 		
 		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer(true, false);
 		renderer.setSeriesPaint(0, new Color(40, 100, 200));
