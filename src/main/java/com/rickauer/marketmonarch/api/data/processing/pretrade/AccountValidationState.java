@@ -78,7 +78,7 @@ public class AccountValidationState extends PreTradeState {
 			_tradeAccountValidationLogger.info("Buying Power: " + _context.getBuyingPower());
 			_tradeAccountValidationLogger.info("Available Funds: " + _context.getAvailableFunds());
 			_tradeAccountValidationLogger.info("Total Cash (EUR): " + _context.getTotalCashInEur());
-			_tradeAccountValidationLogger.info("Total Cash (USD): " + _context.getTotalCashBufferedInUsd());
+			_tradeAccountValidationLogger.info("Total Cash (USD, safety buffer applied): " + _context.getTotalCashBufferedInUsd());
 			
 			validateAccount();
 			_tradeAccountValidationLogger.info("Account validation succeeded. Changing state.");
