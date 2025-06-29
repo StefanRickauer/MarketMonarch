@@ -56,7 +56,7 @@ public class PreTradeContext {
 		return _accountSummary;
 	}
 	
-	public double getTotalCash() {
+	public double getTotalCashInEur() {
 		for (AccountSummaryItem item : _accountSummary) {
 			if (item.getTag().equals("TotalCashValue")) {
 				return item.getValueAsDouble();
@@ -65,8 +65,8 @@ public class PreTradeContext {
 		return -1.0;
 	}
 	
-	public double getTotalCashInUsd() {
-		return StockUtils.roundValueDown((getTotalCash() - TradingConstants.BALANCE_IN_EUR_PUFFER) * getExchangeRate()); 
+	public double getTotalCashBufferedInUsd() {
+		return StockUtils.roundValueDown((getTotalCashInEur() - TradingConstants.BALANCE_IN_EUR_PUFFER) * getExchangeRate()); 
 	}
 	
 	public double getNetLiquidation() {

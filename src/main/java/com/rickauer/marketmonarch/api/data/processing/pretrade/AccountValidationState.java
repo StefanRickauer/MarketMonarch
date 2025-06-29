@@ -77,8 +77,8 @@ public class AccountValidationState extends PreTradeState {
 			_tradeAccountValidationLogger.info("Net Liquidation: " + _context.getNetLiquidation());
 			_tradeAccountValidationLogger.info("Buying Power: " + _context.getBuyingPower());
 			_tradeAccountValidationLogger.info("Available Funds: " + _context.getAvailableFunds());
-			_tradeAccountValidationLogger.info("Total Cash (EUR): " + _context.getTotalCash());
-			_tradeAccountValidationLogger.info("Total Cash (USD): " + _context.getTotalCashInUsd());
+			_tradeAccountValidationLogger.info("Total Cash (EUR): " + _context.getTotalCashInEur());
+			_tradeAccountValidationLogger.info("Total Cash (USD): " + _context.getTotalCashBufferedInUsd());
 			
 			validateAccount();
 			_tradeAccountValidationLogger.info("Account validation succeeded. Changing state.");
@@ -105,7 +105,7 @@ public class AccountValidationState extends PreTradeState {
 	}
 
 	private void validateAccount() {
-		if ( ( (long)Math.floor(_context.getTotalCash()) ) < TradingConstants.MINIMUM_ACCOUNT_BALANCE) {
+		if ( ( (long)Math.floor(_context.getTotalCashInEur()) ) < TradingConstants.MINIMUM_ACCOUNT_BALANCE) {
 			_tradeAccountValidationLogger.fatal("Account validation failed: Less than " + TradingConstants.MINIMUM_ACCOUNT_BALANCE + " Euros in cash available. Exiting.");
 			System.exit(0);
 		} 
