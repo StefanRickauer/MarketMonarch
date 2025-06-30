@@ -95,8 +95,8 @@ public final class ReportPdfCreator {
 						{ "Stop Loss:", String.format("%.2f $", stopLoss) },
 						{ "Erwartetes Risiko", String.format("%.2f %%", riskPercent) },
 						{ "Risikobetrag:", String.format("%.2f $", riskValue) },
-						{ "Gewinn/Verlust pro Aktie (Euro):", String.format("%.2f $", winLossTotal) },
-						{ "Gewinn/Verlust gesamt (Euro):", String.format("%.2f $", winLossTotal * volume) },
+						{ "Gewinn/Verlust pro Aktie (USD):", String.format("%.2f $", winLossTotal) },
+						{ "Gewinn/Verlust gesamt (USD):", String.format("%.2f $", winLossTotal * volume) },
 						{ "Gewinn/Verlust (Prozent):", String.format("%.2f %%", winLossPercent) } };
 				
 				for (String[] row : rows) {
