@@ -20,7 +20,7 @@ public class TradingConstants {
 	public static final int MINIMUM_ACCOUNT_BALANCE = 500;
 	public static final int MINIMUM_PROFIT_LOSS_IN_PERCENT = 50;
 	
-	public static final int MAXIMUM_NUMBER_OF_SCAN_RESULTS = 1;
+	public static final int MAXIMUM_NUMBER_OF_SCAN_RESULTS = 3;
 	
 	public static final double EXCHANGE_PUFFER = 0.01;
 	public static final double BALANCE_IN_EUR_PUFFER = 50.0;
