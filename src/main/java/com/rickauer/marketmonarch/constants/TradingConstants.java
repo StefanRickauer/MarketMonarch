@@ -18,7 +18,7 @@ public class TradingConstants {
 	public static final int MAX_NUMBER_OF_SHARES = 20_000_000;
 	
 	public static final int MINIMUM_ACCOUNT_BALANCE = 500;
-	public static final int MINIMUM_PROFIT_LOSS_IN_PERCENT = 10;
+	public static final int MINIMUM_PROFIT_LOSS_IN_PERCENT = 50;
 	
 	public static final int MAXIMUM_NUMBER_OF_SCAN_RESULTS = 1;
 	
