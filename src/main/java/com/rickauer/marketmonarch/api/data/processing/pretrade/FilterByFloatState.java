@@ -47,9 +47,15 @@ public class FilterByFloatState extends PreTradeState {
 			scanResultCompanyFloat.put(currentSymbol, floatShares);
 		}
 
-		_context.getScanResult().entrySet()
-				.removeIf(entry -> scanResultCompanyFloat.get(entry.getValue().symbol()) > TradingConstants.MAX_NUMBER_OF_SHARES
-						|| scanResultCompanyFloat.get(entry.getValue().symbol()) < TradingConstants.MIN_NUMBER_OF_SHARES);
+		_filterByFloatLogger.warn("Skipping filtering by float. Keeping the best five scan results.");
+		
+		if (false) {
+			_context.getScanResult().entrySet()
+			.removeIf(entry -> scanResultCompanyFloat.get(entry.getValue().symbol()) > TradingConstants.MAX_NUMBER_OF_SHARES
+					|| scanResultCompanyFloat.get(entry.getValue().symbol()) < TradingConstants.MIN_NUMBER_OF_SHARES);			
+		}
+		
+		_context.getScanResult().entrySet().removeIf(entry -> entry.getKey() > 5);
 
 		_filterByFloatLogger.info("Done filtering scan results by company share float. Removed "
 				+ (numberOfStocksBeforeFiltering - _context.getScanResult().size()) + " out of "
