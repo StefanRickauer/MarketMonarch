@@ -69,7 +69,7 @@ public class EntryScanningState extends TradeState {
 							TradingConstants.KEEP_UP_TO_DATE, 
 							null
 							);
-					_lockHistoricalData.wait(TradingConstants.FIVE_MINUTES_TIMEOUT_MS);
+					_lockHistoricalData.wait(TradingConstants.ONE_MINUTE_TIMEOUT_MS);
 
 					if (_foundEntry) {
 						break;
@@ -103,11 +103,11 @@ public class EntryScanningState extends TradeState {
 		_entryScanLogger.warn("Note: Please consider the trading hours of the respective exchange.");
 		_entryScanLogger.info("Waiting for scanner to detect entry. Logging connectivity check every two minutes!");
 		
-		// only true if entry found during historical data request
+		// only true if entry found during historical data request, if no entry is found program will start new
 		if (_foundEntry == false) {			
 			synchronized (_lockLiveData) {
 				try {
-					_lockLiveData.wait(TradingConstants.TEN_MINUTES_TIMEOUT_MS);
+					_lockLiveData.wait(TradingConstants.SCAN_INTERVAL_THREE_MINUTES_IN_MS);
 				} catch (InterruptedException e) {
 					_entryScanLogger.error("Error waiting for notification.");
 				}

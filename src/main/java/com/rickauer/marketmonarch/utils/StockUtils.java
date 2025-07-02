@@ -171,8 +171,8 @@ public class StockUtils {
 		ZonedDateTime newYorkTime = localTime.withZoneSameInstant(ZoneId.of("US/Eastern"));
 		LocalTime nyTime = newYorkTime.toLocalTime();
 		
-		LocalTime start = LocalTime.of(10, 15);
-		LocalTime end = LocalTime.of(13, 30);
+		LocalTime start = LocalTime.of(9, 45);
+		LocalTime end = LocalTime.of(10, 30);
 		
 		return !nyTime.isBefore(start) && !nyTime.isAfter(end);
 	}

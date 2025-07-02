@@ -12,6 +12,8 @@ public class TradingConstants {
 	public static final long TWO_MINUTES_TIMEOUT_MS = 120_000L;
 	public static final long ONE_MINUTE_TIMEOUT_MS = 60_000L;
 	
+	public static final long SCAN_INTERVAL_THREE_MINUTES_IN_MS = 180_000L;
+	
 	public static final int MIN_NUMBER_OF_SHARES = 5_000_000;
 	public static final int MAX_NUMBER_OF_SHARES = 20_000_000;
 	
