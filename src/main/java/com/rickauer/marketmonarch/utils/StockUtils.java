@@ -172,7 +172,7 @@ public class StockUtils {
 		LocalTime nyTime = newYorkTime.toLocalTime();
 		
 		LocalTime start = LocalTime.of(10, 00);
-		LocalTime end = LocalTime.of(13, 30);
+		LocalTime end = LocalTime.of(11, 30);
 		
 		return !nyTime.isBefore(start) && !nyTime.isAfter(end);
 	}

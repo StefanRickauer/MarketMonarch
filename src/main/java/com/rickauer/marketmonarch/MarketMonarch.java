@@ -73,8 +73,8 @@ public final class MarketMonarch {
 				_marketMonarchLogger.info("Checking if program is running within valid time window.");
 
 				if (!StockUtils.isWithinTradingWindow(ZonedDateTime.now(ZoneId.systemDefault()))) {
-					_marketMonarchLogger.warn("Pausing execution: Current time is outside the defined operational window (10:15–13:30 NY time).");
-					long sleepDuration = StockUtils.millisUntilTradingWindowNYSE(10, 15);
+					_marketMonarchLogger.warn("Pausing execution: Current time is outside the defined operational window (10:00–11:30 NY time).");
+					long sleepDuration = StockUtils.millisUntilTradingWindowNYSE(10, 00);
 					String formattedSleepDuration = StockUtils.formatMillis(sleepDuration);
 					_marketMonarchLogger.warn("Waiting for scheduled time - resuming in " + formattedSleepDuration);
 					Thread.sleep(sleepDuration);
