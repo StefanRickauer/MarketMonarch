@@ -270,25 +270,25 @@ public class StockUtilsTest {
 	@Test
 	void calculateTargetPriceStopPriceTest() {
 		double first = 1.0;
-		assertEquals(0.9, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_STOP_PRICE_FACTOR));
+		assertEquals(0.91, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_STOP_PRICE_FACTOR));
 	}
 
 	@Test
 	void calculateTargetPriceStopPriceTest2() {
 		double first = 1.14;
-		assertEquals(1.03, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_STOP_PRICE_FACTOR));
+		assertEquals(1.04, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_STOP_PRICE_FACTOR));
 	}
 
 	@Test
 	void calculateTargetPriceStopLimitTest() {
 		double first = 1.0;
-		assertEquals(0.89, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_LIMIT_PRICE_FACTOR));
+		assertEquals(0.9, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_LIMIT_PRICE_FACTOR));
 	}
 
 	@Test
 	void calculateTargetPriceStopLimitTest2() {
 		double first = 1.14;
-		assertEquals(1.01, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_LIMIT_PRICE_FACTOR));
+		assertEquals(1.03, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_LIMIT_PRICE_FACTOR));
 	}
 	
 	@Test
@@ -402,12 +402,12 @@ public class StockUtilsTest {
 	
 	@Test
 	void isWithinTradingWindowMiddleTest() {
-		assertTrue(StockUtils.isWithinTradingWindow(berlinTime(17, 45)));
+		assertTrue(StockUtils.isWithinTradingWindow(berlinTime(16, 45)));
 	}
 	
 	@Test
 	void isWithinTradingWindowAtEndTest() {
-		assertTrue(StockUtils.isWithinTradingWindow(berlinTime(19, 30)));
+		assertTrue(StockUtils.isWithinTradingWindow(berlinTime(17, 00)));
 	}
 	
 	@Test
