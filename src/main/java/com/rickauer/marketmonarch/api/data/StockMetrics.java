@@ -102,7 +102,9 @@ public class StockMetrics {
 				yesterdaysClosePrice = candleStick.getClose();
 		}
 		
-		_profitLossChange = ( (actualPrice - yesterdaysClosePrice) / yesterdaysClosePrice ) * 100; 
+		double profitLoss = ( (actualPrice - yesterdaysClosePrice) / yesterdaysClosePrice ) * 100;
+		
+		_profitLossChange = Double.isInfinite(profitLoss) ? -1.0 : profitLoss;
 	}
 	
 	private boolean isDateYesterday(DateTime date, DateTime todaysDate, int subtrahend) {
