@@ -76,7 +76,7 @@ public class EntryScanningState extends TradeState {
 					}
 					
 					if (_hasReceivedApiResponse == true) {
-						_entryScanLogger.info("Received resoponse for symbol: " + symbol);
+						_entryScanLogger.info("Received response for symbol: " + symbol);
 						requestId = _context.getController().getNextRequestId();
 						_context.getStockAnalysisManager().updateSymbolLookupTable(requestId, symbol);
 						_context.getController().getSocket().reqRealTimeBars(
