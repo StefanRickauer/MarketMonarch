@@ -27,8 +27,8 @@ public class TradingConstants {
 	public static final double BUY_LIMIT_PUFFER = 1.02;
 	public static final double PUFFER_FACTOR = 0.98;							// number * PUFFER = 2%
 	public static final double TAKE_PROFIT_FACTOR = 1.05;						// number * TAKE_PROFIT = 5%
-	public static final double STOP_LIMIT_STOP_PRICE_FACTOR = 0.80;				// number * STOP_PRICE = 80%  -> Triggered at 20% below
-	public static final double STOP_LIMIT_LIMIT_PRICE_FACTOR = 0.79;			// number * LIMIT_PRICE = 79% -> Loss 21%
+	public static final double STOP_LIMIT_STOP_PRICE_FACTOR = 0.86;				// number * STOP_PRICE = 86%  -> Triggered at 14% below
+	public static final double STOP_LIMIT_LIMIT_PRICE_FACTOR = 0.85;			// number * LIMIT_PRICE = 85% -> Loss 15%
 	
 	public static final String ACCOUNT_SUMMARY_GROUP = "All";
 	public static final String ACCOUNT_SUMMARY_TAGS = "NetLiquidation,TotalCashValue,AccruedCash,BuyingPower,GrossPositionValue,AvailableFunds";

@@ -270,25 +270,25 @@ public class StockUtilsTest {
 	@Test
 	void calculateTargetPriceStopPriceTest() {
 		double first = 1.0;
-		assertEquals(0.89, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_STOP_PRICE_FACTOR));
+		assertEquals(0.86, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_STOP_PRICE_FACTOR));
 	}
 
 	@Test
 	void calculateTargetPriceStopPriceTest2() {
 		double first = 1.14;
-		assertEquals(1.01, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_STOP_PRICE_FACTOR));
+		assertEquals(0.98, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_STOP_PRICE_FACTOR));
 	}
 
 	@Test
 	void calculateTargetPriceStopLimitTest() {
 		double first = 1.0;
-		assertEquals(0.88, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_LIMIT_PRICE_FACTOR));
+		assertEquals(0.85, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_LIMIT_PRICE_FACTOR));
 	}
 
 	@Test
 	void calculateTargetPriceStopLimitTest2() {
 		double first = 1.14;
-		assertEquals(1.0, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_LIMIT_PRICE_FACTOR));
+		assertEquals(0.97, StockUtils.calculateTargetPrice(first, TradingConstants.STOP_LIMIT_LIMIT_PRICE_FACTOR));
 	}
 	
 	@Test
