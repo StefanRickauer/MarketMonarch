@@ -75,11 +75,7 @@ public class StrategyExecutor {
 		Rule rsiRule = new OverIndicatorRule(rsi, series.numOf(50));
 		Rule volumeSpikeRule = new OverIndicatorRule(volume, volumeThreshold);
 		
-		SMAIndicator shortSma = new SMAIndicator(closePrice, 3);
-		SMAIndicator longSma = new SMAIndicator(closePrice, 6);
-		Rule momentumRule = new OverIndicatorRule(shortSma, longSma);
-		
-		Rule entryRule = trendRule.and(rsiRule).and(volumeSpikeRule).and(momentumRule);
+		Rule entryRule = trendRule.and(rsiRule).and(volumeSpikeRule);
 		Rule dummyExitRule = new StopLossRule(closePrice, series.numOf(20));		
 		
 		return new BaseStrategy("IntradayBreakout", entryRule, dummyExitRule);
