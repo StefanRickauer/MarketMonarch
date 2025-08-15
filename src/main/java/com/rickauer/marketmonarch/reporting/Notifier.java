@@ -23,8 +23,8 @@ import jakarta.mail.internet.MimeMultipart;
 
 public final class Notifier {
 	
-	public static final String SENDER = "sessionfeed@neurotrace.one";
-	public static final String RECIPIENT = "stefanrickauer@gmail.com";
+	public static final String SENDER = "name@your-domain.one";
+	public static final String RECIPIENT = "your@email.com";
 	
 	public static void notifyUser(String pdfPath, String token, double buy, double sell) throws UnsupportedEncodingException, MessagingException {
 		Properties props = new Properties();
