@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rickauer.marketmonarch</groupId>
 	<artifactId>MarketMonarchTradingBot</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<name>MarketMonarch</name>
 	<description>Software that trades with stocks based on data analysis and a
 		defined trading strategy.</description>
