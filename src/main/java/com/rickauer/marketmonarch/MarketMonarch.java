@@ -55,7 +55,6 @@ public final class MarketMonarch {
 	
 	public static void main(String[] args) {
 		
-		
 		try {
 			
 			int port = processCommandLineArgs(args);
@@ -82,19 +81,8 @@ public final class MarketMonarch {
 				}				
 				
 				_tradingContext.setState(new TradeInactiveState(_tradingContext));
-				
 				_preTradeContext.clearDataForNextRun();
 				_preTradeContext.setState(new AccountValidationState(_preTradeContext));				
-				
-				
-				// DEBUG ONLY: Remove before going live =======================================
-				for (StockMetrics metric : _preTradeContext.getHistoricalData().values()) {
-					_marketMonarchLogger.debug("Symbol: " + metric.getSymbol() + ", Relative volume: " + metric.getRelativeVolume() + ", Profit loss: " + metric.getProfitLossChange() 
-					+ ", Company Share Float: " + _preTradeContext.getAllCompanyFloats().get(metric.getSymbol()));
-				}
-				// DEBUG ONLY END =============================================================
-				
-				
 				_tradingContext.setState(new EntryScanningState(_tradingContext));
 			}
 			
@@ -106,6 +94,7 @@ public final class MarketMonarch {
 			// Workaround because usage of t will throw exception.
 			String stackTrace = ExceptionUtils.getStackTrace(t);
 			_marketMonarchLogger.error(stackTrace);
+			
 		} finally {
 			_apiAccess.close();
 			_finAccess.close();
