@@ -31,7 +31,6 @@ public class SessionNotificationState extends TradeState{
 	private static Logger _sessionNotificationLogger = LogManager.getLogger(SessionNotificationState.class.getName());
 	
 	TradeDto _sessionData;
-	; // TradeReportDto verwenden, sobald erfolgreich getestet
 //	TradeReportDto _tradeReportData;
 	BarSeries _series;
 	Object _lock; 

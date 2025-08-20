@@ -31,7 +31,6 @@ public class TradeReportDto {
 	double _allLossesAbsolute;
 	double _sortinoRatio;
 	
-	; // overall profit -> implement in AggregateTradeMetricsCalculator and create new DB only for account balances!
 	public TradeReportDto(List<TradeDto> allTrades, TradeDto tradingData) {
 		_allTrades = allTrades;
 		_tradingData = tradingData;

@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import com.ib.client.Bar;
 import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
-import com.rickauer.marketmonarch.constants.TradingConstants;
 
 public class FilterByFloatState extends PreTradeState {
 
@@ -48,12 +47,6 @@ public class FilterByFloatState extends PreTradeState {
 		}
 
 		_filterByFloatLogger.warn("Skipping filtering by float. Keeping the best five scan results.");
-		
-		if (false) {
-			_context.getScanResult().entrySet()
-			.removeIf(entry -> scanResultCompanyFloat.get(entry.getValue().symbol()) > TradingConstants.MAX_NUMBER_OF_SHARES
-					|| scanResultCompanyFloat.get(entry.getValue().symbol()) < TradingConstants.MIN_NUMBER_OF_SHARES);			
-		}
 		
 		_context.getScanResult().entrySet().removeIf(entry -> entry.getKey() > 5);
 

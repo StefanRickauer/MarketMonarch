@@ -8,7 +8,6 @@ import com.rickauer.marketmonarch.api.connect.FmpConnector;
 import com.rickauer.marketmonarch.api.connect.MailtrapServiceConnector;
 import com.rickauer.marketmonarch.api.controller.FmpRequestController;
 import com.rickauer.marketmonarch.api.controller.InteractiveBrokersApiController;
-import com.rickauer.marketmonarch.api.data.StockMetrics;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.AccountValidationState;
 import com.rickauer.marketmonarch.api.data.processing.pretrade.PreTradeContext;
 import com.rickauer.marketmonarch.api.data.processing.trade.EntryScanningState;

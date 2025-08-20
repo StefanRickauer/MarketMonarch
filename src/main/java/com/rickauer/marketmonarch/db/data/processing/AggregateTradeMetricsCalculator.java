@@ -118,7 +118,15 @@ public class AggregateTradeMetricsCalculator {
 	}
 	
 	public static double calculateOverallProfit(List<TradeDto> trades) {
-		; // Add logic to calculate overall profit, therefore you need account balance
-		return 0.0;
+		
+		double profitPerTrade = 0.0;
+		double totalProfit = 0.0;
+		
+		for (TradeDto trade : trades) {
+			profitPerTrade = trade.getEntryPrice() - trade.getExitPrice();
+			totalProfit += profitPerTrade;
+		}
+		
+		return totalProfit;
 	}
 }
