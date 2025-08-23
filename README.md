@@ -81,26 +81,28 @@ Table: `credentials`
 *financial_data Database*
 
 Table: `trade`  
-| Column                  | Type           | Required | Description                                                   |
-|-------------------------|---------------|----------|---------------------------------------------------------------|
-| `id`                    | INT           | Yes      | Internal broker ID (e.g., order or trade ID)                 |
-| `symbol`                | VARCHAR(20)   | Yes      | Stock symbol of the traded asset                              |
-| `entry_price`           | DECIMAL(18,4) | Yes      | Entry price per unit                                          |
-| `exit_price`            | DECIMAL(18,4) | Yes      | Exit price per unit                                           |
-| `quantity`              | INT           | Yes      | Number of shares/contracts traded                             |
-| `entry_time`            | TIMESTAMP     | Yes      | Timestamp when the position was opened                        |
-| `exit_time`             | TIMESTAMP     | Yes      | Timestamp when the position was closed                        |
-| `stop_loss`             | DECIMAL(18,4) | No       | Optional stop-loss price                                      |
-| `take_profit`           | DECIMAL(18,4) | No       | Optional take-profit price                                     |
-| `order_efficiency_ratio`| DECIMAL(18,4) | No       | Ratio of modifications/cancellations vs. executed trades     | 
-
-
+<table>
+  <tr><th>Column</th><th>Type</th><th>Primary Key</th><th>Not Null</th><th>Auto Increment</th></tr>
+  <tr><td>id</td><td>INT</td><td>YES</td><td>YES</td><td>YES</td></tr>
+  <tr><td>symbol</td><td>VARCHAR(20)</td><td>NO</td><td>YES</td><td>NO</td></tr>
+  <tr><td>entry_price</td><td>DECIMAL(18,4)</td><td>NO</td><td>YES</td><td>NO</td></tr>
+  <tr><td>exit_price</td><td>DECIMAL(18,4)</td><td>NO</td><td>YES</td><td>NO</td></tr>
+  <tr><td>quantity</td><td>INT</td><td>NO</td><td>YES</td><td>NO</td></tr>
+  <tr><td>entry_time</td><td>TIMESTAMP</td><td>NO</td><td>YES</td><td>NO</td></tr>
+  <tr><td>exit_time</td><td>TIMESTAMP</td><td>NO</td><td>YES</td><td>NO</td></tr>
+  <tr><td>stop_loss</td><td>DECIMAL(18,4)</td><td>NO</td><td>NO</td><td>NO</td></tr>
+  <tr><td>take_profit</td><td>DECIMAL(18,4)</td><td>NO</td><td>NO</td><td>NO</td></tr>
+  <tr><td>order_efficiency_ratio</td><td>DECIMAL(18,4)</td><td>NO</td><td>NO</td><td>NO</td></tr>
+</table>
 
 *test_db Database*
 
 Table: `test_db` 
-  - `id` VARCHAR(255) **PRIMARY KEY, NOT NULL** – Unique identifier  
-  - `name` VARCHAR(45) – Test name field  
+<table>
+  <tr><th>Column</th><th>Type</th><th>Primary Key</th><th>Not Null</th><th>Auto Increment</th></tr>
+  <tr><td>id</td><td>VARCHAR(255)</td><td>YES</td><td>YES</td><td>NO</td></tr>
+  <tr><td>name</td><td>VARCHAR(45)</td><td>NO</td><td>NO</td><td>NO</td></tr>
+</table>  
   
   
 ⚙️ **Build Process**
