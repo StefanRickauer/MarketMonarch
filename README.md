@@ -67,7 +67,7 @@ MarketMonarch uses a central configuration file for database connections and cre
 
 🛢️ **Database Structure**
 
-*api_key Database*
+*Database:* `api_key`
 
 Table: `credentials`  
 <table>
@@ -78,7 +78,7 @@ Table: `credentials`
 
 
 
-*financial_data Database*
+*Database:* `financial_data`
 
 Table: `trade`  
 <table>
@@ -95,7 +95,7 @@ Table: `trade`
   <tr><td>order_efficiency_ratio</td><td>DECIMAL(18,4)</td><td>NO</td><td>NO</td><td>NO</td></tr>
 </table>
 
-*test_db Database*
+*Database:* `test_db`
 
 Table: `test_db` 
 <table>
