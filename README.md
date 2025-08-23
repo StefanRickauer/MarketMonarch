@@ -54,15 +54,15 @@ MarketMonarch uses a central configuration file for database connections and cre
 } 
 ```
 
-   *Explanation*
-  - Username           -> Database user (e.g. root)
-  - Password           -> Password for the database user
-  - URL-api_key        -> URL for API key storage 
-  - URL-financial_data -> URL for financial data storage
-  - URL-test_db        -> URL for test database 
+*Explanation*
+- Username           -> Database user (e.g. root)
+- Password           -> Password for the database user
+- URL-api_key        -> URL for API key storage 
+- URL-financial_data -> URL for financial data storage
+- URL-test_db        -> URL for test database 
 
-   *Security Note*
-  - Never commit this file with real credentials to a public repository. For production, use environment variables or a secrets manager.
+*Security Note*
+- Never commit this file with real credentials to a public repository. For production, use environment variables or a secrets manager.
 
 
 🛢️ **Database Structure**
@@ -130,6 +130,15 @@ Table: `test_db`
 - The installer bundles the `.exe` and required resources into a distributable package.  
 - **Output:** ready-to-install setup executable.  
 
+🛠️ *Maven Build*
+- Execute with: `mvn clean verify`  
+  - Cleans previous outputs and builds the project, running all tests.  
+  - ⚠️ Some tests require the Gateway to be running.  
+
+
+- Optionally execute with: `mvn clean verify -Dmaven.test.skip=true`  
+  - Skips all tests, useful if the Gateway is not available.  
+  - Cleans previous outputs and builds the project artifacts without executing tests.
 
 **Attribution**
 
