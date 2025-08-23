@@ -70,24 +70,29 @@ MarketMonarch uses a central configuration file for database connections and cre
 *api_key Database*
 
 Table: `credentials`  
-  - `provider` VARCHAR(150) **PRIMARY KEY, NOT NULL** – Identifies the API provider  
-  - `token` VARCHAR(512) **NOT NULL** – Stores the access token for authentication  
+<table>
+  <tr><th>Column</th><th>Type</th><th>Primary Key</th><th>Not Null</th><th>Auto Increment</th></tr>
+  <tr><td>provider</td><td>VARCHAR(150)</td><td>YES</td><td>YES</td><td>NO</td></tr>
+  <tr><td>token</td><td>VARCHAR(512)</td><td>NO</td><td>YES</td><td>NO</td></tr>
+</table>
 
 
 
 *financial_data Database*
 
 Table: `trade`  
-  - `id` INT **PRIMARY KEY, AUTO_INCREMENT** – Internal broker ID (e.g., order or trade ID)  
-  - `symbol` VARCHAR(20) **NOT NULL** – Stock symbol of the traded asset  
-  - `entry_price` DECIMAL(18,4) **NOT NULL** – Entry price per unit  
-  - `exit_price` DECIMAL(18,4) **NOT NULL** – Exit price per unit  
-  - `quantity` INT **NOT NULL** – Traded quantity  
-  - `entry_time` TIMESTAMP **NOT NULL** – Entry timestamp  
-  - `exit_time` TIMESTAMP **NOT NULL** – Exit timestamp  
-  - `stop_loss` DECIMAL(18,4) – Optional stop-loss price  
-  - `take_profit` DECIMAL(18,4) – Optional take-profit price  
-  - `order_efficiency_ratio` DECIMAL(18,4) – Ratio of modifications, cancellations, etc. vs. executed trades  
+| Column                  | Type           | Required | Description                                                   |
+|-------------------------|---------------|----------|---------------------------------------------------------------|
+| `id`                    | INT           | Yes      | Internal broker ID (e.g., order or trade ID)                 |
+| `symbol`                | VARCHAR(20)   | Yes      | Stock symbol of the traded asset                              |
+| `entry_price`           | DECIMAL(18,4) | Yes      | Entry price per unit                                          |
+| `exit_price`            | DECIMAL(18,4) | Yes      | Exit price per unit                                           |
+| `quantity`              | INT           | Yes      | Number of shares/contracts traded                             |
+| `entry_time`            | TIMESTAMP     | Yes      | Timestamp when the position was opened                        |
+| `exit_time`             | TIMESTAMP     | Yes      | Timestamp when the position was closed                        |
+| `stop_loss`             | DECIMAL(18,4) | No       | Optional stop-loss price                                      |
+| `take_profit`           | DECIMAL(18,4) | No       | Optional take-profit price                                     |
+| `order_efficiency_ratio`| DECIMAL(18,4) | No       | Ratio of modifications/cancellations vs. executed trades     | 
 
 
 
@@ -134,3 +139,4 @@ This project includes an icon downloaded from [icon-icons.com](https://icon-icon
 - **License:** Free icon-icons license (with attribution)
 
 The icon is used in accordance with the license, which requires attribution to the author in the definitive project.
+
