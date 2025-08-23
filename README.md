@@ -46,20 +46,20 @@ MarketMonarch uses a central configuration file for database connections and cre
    
 ```json
 {
-  "Password": "<yourpassword>",
-  "URL-test_db": "jdbc:mysql://localhost:3306/test_db",
-  "URL-api_key": "jdbc:mysql://localhost:3306/api_key",
-  "URL-financial_data": "jdbc:mysql://localhost:3306/financial_data",
   "Username": "<username>"
+  "Password": "<yourpassword>",
+  "URL-api_key": "jdbc:mysql://<host>:<port>/api_key",
+  "URL-financial_data": "jdbc:mysql://<host>:<port>/financial_data",
+  "URL-test_db": "jdbc:mysql://<host>:<port>/test_db",
 } 
 ```
 
    *Explanation*
   - Username           -> Database user (e.g. root)
   - Password           -> Password for the database user
-  - URL-test_db        -> Connection string for test database
-  - URL-api_key        -> Connection string for API key storage (e.g. "jdbc:mysql://localhost:3306/api_key")
-  - URL-financial_data -> Connection string for financial data storage
+  - URL-api_key        -> URL for API key storage 
+  - URL-financial_data -> URL for financial data storage
+  - URL-test_db        -> URL for test database 
 
    *Security Note*
   - Never commit this file with real credentials to a public repository. For production, use environment variables or a secrets manager.
