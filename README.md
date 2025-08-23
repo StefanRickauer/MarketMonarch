@@ -122,3 +122,15 @@ Table: `test_db`
 - Maven executes `makensis.exe` with the project’s custom script (`installer.nsi`).  
 - The installer bundles the `.exe` and required resources into a distributable package.  
 - **Output:** ready-to-install setup executable.  
+
+
+**Attribution**
+
+This project includes an icon downloaded from [icon-icons.com](https://icon-icons.com/).
+
+- **Icon Name:** Online-Handel / E-commerce / Digital Commerce / Online Business  
+- **Author:** Iconic_ux  
+- **Source:** [https://icon-icons.com/de/symbol/Online-Handel-e-commerce-digitaler-Handel-Onlinegesch%C3%A4ft/262960](https://icon-icons.com/de/symbol/Online-Handel-e-commerce-digitaler-Handel-Onlinegesch%C3%A4ft/262960)  
+- **License:** Free icon-icons license (with attribution)
+
+The icon is used in accordance with the license, which requires attribution to the author in the definitive project.
