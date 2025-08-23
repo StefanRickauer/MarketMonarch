@@ -128,9 +128,9 @@ Table: `test_db`
 
 This project includes an icon downloaded from [icon-icons.com](https://icon-icons.com/).
 
-- **Icon Name:** Online-Handel / E-commerce / Digital Commerce / Online Business  
-- **Author:** Iconic_ux  
-- **Source:** [https://icon-icons.com/de/symbol/Online-Handel-e-commerce-digitaler-Handel-Onlinegesch%C3%A4ft/262960](https://icon-icons.com/de/symbol/Online-Handel-e-commerce-digitaler-Handel-Onlinegesch%C3%A4ft/262960)  
+- **Icon Name:** Going up two bars chart / Graph / Data analysis  
+- **Author:** Goce Mitevski  
+- **Source:** [https://icon-icons.com/icon/Going-up-two-bars-chart-graph-data-analysis-graph/114381](https://icon-icons.com/icon/Going-up-two-bars-chart-graph-data-analysis-graph/114381)  
 - **License:** Free icon-icons license (with attribution)
 
 The icon is used in accordance with the license, which requires attribution to the author in the definitive project.
