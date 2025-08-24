@@ -21,8 +21,8 @@ Think of it as a *robotic trader* who is very eager to trade… but not particul
   - Additionally, you need to download and install the **Trader Workstation (TWS) or IB Gateway software**, as well as the **official IB API source code** (including `EWrapper`, `EClientSocket`, etc.).  
   - All required software and API documentation can be found here: [IBKR API Page](https://ibkrcampus.com/campus/ibkr-api-page/twsapi-doc/).
   - **Required Market Data Subscriptions** (to receive live data):  
-    - **US Securities Snapshot and Futures Value Bundle (NP, L1)** – via Trader Workstation  
-    - **US Equity and Options Add-On Streaming Bundle (NP)** – via Trader Workstation
+    - **US Securities Snapshot and Futures Value Bundle (NP, L1)**  
+    - **US Equity and Options Add-On Streaming Bundle (NP)** 
     
 *Mailtrap Account*
   - Used to send the password-protected session report via SMTP in a safe sandbox.
